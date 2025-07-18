@@ -1,9 +1,9 @@
 # This idea is partially stolen from the actual vm
-from zipfile import ZipFile, ZipInfo
+from zipfile import ZipFile
 import json
-import operator
+import io
 
-from pygame import Vector2
+from pygame import Vector2, image
 
 from electrosb3.project.sprite import Sprite
 from electrosb3.project.costume import Costume
@@ -17,8 +17,19 @@ class Deserialize:
         for target in project_json["targets"]: Project.sprites.append(self.deserialize_target(target))
 
         # lemme js sort by layer
-        Project.sprites.sort(key=operator.attrgetter("layer_order"))
+        # just learned you could also just use a lambda for this
+        Project.sprites.sort(key=lambda sprite: sprite.layer_order)
 
+    def deserialize_costume(self, costume):
+        image_file = self.get(costume["md5ext"])
+
+        costume_object = Costume()
+        costume_object.image = image.load(io.BytesIO(image_file))
+        costume_object.rotation_center = Vector2(costume["rotationCenterX"],-costume["rotationCenterY"]) # HACK: For the displaying to work properly, we need to make rotationCenterY negative
+        costume_object.name = costume["name"]
+
+        return costume_object
+    
     def deserialize_target(self, target):
         sprite = Sprite()
 
@@ -27,10 +38,12 @@ class Deserialize:
             sprite.size = target["size"]
             sprite.rotation = target["direction"]
             sprite.visible = target["visible"]
-            sprite.visible = target["layerOrder"]
+            sprite.layer_order = target["layerOrder"]
 
-        for costume in target["costumes"]: # Load costumes
-            sprite.costumes.append(Costume(self.get(costume["md5ext"]), (costume["rotationCenterX"], costume["rotationCenterY"]), costume["name"]))
+        # Load costumes
+        for costume in target["costumes"]: sprite.costumes.append(self.deserialize_costume(costume))
+
+        sprite.setup() # Sorta temporary
 
         return sprite 
 

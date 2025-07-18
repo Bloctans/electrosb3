@@ -8,3 +8,10 @@ class Sprite:
         self.rotation = 90
         self.visible = True
         self.layer_order = 0
+        self.current_costume = None
+
+    def setup(self):
+        self.current_costume = self.costumes[0]
+
+    def get_pos(self):
+        return self.position - self.current_costume.rotation_center
