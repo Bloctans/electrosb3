@@ -19,9 +19,11 @@ class Electro:
                     running = False
 
             bg = pygame.image.load("./unpacked/" + self.proj.data["targets"][0]["costumes"][0]["md5ext"])
+            sprite_one = pygame.image.load("./unpacked/" + self.proj.data["targets"][1]["costumes"][0]["md5ext"])
             # setting bg color to white
             win.screen.fill("white")
             win.screen.blit(bg, bg.get_rect(center = win.screen.get_rect().center))
+            win.screen.blit(sprite_one, sprite_one.get_rect(center = win.screen.get_rect().center))
             
             pygame.display.flip()
 
