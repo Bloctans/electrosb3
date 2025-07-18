@@ -6,6 +6,7 @@ extracted/*
 
 # Pycache
 __pycache__
+*/__pycache__
 
 # Env stuff
 .env
