@@ -1,7 +1,6 @@
 import sys
-
-from electrosb3 import Electro
+import electrosb3
 
 if __name__ == "__main__":
-    e = Electro()
+    e = electrosb3.Electro()
     e.run(sys.argv[1])

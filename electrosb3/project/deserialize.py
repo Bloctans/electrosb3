@@ -5,8 +5,9 @@ import io
 
 from pygame import Vector2, image
 
-from electrosb3.project.sprite import Sprite
 from electrosb3.project.costume import Costume
+from electrosb3.project.sprite import Sprite
+import electrosb3.block_engine as BlockEngine
 
 class Deserialize:
     def __init__(self, ProjectFile: ZipFile, Project):
@@ -39,6 +40,8 @@ class Deserialize:
             sprite.rotation = target["direction"]
             sprite.visible = target["visible"]
             sprite.layer_order = target["layerOrder"]
+
+        print(target["blocks"])
 
         # Load costumes
         for costume in target["costumes"]: sprite.costumes.append(self.deserialize_costume(costume))
