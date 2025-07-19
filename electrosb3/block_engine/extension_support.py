@@ -1,4 +1,4 @@
-# General extension related stuff.
+# General extension related stuff, like type Enums, and the block set registry
 
 BLOCK_HAT = 1
 BLOCK_STACK = 2

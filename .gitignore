@@ -1,6 +1,9 @@
 # Our tests
 tests/*
 
+# Notes
+notes/*
+
 # In the case we do end up making an option to do this
 extracted/*
 
