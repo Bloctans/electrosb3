@@ -1,8 +1,20 @@
-# General extension related stuff, like type Enums, and the block set registry
-
-BLOCK_HAT = 1
-BLOCK_STACK = 2
-BLOCK_C = 3
+# General extension utilities.
 
 block_sets = {}
-def register_extension(extension_name: str, extension): block_sets.update({extension_name:extension})
+
+# Register an extension as a block set.
+def register_extension(extension_name: str, extension): 
+    block_sets.update({extension_name:extension})
+
+def get_block_map(set: str):
+    return block_sets[set].block_map
+
+# Grab the block data from a set.
+def get_block(opcode: str):
+    split = opcode.split("_")
+
+    block_set = split[:1][0]
+    block_map = get_block_map(block_set)
+    block_opcode = "_".join(split[1:])
+
+    return block_map[block_opcode],block_map,block_set

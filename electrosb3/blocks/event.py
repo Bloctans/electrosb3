@@ -1,14 +1,14 @@
-import electrosb3.block_engine as Block
+import electrosb3.block_engine as BlockEngine
 
-class Blocks_Event:
+class BlocksEvent:
     def __init__(self):
         self.block_map = {
             "whenflagclicked": {
-                "type": Block.BLOCK_HAT,
+                "type": BlockEngine.Enum.BLOCK_HAT,
             }
         }
 
     def whenflagclicked():
         return True
     
-Block.register_extension("event", Blocks_Event())
+BlockEngine.register_extension("event", BlocksEvent())

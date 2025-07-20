@@ -12,6 +12,9 @@ class Sprite:
         self.visible = True
         self.layer_order = 0
 
+        # we can always refactor later
+        self.blocks = {}
+
     def setup(self):
         self.current_costume = self.costumes[0]
 

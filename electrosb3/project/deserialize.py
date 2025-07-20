@@ -31,6 +31,28 @@ class Deserialize:
 
         return costume_object
     
+    def deserialize_blocks(self, serialized_blocks):
+        blocks = {}
+
+        for block_id in serialized_blocks:
+            block_value = serialized_blocks[block_id]
+
+            try:
+                block_data,opcode,map = BlockEngine.get_block(block_value["opcode"])
+
+                block = BlockEngine.Block()
+
+                block.type = block_data["type"]
+                block.opcode = opcode
+                block.block_set = map
+
+                blocks.update({block_id: block})
+            except:
+                print(f"{block_value["opcode"]} Could not be found! Skipping!")
+
+        return blocks
+
+    
     def deserialize_target(self, target):
         sprite = Sprite()
 
@@ -41,7 +63,7 @@ class Deserialize:
             sprite.visible = target["visible"]
             sprite.layer_order = target["layerOrder"]
 
-        print(target["blocks"])
+        sprite.blocks = self.deserialize_blocks(target["blocks"])
 
         # Load costumes
         for costume in target["costumes"]: sprite.costumes.append(self.deserialize_costume(costume))

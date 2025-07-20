@@ -5,6 +5,7 @@ from electrosb3.project.deserialize import Deserialize
 from electrosb3.project.costume import Costume
 from electrosb3.project.sprite import Sprite
 import electrosb3.util as Util
+import electrosb3.blocks as Blocks # Imported here to initalize blocks
 
 class Project:
     def __init__(self, file):
