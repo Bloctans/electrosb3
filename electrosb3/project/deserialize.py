@@ -31,26 +31,31 @@ class Deserialize:
 
         return costume_object
     
-    def deserialize_blocks(self, serialized_blocks):
-        blocks = {}
-
+    def deserialize_blocks(self, serialized_blocks, sprite):
         for block_id in serialized_blocks:
             block_value = serialized_blocks[block_id]
 
             try:
-                block_data,opcode,map = BlockEngine.get_block(block_value["opcode"])
+                block_data,opcode,map = BlockEngine.get_raw_block(block_value["opcode"])
 
                 block = BlockEngine.Block()
 
-                block.type = block_data["type"]
                 block.opcode = opcode
                 block.block_set = map
 
-                blocks.update({block_id: block})
+                block.inputs = block_value["inputs"]
+
+                if block_data["type"] == BlockEngine.Enum.BLOCK_HAT:
+                    script = BlockEngine.Script(BlockEngine)
+                    script.start_block = block
+                    script.sprite = sprite
+
+                    sprite.scripts.append(script)
+                    
+
+                sprite.blocks.update({block_id: block})
             except:
                 print(f"{block_value["opcode"]} Could not be found! Skipping!")
-
-        return blocks
 
     
     def deserialize_target(self, target):
@@ -63,7 +68,7 @@ class Deserialize:
             sprite.visible = target["visible"]
             sprite.layer_order = target["layerOrder"]
 
-        sprite.blocks = self.deserialize_blocks(target["blocks"])
+        sprite.blocks = self.deserialize_blocks(target["blocks"], sprite)
 
         # Load costumes
         for costume in target["costumes"]: sprite.costumes.append(self.deserialize_costume(costume))

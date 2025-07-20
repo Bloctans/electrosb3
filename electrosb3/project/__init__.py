@@ -22,3 +22,6 @@ class Project:
                     sprite.current_costume.image, 
                     Util.to_scratch_pos(sprite.get_pos())
                 )
+
+            for script in sprite.scripts:
+                script.update()

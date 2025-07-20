@@ -5,10 +5,11 @@ class BlocksEvent:
         self.block_map = {
             "whenflagclicked": {
                 "type": BlockEngine.Enum.BLOCK_HAT,
+                "function": self.whenflagclicked
             }
         }
 
-    def whenflagclicked():
+    def whenflagclicked(self, args, script):
         return True
     
 BlockEngine.register_extension("event", BlocksEvent())

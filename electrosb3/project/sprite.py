@@ -14,6 +14,7 @@ class Sprite:
 
         # we can always refactor later
         self.blocks = {}
+        self.scripts = []
 
     def setup(self):
         self.current_costume = self.costumes[0]

@@ -1,1 +1,1 @@
-import electrosb3.blocks.event
+from electrosb3.blocks import event, motion
