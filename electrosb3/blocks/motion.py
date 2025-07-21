@@ -6,10 +6,17 @@ class BlocksMotion:
             "changexby": {
                 "type": BlockEngine.Enum.BLOCK_STACK,
                 "function": self.changexby
+            },
+            "changeyby": { # did i do it right?
+                "type": BlockEngine.Enum.BLOCK_STACK,
+                "function": self.changeyby
             }
         }
 
     def changexby(self):
+        return True
+    
+    def changeyby(self):
         return True
     
 BlockEngine.register_extension("motion", BlocksMotion())

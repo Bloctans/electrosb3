@@ -15,7 +15,7 @@ YIELD_NONE = 1 # Dont yield, continue to run blocks
 YIELD = 2 # Yield and call the same block next frame
 YIELD_TILL_NEXT_FRAME = 3 # Yield for a single frame
 
-class Script:
+class Script: # TODO: prolly put this in a different file
     def __init__(self, block_engine):
         self.current_block = None
         self.start_block = None
