@@ -12,7 +12,6 @@ class Script:
         self.block_engine = block_engine
         
         self.running = False
-        self.frames = 0 # temp
 
         self.yielding = YIELD_NONE # This concept is stolen from the VM.
 
@@ -43,10 +42,6 @@ class Script:
         #print("Update script")
 
         if self.yielding == YIELD_TILL_NEXT_FRAME: self.set_yield(YIELD_NONE)
-
-        self.frames += 1
-
-        if self.frames < 100: return
 
         while True: # forever until we yield.
             if (not self.running):

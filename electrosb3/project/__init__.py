@@ -13,9 +13,13 @@ class Project:
 
         self.sprites: list[Sprite] = []
 
+        self.frames = 0
+
         Deserialize(ZipFile(file, "r"), self)
 
     def update(self, screen):
+        self.frames += 1
+
         for sprite in self.sprites:
             if sprite.visible:
                 screen.blit(
@@ -23,5 +27,6 @@ class Project:
                     Util.to_scratch_pos(sprite.get_pos())
                 )
 
-            for script in sprite.scripts:
-                script.update()
+            if self.frames > 60:
+                for script in sprite.scripts:
+                    script.update()
