@@ -13,7 +13,8 @@ class BlocksMotion:
             }
         }
 
-    def changexby(self):
+    def changexby(self, args, script):
+        print(args.DX)
         return True
     
     def changeyby(self):

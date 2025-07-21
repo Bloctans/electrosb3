@@ -1,4 +1,11 @@
-# electrosb3
-my attempt at porting scratch to python
+# ElectroSB3
+## **(Highly WIP!!!!!! Blocks are barely Implemented yet!!!!)**
 
-right now the only thing you can do is display the first costume of the backdrop and the first sprite
+Yet another Scratch VM in Python.
+
+## Credits:
+Bloctans - Code Help
+
+[https://github.com/BirdLogics/sb3topy](BirdLogics/sb3topy) - Used as reference for block parsing (Also, I'd consider this different from this project, as ElectroSB3 is a **VM**, and not a **Converter**.)
+
+Scratch Foundation (Previously LLK) - Scratch, and certain concepts

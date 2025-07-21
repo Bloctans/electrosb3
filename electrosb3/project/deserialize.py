@@ -35,6 +35,8 @@ class Deserialize:
         for block_id in serialized_blocks:
             block_value = serialized_blocks[block_id]
 
+            print(block_value)
+
             try:
                 block_data,opcode,map = BlockEngine.get_raw_block(block_value["opcode"])
 
