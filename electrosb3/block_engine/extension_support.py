@@ -2,17 +2,12 @@
 
 block_sets = {}
 
-# Args class, contains both the fields and args in a simple class
-class Args:
-    def __init__(self):
-        pass
-
 # Register an extension as a block set.
 def register_extension(extension_name: str, extension): 
     block_sets.update({extension_name:extension})
 
 # Run a block function itself.
-def run_block_func(block, args: Args, script):
+def run_block_func(block, args, script):
     opcode = block.opcode
 
     block_map = get_block_map(block.block_set)

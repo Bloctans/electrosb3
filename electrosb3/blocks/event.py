@@ -9,7 +9,12 @@ class BlocksEvent:
             }
         }
 
+        self.started = False
+
     def whenflagclicked(self, args, script):
-        return True
+        startedold = self.started
+        self.started = True
+
+        return (not startedold)
     
 BlockEngine.register_extension("event", BlocksEvent())

@@ -14,10 +14,13 @@ class BlocksMotion:
         }
 
     def changexby(self, args, script):
-        print(args.DX)
-        return True
+        sprite = script.sprite
+
+        sprite.position.x += float(args["DX"])
     
-    def changeyby(self):
-        return True
+    def changeyby(self, args, script):
+        sprite = script.sprite
+
+        sprite.position.y += float(args["DY"])
     
 BlockEngine.register_extension("motion", BlocksMotion())

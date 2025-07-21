@@ -11,6 +11,7 @@ import electrosb3.block_engine as BlockEngine
 
 class Deserialize:
     def __init__(self, ProjectFile: ZipFile, Project):
+        print("Started Deserializing")
         self.file = ProjectFile
 
         project_json = self.get_as_json("project.json")
@@ -20,6 +21,8 @@ class Deserialize:
         # lemme js sort by layer
         # just learned you could also just use a lambda for this
         Project.sprites.sort(key=lambda sprite: sprite.layer_order)
+
+        print("Deserialization finished!")
 
     def deserialize_costume(self, costume):
         image_file = self.get(costume["md5ext"])
@@ -44,6 +47,9 @@ class Deserialize:
 
                 block.opcode = opcode
                 block.block_set = map
+                block.next = block_value["next"]
+
+                block.sprite = sprite
 
                 block.inputs = block_value["inputs"]
 
@@ -53,7 +59,6 @@ class Deserialize:
                     script.sprite = sprite
 
                     sprite.scripts.append(script)
-                    
 
                 sprite.blocks.update({block_id: block})
             except:
@@ -70,7 +75,7 @@ class Deserialize:
             sprite.visible = target["visible"]
             sprite.layer_order = target["layerOrder"]
 
-        sprite.blocks = self.deserialize_blocks(target["blocks"], sprite)
+        self.deserialize_blocks(target["blocks"], sprite)
 
         # Load costumes
         for costume in target["costumes"]: sprite.costumes.append(self.deserialize_costume(costume))
