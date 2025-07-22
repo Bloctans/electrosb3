@@ -1,15 +1,10 @@
 import electrosb3.block_engine as BlockEngine
 
-class BlocksControl:
+class BlocksLooks:
     def __init__(self):
         self.block_map = {
-            "forever": {
-                "type": BlockEngine.Enum.BLOCK_C,
-                "function": self.forever
-            },
-            "wait": {
-                "type": BlockEngine.Enum.BLOCK_STACK,
-                "function": self.wait
+            "switchcostumeto": {
+
             }
         }
 
@@ -24,4 +19,4 @@ class BlocksControl:
             script.set_yield(BlockEngine.Enum.YIELD)
 
 # This stays unregistered until we actually make progress on it
-BlockEngine.register_extension("control", BlocksControl())
+#BlockEngine.register_extension("looks", BlocksLooks())

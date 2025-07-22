@@ -1,6 +1,4 @@
-YIELD_NONE = 1 # Dont yield, continue to run blocks
-YIELD = 2 # Yield and call the same block next frame
-YIELD_TILL_NEXT_FRAME = 3 # Yield for a single frame
+import electrosb3.block_engine.enum as Enum
 
 class Script:
     def __init__(self, block_engine):
@@ -13,10 +11,11 @@ class Script:
         
         self.running = False
 
-        self.yielding = YIELD_NONE # This concept is stolen from the VM.
+        self.yielding = Enum.YIELD_NONE # This concept is stolen from the VM.
 
         self.sprite = None
 
+    def is_yielding(self): return (self.yielding == Enum.YIELD)
     def set_yield(self, yield_type): self.yielding = yield_type
 
     def step_next_to(self, block: str): self.step_next = block
@@ -42,7 +41,7 @@ class Script:
     def update(self):
         #print("Update script")
 
-        if self.yielding == YIELD_TILL_NEXT_FRAME: self.set_yield(YIELD_NONE)
+        if self.yielding == Enum.YIELD_TILL_NEXT_FRAME: self.set_yield(Enum.YIELD_NONE)
 
         while True: # forever until we yield.
             if (not self.running):
@@ -54,5 +53,5 @@ class Script:
                 if self.step_next: # Custom step
                     self.goto(self.step_next)
                     self.step_next = None
-                elif self.yielding == YIELD_NONE: self.step_block()
+                elif self.yielding == Enum.YIELD_NONE: self.step_block()
                 else: break # All other cases break.

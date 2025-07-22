@@ -41,7 +41,7 @@ class Block:
                 return float(wrapper_value)
             else:
                 return wrapper_value
-        elif wrapper_type == 2 or wrapper_type == 3: # Block in block
+        elif wrapper_type == 2 or wrapper_type == 3: # Input in block, or a substack
             block = blocks[wrapper_value]
 
             if block.block_info["type"] == Enum.BLOCK_INPUT: # Parse inputs normally
