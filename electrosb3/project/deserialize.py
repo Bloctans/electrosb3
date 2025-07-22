@@ -9,6 +9,7 @@ from electrosb3.project.costume import Costume
 from electrosb3.project.sprite import Sprite
 import electrosb3.block_engine as BlockEngine
 
+# is there a way to put all the json values into the class variables without this mess, cuz i havent touched python in a WHILE - bloctans
 class Deserialize:
     def __init__(self, ProjectFile: ZipFile, Project):
         print("Started Deserializing")
@@ -35,10 +36,12 @@ class Deserialize:
         return costume_object
     
     def deserialize_blocks(self, serialized_blocks, sprite):
+        missing_opcodes = 0
+
         for block_id in serialized_blocks:
             block_value = serialized_blocks[block_id]
 
-            print(block_value)
+            #print(block_value)
 
             try:
                 block_data,opcode,map = BlockEngine.get_raw_block(block_value["opcode"])
@@ -52,6 +55,7 @@ class Deserialize:
                 block.sprite = sprite
 
                 block.inputs = block_value["inputs"]
+                block.fields = block_value["fields"]
 
                 if block_data["type"] == BlockEngine.Enum.BLOCK_HAT:
                     script = BlockEngine.Script(BlockEngine)
@@ -62,9 +66,11 @@ class Deserialize:
 
                 sprite.blocks.update({block_id: block})
             except:
-                print(f"{block_value["opcode"]} Could not be found! Skipping!")
+                missing_opcodes += 1
+                #print(f"{block_value["opcode"]} Could not be found! Skipping!")
 
-    
+        print(f"{missing_opcodes} Missing opcodes for {sprite.name}")
+
     def deserialize_target(self, target):
         sprite = Sprite()
 
@@ -74,6 +80,8 @@ class Deserialize:
             sprite.rotation = target["direction"]
             sprite.visible = target["visible"]
             sprite.layer_order = target["layerOrder"]
+
+        sprite.name = target["name"]
 
         self.deserialize_blocks(target["blocks"], sprite)
 

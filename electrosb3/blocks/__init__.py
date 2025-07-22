@@ -1,1 +1,1 @@
-from electrosb3.blocks import event, motion
+from electrosb3.blocks import event, motion, sound

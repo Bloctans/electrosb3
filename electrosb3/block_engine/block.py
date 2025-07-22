@@ -13,6 +13,16 @@ class Block:
         self.inputs = {}
         self.fields = {}
 
+    # I do not know how we should properly handle these.
+    def parse_fields(self, field): 
+        if len(field) > 1:
+            return {  # Depends on how this is handled
+                "name": field[0],
+                "id": field[1]
+            }
+        else:
+            return field[0] # Return only the name
+
     def parse_input(self, input, script):
         blocks = self.sprite.blocks
 
@@ -33,5 +43,8 @@ class Block:
 
         for i in self.inputs:
             inputs.update({i:self.parse_input(self.inputs[i], script)})
+
+        for i in self.fields:
+            inputs.update({i:self.parse_fields(self.fields[i])})
 
         return ExtensionSupport.run_block_func(self, inputs, script)

@@ -12,6 +12,8 @@ class Sprite:
         self.visible = True
         self.layer_order = 0
 
+        self.name = "Placeholder"
+
         # we can always refactor later
         self.blocks = {}
         self.scripts = []
