@@ -8,14 +8,13 @@ def register_extension(extension_name: str, extension):
 
 # Run a block function itself.
 def run_block_func(block, args, script):
-    opcode = block.opcode
+    return block.info["function"](args, script)
 
-    block_map = get_block_map(block.block_set)
-    return block_map[opcode]["function"](args, script)
+# Get a block set itself.
+def get_block_set(set: str): return block_sets[set]
 
 # Get a block sets map.
-def get_block_map(set: str):
-    return block_sets[set].block_map
+def get_block_map(set: str): return get_block_set(set).block_map
 
 # Grab the block data from a set.
 def get_raw_block(opcode: str):

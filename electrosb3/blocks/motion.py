@@ -1,5 +1,6 @@
 import electrosb3.block_engine as BlockEngine
 from pygame import Vector2
+from math import sin, cos, radians
 
 class BlocksMotion:
     def __init__(self):
@@ -35,21 +36,22 @@ class BlocksMotion:
             "sety": {
                 "type": BlockEngine.Enum.BLOCK_STACK,
                 "function": self.sety
+            },
+            "movesteps": {
+                "type": BlockEngine.Enum.BLOCK_STACK,
+                "function": self.move_steps
             }
         }
 
-    def _changeby(x,y,sprite): sprite.position += Vector2(x,y)
-    def _setrotation(self, rotation, sprite):
-        pass
+    def _changeby(self,x,y,sprite): sprite.position += Vector2(x,y)
+    def _setrotation(self, rotation, sprite): sprite.rotation = rotation
 
-    def pointindirection(self, args, script):
-        self._setrotation(args["DIRECTION"], script.sprite)
+    def pointindirection(self, args, script): self._setrotation(args["DIRECTION"], script.sprite)
 
     def changexby(self, args, script): self._changeby(args["DX"],0,script.sprite)
     def changeyby(self, args, script): self._changeby(0,args["DY"],script.sprite)
 
-    def gotoxy(self, args, script):
-        script.sprite.position = Vector2(args["X"], args["Y"])
+    def gotoxy(self, args, script): script.sprite.position = Vector2(args["X"], args["Y"])
 
     def setx(self, args, script):
         print(args)
@@ -59,5 +61,17 @@ class BlocksMotion:
 
     def xposition(self, args, script): return script.sprite.position.x
     def yposition(self, args, script): return script.sprite.position.y
+
+    def move_steps(self, args, script):
+        sprite = script.sprite
+        steps = args["STEPS"]
+
+        rotation = radians(sprite.rotation)
+
+        self._changeby(
+            sin(rotation)*steps,
+            cos(rotation)*steps,
+            sprite
+        )
     
 BlockEngine.register_extension("motion", BlocksMotion())

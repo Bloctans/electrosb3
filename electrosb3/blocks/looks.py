@@ -4,19 +4,28 @@ class BlocksLooks:
     def __init__(self):
         self.block_map = {
             "switchcostumeto": {
-
+                "type": BlockEngine.Enum.BLOCK_STACK,
+                "function": self.switchcostumeto
+            },
+            "costume": {
+                "type": BlockEngine.Enum.BLOCK_INPUT,
+                "function": self.costume
             }
         }
 
-    def forever(self, args, script):
-        print(args)
-        script.step_next_to(args["SUBSTACK"])
+    def switchcostumeto(self, args, script):
+        sprite = script.sprite
 
-    def wait(self, args, script):
-        if script.is_yielding():
-            print(args)
-        else:
-            script.set_yield(BlockEngine.Enum.YIELD)
+        costume = args["COSTUME"]
+
+        if type(args["COSTUME"]) == float: costume = script.sprite.costumes[int(args["COSTUME"])]
+
+        sprite.set_costume(costume)
+
+    def costume(self, args, script):
+        sprite = script.sprite
+
+        return sprite.costume_from_name(args["COSTUME"])
 
 # This stays unregistered until we actually make progress on it
-#BlockEngine.register_extension("looks", BlocksLooks())
+BlockEngine.register_extension("looks", BlocksLooks())

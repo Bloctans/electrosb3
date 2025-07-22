@@ -35,28 +35,40 @@ class Deserialize:
 
         return costume_object
     
+    def deserialize_sounds(self, sounds):
+        print(sounds)
+
+        #audio_file = self.get(sounds[])
+    
     def deserialize_blocks(self, serialized_blocks, sprite):
         missing_opcodes = 0
+
+        sprite.debug_blocks = serialized_blocks
 
         for block_id in serialized_blocks:
             block_value = serialized_blocks[block_id]
 
-            #print(block_id)
-            #print(block_value)
+            print(block_id)
+            print(block_value)
 
             try:
                 block_data,opcode,map = BlockEngine.get_raw_block(block_value["opcode"])
 
                 block = BlockEngine.Block()
 
-                block.opcode = opcode
-                block.block_set = map
                 block.next = block_value["next"]
+                block.parent = block_value["parent"]
+
+                block.opcode = opcode
+                block.info = block_data
+                block.id = block_id
 
                 block.sprite = sprite
 
-                block.inputs = block_value["inputs"]
-                block.fields = block_value["fields"]
+                block.args = {
+                    "inputs": block_value["inputs"],
+                    "fields": block_value["fields"]
+                }
 
                 if block_data["type"] == BlockEngine.Enum.BLOCK_HAT:
                     script = BlockEngine.Script(BlockEngine)
@@ -69,6 +81,15 @@ class Deserialize:
             except:
                 missing_opcodes += 1
                 print(f"{block_value["opcode"]} Could not be found! Skipping!")
+
+        for block in sprite.blocks: # Go through all blocks and assign next and parent properly
+            current_block = sprite.blocks[block]
+
+            if current_block.next:
+                current_block.next = sprite.blocks[current_block.next]
+
+            if current_block.parent:
+                current_block.parent = sprite.blocks[current_block.parent]
 
         print(f"{missing_opcodes} Missing opcodes for {sprite.name}")
 

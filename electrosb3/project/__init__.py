@@ -27,6 +27,6 @@ class Project:
                     Util.to_scratch_pos(sprite.get_pos())
                 )
 
-            if self.frames > 60:
+            if self.frames > 10:
                 for script in sprite.scripts:
                     script.update()
