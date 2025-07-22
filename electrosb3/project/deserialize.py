@@ -41,6 +41,7 @@ class Deserialize:
         for block_id in serialized_blocks:
             block_value = serialized_blocks[block_id]
 
+            #print(block_id)
             #print(block_value)
 
             try:
@@ -67,7 +68,7 @@ class Deserialize:
                 sprite.blocks.update({block_id: block})
             except:
                 missing_opcodes += 1
-                #print(f"{block_value["opcode"]} Could not be found! Skipping!")
+                print(f"{block_value["opcode"]} Could not be found! Skipping!")
 
         print(f"{missing_opcodes} Missing opcodes for {sprite.name}")
 

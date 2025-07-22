@@ -18,7 +18,8 @@ class Script:
         self.sprite = None
 
     def set_yield(self, yield_type): self.yielding = yield_type
-    
+
+    def step_next_to(self, block: str): self.step_next = block
     def goto(self, block: str): self.current_block = self.get_block(block)
 
     def step_block(self):
