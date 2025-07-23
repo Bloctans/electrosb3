@@ -6,8 +6,11 @@ class Field:
         self.name = name
         self.id = id
 
+class Args:
+    def __init__(self): pass
+
 class Block:   
-    def __init__(self):
+    def __init__(self, sprite):
         self.opcode = None
         self.id = None
         self.info = {}
@@ -15,7 +18,11 @@ class Block:
         self.next = None
         self.parent = None
 
-        self.sprite = None
+        self.api = ExtensionSupport.BlockAPI(sprite, self)
+
+        self.sprite = sprite
+
+        self.loops = 0 # Loop 
 
         self.args = {}
 
@@ -54,18 +61,18 @@ class Block:
             pass
 
     def run_block(self, script):
-        args = {}
+        args = Args()
 
         inputs = self.args["inputs"]
         fields = self.args["fields"]
 
         for i in inputs:
-            args.update({i:self.parse_input(inputs[i], script)})
+            args.__dict__.update({i.lower():self.parse_input(inputs[i], script)})
         
         for i in fields:
-            args.update({i:self.parse_fields(fields[i])})
+            args.__dict__.update({i.lower():self.parse_fields(fields[i])})
 
-        #print(args)
+        self.api.set_script(script)
 
         # TODO: Replace the script API with a better one
-        return ExtensionSupport.run_block_func(self, args, script)
+        return ExtensionSupport.run_block_func(self, args, self.api)

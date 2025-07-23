@@ -46,15 +46,14 @@ class BlocksMotion:
     def _changeby(self,x,y,sprite): sprite.position += Vector2(x,y)
     def _setrotation(self, rotation, sprite): sprite.rotation = rotation
 
-    def pointindirection(self, args, script): self._setrotation(args["DIRECTION"], script.sprite)
+    def pointindirection(self, args, script): self._setrotation(args.direction, script.sprite)
 
-    def changexby(self, args, script): self._changeby(args["DX"],0,script.sprite)
-    def changeyby(self, args, script): self._changeby(0,args["DY"],script.sprite)
+    def changexby(self, args, script): self._changeby(args.dx,0,script.sprite)
+    def changeyby(self, args, script): self._changeby(0,args.dy,script.sprite)
 
-    def gotoxy(self, args, script): script.sprite.position = Vector2(args["X"], args["Y"])
+    def gotoxy(self, args, script): script.sprite.position = Vector2(args.x, args.y)
 
-    def setx(self, args, script):
-        print(args)
+    def setx(self, args, script): script.sprite.position.x = float(args.x) # TODO: Properly convert digits
 
     def sety(self, args, script):
         print(args)
@@ -64,7 +63,7 @@ class BlocksMotion:
 
     def move_steps(self, args, script):
         sprite = script.sprite
-        steps = args["STEPS"]
+        steps = args.steps
 
         rotation = radians(sprite.rotation)
 

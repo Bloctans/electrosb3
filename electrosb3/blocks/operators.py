@@ -30,15 +30,14 @@ class BlocksOperator:
             "floor": math.floor
         }
 
-    def add(self, args, script): return args["NUM1"]/args["NUM2"]
+    def add(self, args, script): return args.num1+args.num2
     
-    def divide(self, args, script): return args["NUM1"]/args["NUM2"]
+    def divide(self, args, script): return args.num1/args.num2
 
-    def mod(self, args, script): return args["NUM1"]%args["NUM2"]
+    def mod(self, args, script): return args.num1%args.num2
 
-    def mathop(self, args, script): return self.operations[args["OPERATOR"].name](args["NUM"])
+    def mathop(self, args, script): return self.operations[args.operator.name](args.num)
 
-    def gt(self, args, script): return args["OPERAND1"]>args["OPERAND2"]
-
+    def gt(self, args, script): return args.operand1>args.operand2
 # This stays unregistered until we actually make progress on it
 BlockEngine.register_extension("operator", BlocksOperator())

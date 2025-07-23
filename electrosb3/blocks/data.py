@@ -27,11 +27,11 @@ class BlocksData:
         self.setup_variable(id)
         self.variables[id] = value
 
-    def setvariableto(self, args, script): self.set_variable(args["VARIABLE"], args["VALUE"])
+    def setvariableto(self, args, script): self.set_variable(args.variable, args.value)
 
     def changevariableby(self, args, script):
-        variable_id = args["VARIABLE"].id
+        variable_id = args.variable.id
 
-        self.set_variable(variable_id, self.get_variable(variable_id) + args["VALUE"])
+        self.set_variable(variable_id, self.get_variable(variable_id) + args.value)
 
 BlockEngine.register_extension("data", BlocksData())

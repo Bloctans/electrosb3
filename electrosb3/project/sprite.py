@@ -28,7 +28,8 @@ class Sprite:
         for sound in self.sounds:
             if sound.name == name: return sound
             
-    def set_costume(self, costume): self.current_costume = costume
+    def set_costume(self, costume): 
+        self.current_costume = costume
 
     def setup(self):
         self.current_costume = self.costumes[0]

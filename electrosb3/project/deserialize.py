@@ -51,36 +51,34 @@ class Deserialize:
             print(block_id)
             print(block_value)
 
-            try:
-                block_data,opcode,map = BlockEngine.get_raw_block(block_value["opcode"])
+            #try:
+            block_data,opcode,map = BlockEngine.get_raw_block(block_value["opcode"])
 
-                block = BlockEngine.Block()
+            block = BlockEngine.Block(sprite)
 
-                block.next = block_value["next"]
-                block.parent = block_value["parent"]
+            block.next = block_value["next"]
+            block.parent = block_value["parent"]
 
-                block.opcode = opcode
-                block.info = block_data
-                block.id = block_id
+            block.opcode = opcode
+            block.info = block_data
+            block.id = block_id
 
-                block.sprite = sprite
+            block.args = {
+                "inputs": block_value["inputs"],
+                "fields": block_value["fields"]
+            }
 
-                block.args = {
-                    "inputs": block_value["inputs"],
-                    "fields": block_value["fields"]
-                }
+            if block_data["type"] == BlockEngine.Enum.BLOCK_HAT:
+                script = BlockEngine.Script()
+                script.start_block = block
+                script.sprite = sprite
 
-                if block_data["type"] == BlockEngine.Enum.BLOCK_HAT:
-                    script = BlockEngine.Script(BlockEngine)
-                    script.start_block = block
-                    script.sprite = sprite
+                sprite.scripts.append(script)
 
-                    sprite.scripts.append(script)
-
-                sprite.blocks.update({block_id: block})
-            except:
-                missing_opcodes += 1
-                print(f"{block_value["opcode"]} Could not be found! Skipping!")
+            sprite.blocks.update({block_id: block})
+            #except:
+            #    missing_opcodes += 1
+            #    print(f"{block_value["opcode"]} Could not be found! Skipping!")
 
         for block in sprite.blocks: # Go through all blocks and assign next and parent properly
             current_block = sprite.blocks[block]
