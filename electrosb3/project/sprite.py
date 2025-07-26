@@ -29,6 +29,10 @@ class Sprite:
             if sound.name == name: return sound
             
     def set_costume(self, costume): 
+        if type(costume) == float or type(costume) == int: 
+            costume = round(costume)-1
+            costume = self.costumes[costume % (len(self.costumes)-1)]
+
         self.current_costume = costume
 
     def setup(self):

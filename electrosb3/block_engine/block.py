@@ -1,3 +1,4 @@
+import electrosb3.block_engine.block_support as BlockSupport
 import electrosb3.block_engine.extension_support as ExtensionSupport
 import electrosb3.block_engine.enum as Enum
 
@@ -10,6 +11,8 @@ class Args:
     def __init__(self): pass
 
 class Block:   
+    timer_end = 0
+
     def __init__(self, sprite):
         self.opcode = None
         self.id = None
@@ -18,11 +21,9 @@ class Block:
         self.next = None
         self.parent = None
 
-        self.api = ExtensionSupport.BlockAPI(sprite, self)
+        self.api = BlockSupport.API(sprite, self)
 
         self.sprite = sprite
-
-        self.loops = 0 # Loop 
 
         self.args = {}
 
@@ -73,6 +74,7 @@ class Block:
             args.__dict__.update({i.lower():self.parse_fields(fields[i])})
 
         self.api.set_script(script)
+        self.api.loops += 1
 
         # TODO: Replace the script API with a better one
         return ExtensionSupport.run_block_func(self, args, self.api)

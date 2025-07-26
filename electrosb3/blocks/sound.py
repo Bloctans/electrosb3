@@ -8,7 +8,7 @@ class BlocksSound:
                 "function": self.play
             },
             "sounds_menu": {
-                "type": BlockEngine.Enum.BLOCK_STACK,
+                "type": BlockEngine.Enum.BLOCK_INPUT,
                 "function": self.sounds_menu
             },
             "stopallsounds": {
@@ -17,11 +17,12 @@ class BlocksSound:
             }
         }
 
-    def play(self, args, script):
-        pass
+    def play(self, args, api):
+        args.sound_menu.play()
     
-    def sounds_menu(self, args, script):
-        pass
+    def sounds_menu(self, args, api):
+        print(args.sound_menu)
+        return api.sprite.sound_from_name(args.sound_menu.name)
 
     def stopallsounds(self, args, script):
         pass

@@ -40,16 +40,23 @@ class BlocksMotion:
             "movesteps": {
                 "type": BlockEngine.Enum.BLOCK_STACK,
                 "function": self.move_steps
+            },
+            "turnright": {
+                "type": BlockEngine.Enum.BLOCK_STACK,
+                "function": self.turnright
             }
         }
 
-    def _changeby(self,x,y,sprite): sprite.position += Vector2(x,y)
+    def _changeby(self,x,y,api): 
+        api.sprite.position += Vector2(x,y)
+
     def _setrotation(self, rotation, sprite): sprite.rotation = rotation
+    def _changerotation(self, rotation, sprite): sprite.rotation += rotation
 
     def pointindirection(self, args, script): self._setrotation(args.direction, script.sprite)
 
-    def changexby(self, args, script): self._changeby(args.dx,0,script.sprite)
-    def changeyby(self, args, script): self._changeby(0,args.dy,script.sprite)
+    def changexby(self, args, script): self._changeby(args.dx,0,script)
+    def changeyby(self, args, script): self._changeby(0,args.dy,script)
 
     def gotoxy(self, args, script): script.sprite.position = Vector2(args.x, args.y)
 
@@ -61,8 +68,10 @@ class BlocksMotion:
     def xposition(self, args, script): return script.sprite.position.x
     def yposition(self, args, script): return script.sprite.position.y
 
-    def move_steps(self, args, script):
-        sprite = script.sprite
+    def turnright(self, args, script): self._changerotation(-float(args.degrees), script.sprite)
+
+    def move_steps(self, args, api):
+        sprite = api.sprite
         steps = args.steps
 
         rotation = radians(sprite.rotation)
@@ -70,7 +79,7 @@ class BlocksMotion:
         self._changeby(
             sin(rotation)*steps,
             cos(rotation)*steps,
-            sprite
+            api
         )
     
 BlockEngine.register_extension("motion", BlocksMotion())

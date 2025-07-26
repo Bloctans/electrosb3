@@ -16,7 +16,7 @@ class BlocksData:
         }
 
     def setup_variable(self, id): 
-        if not (id in self.variables): self.variables[id] = 0
+        if not (id in self.variables): self.variables[id] = 0.0
 
     def get_variable(self, id):
         self.setup_variable(id)
@@ -29,9 +29,11 @@ class BlocksData:
 
     def setvariableto(self, args, script): self.set_variable(args.variable, args.value)
 
-    def changevariableby(self, args, script):
+    def changevariableby(self, args, api):
         variable_id = args.variable.id
 
-        self.set_variable(variable_id, self.get_variable(variable_id) + args.value)
+        variable = self.get_variable(variable_id)
+        self.set_variable(variable_id, variable + float(args.value)) # Always assume this will be a float
+
 
 BlockEngine.register_extension("data", BlocksData())

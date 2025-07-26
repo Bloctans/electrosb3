@@ -14,19 +14,30 @@ class BlocksControl:
             "if": {
                 "type": BlockEngine.Enum.BLOCK_C,
                 "function": self.block_if,
+            },
+            "repeat": {
+                "type": BlockEngine.Enum.BLOCK_C,
+                "function": self.repeat
             }
         }
 
     def forever(self, args, api):
-        api.script.set_yield(BlockEngine.Enum.YIELD_TILL_NEXT_FRAME)
+        api.wait_frame()
         api.script.branch_to(args.substack, True)
 
+    def repeat(self, args, api):
+        if api.loops <= args.times:
+            api.wait_frame()
+            api.script.branch_to(args.substack, True)
+
     def wait(self, args, api):
-        pass
-        #if script.is_yielding():
-            #print(args)
-        #else:
-            #script.set_yield(BlockEngine.Enum.YIELD)
+        if (not api.timer_started):
+            print("timer start")
+            api.do_yield()
+            api.start_timer(args.duration)
+        elif api.timer_finished():
+            print("timer finished")
+            api.stop_yield()
 
     def block_if(self, args, api):
         if args.condition:

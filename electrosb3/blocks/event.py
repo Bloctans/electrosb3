@@ -9,12 +9,8 @@ class BlocksEvent:
             }
         }
 
-        self.started = False
-
-    def whenflagclicked(self, args, script):
-        startedold = self.started
-        self.started = True
-
-        return (not startedold)
+    def whenflagclicked(self, args, api):
+        if api.loops == 1:
+            return True
     
 BlockEngine.register_extension("event", BlocksEvent())

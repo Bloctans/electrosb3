@@ -2,14 +2,6 @@
 
 block_sets = {}
 
-class BlockAPI():
-    def __init__(self, sprite, block):
-        self.script = None
-        self.sprite = sprite
-        self.block = block
-
-    def set_script(self, script): self.script = script
-
 # Register an extension as a block set.
 def register_extension(extension_name: str, extension): 
     block_sets.update({extension_name:extension})

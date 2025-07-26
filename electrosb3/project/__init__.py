@@ -2,8 +2,8 @@ from zipfile import ZipFile
 from pathlib import Path
 
 from electrosb3.project.deserialize import Deserialize
-from electrosb3.project.costume import Costume
 from electrosb3.project.sprite import Sprite
+
 import electrosb3.util as Util
 import electrosb3.blocks as Blocks # Imported here to initalize blocks
 
@@ -26,6 +26,7 @@ class Project:
                     sprite.current_costume.image, 
                     Util.to_scratch_pos(sprite.get_pos())
                 )
+                print("rendering "+sprite.current_costume.name)
 
             if self.frames > 10:
                 for script in sprite.scripts:

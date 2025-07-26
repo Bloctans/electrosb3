@@ -1,5 +1,4 @@
 import electrosb3.block_engine as BlockEngine
-from math import floor
 
 class BlocksLooks:
     def __init__(self):
@@ -11,16 +10,13 @@ class BlocksLooks:
             "costume": {
                 "type": BlockEngine.Enum.BLOCK_INPUT,
                 "function": self.costume
-            }
+            },
         }
 
-    def switchcostumeto(self, args, script):
-        sprite = script.sprite
+    def switchcostumeto(self, args, api):
+        sprite = api.sprite
 
         costume = args.costume or 0
-
-        if type(costume) == float or type(costume) == int: 
-            costume = script.sprite.costumes[floor(costume)]
 
         sprite.set_costume(costume)
 

@@ -3,10 +3,14 @@ from zipfile import ZipFile
 import json
 import io
 
-from pygame import Vector2, image
+from pygame import Vector2, image, mixer
 
-from electrosb3.project.costume import Costume
-from electrosb3.project.sprite import Sprite
+mixer.init()
+
+from electrosb3.project.sound import *
+from electrosb3.project.costume import *
+from electrosb3.project.sprite import *
+from electrosb3.project.deserialize import *
 import electrosb3.block_engine as BlockEngine
 
 # is there a way to put all the json values into the class variables without this mess, cuz i havent touched python in a WHILE - bloctans
@@ -35,10 +39,20 @@ class Deserialize:
 
         return costume_object
     
-    def deserialize_sounds(self, sounds):
-        print(sounds)
+    def deserialize_sounds(self, serialized_sounds):
+        sounds = []
 
-        #audio_file = self.get(sounds[])
+        for sound in serialized_sounds:
+            audio = Sound()
+
+            audio_file = io.BytesIO(self.get(sound["md5ext"]))
+
+            audio.sound = mixer.Sound(audio_file)
+            audio.name = sound["name"]
+
+            sounds.append(audio)
+
+        return sounds
     
     def deserialize_blocks(self, serialized_blocks, sprite):
         missing_opcodes = 0
@@ -104,6 +118,9 @@ class Deserialize:
         sprite.name = target["name"]
 
         self.deserialize_blocks(target["blocks"], sprite)
+        sounds = self.deserialize_sounds(target["sounds"])
+
+        sprite.sounds = sounds
 
         # Load costumes
         for costume in target["costumes"]: sprite.costumes.append(self.deserialize_costume(costume))

@@ -62,9 +62,11 @@ class Script:
         return self.sprite.blocks[id]
 
     def update(self):
-        #print("Update script")
+       # print(self.yielding)
 
-        if self.yielding == Enum.YIELD_TILL_NEXT_FRAME: self.set_yield(Enum.YIELD_NONE)
+        if self.yielding == Enum.YIELD_TILL_NEXT_FRAME: 
+            self.set_yield(Enum.YIELD_NONE)
+            self.step_block()
 
         while True: # forever until we yield.
             if (not self.running):
@@ -76,6 +78,7 @@ class Script:
 
                 break
             else:
+                #print(self.current_block.opcode)
                 self.run_block(self.current_block)
 
                 if self.step_next: # Custom step
