@@ -1,6 +1,8 @@
 import electrosb3.block_engine.enum as Enum
 from electrosb3.block_engine.block import Block
 
+from time import sleep as wait_blocking
+
 class Script:
     def __init__(self):
         self.current_block = None
@@ -65,8 +67,8 @@ class Script:
        # print(self.yielding)
 
         if self.yielding == Enum.YIELD_TILL_NEXT_FRAME: 
-            self.set_yield(Enum.YIELD_NONE)
             self.step_block()
+            self.set_yield(Enum.YIELD_NONE)
 
         while True: # forever until we yield.
             if (not self.running):
@@ -78,7 +80,7 @@ class Script:
 
                 break
             else:
-                #print(self.current_block.opcode)
+                print(self.current_block.opcode)
                 self.run_block(self.current_block)
 
                 if self.step_next: # Custom step

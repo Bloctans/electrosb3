@@ -1,5 +1,7 @@
 import pygame
 
+import electrosb3.util as Util
+
 class Sprite:
     def __init__(self):
         self.costumes = []
@@ -19,14 +21,6 @@ class Sprite:
         self.blocks = {}
         self.debug_blocks = {}
         self.scripts = []
-
-    def costume_from_name(self, name):
-        for costume in self.costumes:
-            if costume.name == name: return costume
-
-    def sound_from_name(self, name):
-        for sound in self.sounds:
-            if sound.name == name: return sound
             
     def set_costume(self, costume): 
         if type(costume) == float or type(costume) == int: 
@@ -37,6 +31,18 @@ class Sprite:
 
     def setup(self):
         self.current_costume = self.costumes[0]
+
+    def update(self, screen):
+        if self.visible:
+            screen.blit(
+                self.current_costume.image, 
+                Util.to_scratch_pos(self.get_pos())
+            )
+            print("rendering "+self.current_costume.name)
+
+        for script in self.scripts:
+            print("step script")
+            script.update()
 
     def get_pos(self):
         return self.position - self.current_costume.rotation_center

@@ -6,8 +6,19 @@ class BlocksEvent:
             "whenflagclicked": {
                 "type": BlockEngine.Enum.BLOCK_HAT,
                 "function": self.whenflagclicked
+            },
+            "broadcast": {
+                "type": BlockEngine.Enum.BLOCK_HAT,
+                "function": self.broadcast
+            },
+            "whenbroadcastreceived": {
+                "type": BlockEngine.Enum.BLOCK_HAT,
+                "function": self.broadcast
             }
         }
+
+    def broadcast(self,args,api):
+        pass
 
     def whenflagclicked(self, args, api):
         if api.loops == 1:

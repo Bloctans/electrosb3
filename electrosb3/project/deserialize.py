@@ -29,13 +29,14 @@ class Deserialize:
 
         print("Deserialization finished!")
 
-    def deserialize_costume(self, costume):
+    def deserialize_costume(self, costume,id):
         image_file = self.get(costume["md5ext"])
 
         costume_object = Costume()
         costume_object.image = image.load(io.BytesIO(image_file))
         costume_object.rotation_center = Vector2(costume["rotationCenterX"],-costume["rotationCenterY"]) # HACK: For the displaying to work properly, we need to make rotationCenterY negative
         costume_object.name = costume["name"]
+        costume_object.id = id
 
         return costume_object
     
@@ -123,7 +124,10 @@ class Deserialize:
         sprite.sounds = sounds
 
         # Load costumes
-        for costume in target["costumes"]: sprite.costumes.append(self.deserialize_costume(costume))
+        i = 0
+        for costume in target["costumes"]: 
+            sprite.costumes.append(self.deserialize_costume(costume,i))
+            i += 1
 
         sprite.setup() # Sorta temporary
 

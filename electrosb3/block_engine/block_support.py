@@ -13,6 +13,8 @@ class API:
 
         self.loops = 0
 
+    def wait_frame(self): self.script.set_yield(Enum.YIELD_TILL_NEXT_FRAME)
+
     def start_timer(self, duration):
         self.timer = time.time()
         self.timer_end = duration
@@ -26,7 +28,6 @@ class API:
 
     def set_script(self, script): self.script = script
 
-    def wait_frame(self): self.script.set_yield(Enum.YIELD_TILL_NEXT_FRAME)
     def do_yield(self): self.script.set_yield(Enum.YIELD)
 
     def stop_yield(self): 

@@ -18,6 +18,14 @@ class BlocksControl:
             "repeat": {
                 "type": BlockEngine.Enum.BLOCK_C,
                 "function": self.repeat
+            },
+            "create_clone_of": {
+                "type": BlockEngine.Enum.BLOCK_STACK,
+                "function": self.create_clone_of
+            },
+            "create_clone_of_menu": {
+                "type": BlockEngine.Enum.BLOCK_STACK,
+                "function": self.create_clone_of
             }
         }
 
@@ -38,6 +46,9 @@ class BlocksControl:
         elif api.timer_finished():
             print("timer finished")
             api.stop_yield()
+
+    def create_clone_of(self,args,api):
+        pass # TODO
 
     def block_if(self, args, api):
         if args.condition:

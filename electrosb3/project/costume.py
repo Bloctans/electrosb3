@@ -6,3 +6,4 @@ class Costume:
         self.image = None
         self.rotation_center = Vector2(0,0)
         self.name = "Placeholder"
+        self.id = 0

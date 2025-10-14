@@ -1,1 +1,1 @@
-from electrosb3.blocks import event, motion, sound, data, operators, control, looks
+from electrosb3.blocks import event, motion, sound, data, operators, control, looks, procedures

@@ -16,6 +16,10 @@ class BlocksOperator:
                 "type": BlockEngine.Enum.BLOCK_INPUT,
                 "function": self.mod
             },
+            "subtract": {
+                "type": BlockEngine.Enum.BLOCK_INPUT,
+                "function": self.subtract
+            },
             "mathop": {
                 "type": BlockEngine.Enum.BLOCK_INPUT,
                 "function": self.mathop
@@ -35,6 +39,8 @@ class BlocksOperator:
     def divide(self, args, script): return args.num1/args.num2
 
     def mod(self, args, script): return args.num1%args.num2
+
+    def subtract(self, args, script): return args.num1-args.num2
 
     def mathop(self, args, script): return self.operations[args.operator.name](args.num)
 
