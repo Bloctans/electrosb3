@@ -23,7 +23,7 @@ class API:
     def end_timer(self): self.timer_started = False
 
     def timer_finished(self): 
-        print((time.time() - self.timer))
+        #print((time.time() - self.timer))
         return (time.time() - self.timer) > self.timer_end
 
     def request_redraw(self):
@@ -35,4 +35,3 @@ class API:
 
     def stop_yield(self): 
         self.end_timer()
-        self.script.set_yield(Enum.STATUS_NONE)

@@ -49,7 +49,7 @@ class BlocksLooks:
 
         costume = args.costume or 0
 
-        sprite.set_costume(costume)
+        #sprite.set_costume(costume)
 
     def size(self, args, api):
         return 100
@@ -60,9 +60,11 @@ class BlocksLooks:
     def nextcostume(self, args, api):
         sprite = api.sprite
 
-        sprite.set_costume(sprite.current_costume.id+1)
+        #sprite.set_costume(sprite.current_costume.id+1)
 
     def costume(self, args, script):
+        script.request_redraw()
+
         sprite = script.sprite
 
         return self.costume_from_name(args.costume, sprite.costumes)

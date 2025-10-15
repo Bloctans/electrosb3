@@ -33,6 +33,8 @@ class BlocksData:
         variable_id = args.variable.id
 
         variable = self.get_variable(variable_id)
+        print(f"{variable_id}: {variable}")
+        print(args.value)
         self.set_variable(variable_id, variable + float(args.value)) # Always assume this will be a float
 
 

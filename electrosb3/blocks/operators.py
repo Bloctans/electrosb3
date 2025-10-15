@@ -36,7 +36,8 @@ class BlocksOperator:
 
     def add(self, args, script): return args.num1+args.num2
     
-    def divide(self, args, script): return args.num1/args.num2
+    def divide(self, args, script): 
+        return args.num1/args.num2
 
     def mod(self, args, script): return args.num1%args.num2
 

@@ -30,22 +30,22 @@ class BlocksControl:
         }
 
     def forever(self, args, api):
-        api.do_yield()
         api.script.branch_to(args.substack, True)
 
     def repeat(self, args, api):
         if api.loops <= args.times:
+            print("Branch repeat")
             api.script.branch_to(args.substack, True)
 
     def wait(self, args, api):
-        print("Wait started")
+        print("Wait")
         if (not api.timer_started):
-            print("timer start")
+            #print("timer start")
             api.do_yield()
+            api.request_redraw()
             api.start_timer(args.duration)
-        elif api.timer_finished():
-            print("timer finished")
-            api.stop_yield()
+        elif (not api.timer_finished()):
+            api.do_yield()
 
     def create_clone_of(self,args,api):
         pass # TODO

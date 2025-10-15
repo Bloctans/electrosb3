@@ -86,7 +86,7 @@ class BlocksMotion:
 
     def turnright(self, args, script): 
         script.request_redraw()
-        self._changerotation(-float(args.degrees), script.sprite)
+        self._changerotation(float(args.degrees), script.sprite)
 
     def move_steps(self, args, api):
         sprite = api.sprite
