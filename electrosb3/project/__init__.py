@@ -3,6 +3,7 @@ from pathlib import Path
 
 from electrosb3.project.deserialize import Deserialize
 from electrosb3.project.sprite import Sprite
+from electrosb3.block_engine.script import ScriptStepper
 
 import electrosb3.blocks as Blocks # Imported here to initalize blocks
 
@@ -12,8 +13,12 @@ class Project:
 
         self.sprites: list[Sprite] = []
 
+        self.script_stepper = ScriptStepper()
+
         Deserialize(ZipFile(file, "r"), self)
 
     def update(self, screen):
         for sprite in self.sprites:
             sprite.update(screen)
+
+        self.script_stepper.step_scripts()

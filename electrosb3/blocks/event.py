@@ -22,6 +22,7 @@ class BlocksEvent:
 
     def whenflagclicked(self, args, api):
         if api.loops == 1:
+            print("Greenflag started")
             return True
     
 BlockEngine.register_extension("event", BlocksEvent())

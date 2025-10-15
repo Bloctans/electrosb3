@@ -30,15 +30,15 @@ class BlocksControl:
         }
 
     def forever(self, args, api):
-        api.wait_frame()
+        api.do_yield()
         api.script.branch_to(args.substack, True)
 
     def repeat(self, args, api):
         if api.loops <= args.times:
-            api.wait_frame()
             api.script.branch_to(args.substack, True)
 
     def wait(self, args, api):
+        print("Wait started")
         if (not api.timer_started):
             print("timer start")
             api.do_yield()

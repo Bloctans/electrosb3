@@ -20,7 +20,6 @@ class Sprite:
         # we can always refactor later
         self.blocks = {}
         self.debug_blocks = {}
-        self.scripts = []
             
     def set_costume(self, costume): 
         if type(costume) == float or type(costume) == int: 
@@ -38,11 +37,7 @@ class Sprite:
                 self.current_costume.image, 
                 Util.to_scratch_pos(self.get_pos())
             )
-            print("rendering "+self.current_costume.name)
-
-        for script in self.scripts:
-            print("step script")
-            script.update()
+            #print("rendering "+self.current_costume.name)
 
     def get_pos(self):
         return self.position - self.current_costume.rotation_center

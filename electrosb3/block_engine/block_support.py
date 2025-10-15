@@ -26,10 +26,13 @@ class API:
         print((time.time() - self.timer))
         return (time.time() - self.timer) > self.timer_end
 
+    def request_redraw(self):
+        self.script.request_redraw()
+
     def set_script(self, script): self.script = script
 
-    def do_yield(self): self.script.set_yield(Enum.YIELD)
+    def do_yield(self): self.script.set_status(Enum.STATUS_YIELDED)
 
     def stop_yield(self): 
         self.end_timer()
-        self.script.set_yield(Enum.YIELD_NONE)
+        self.script.set_yield(Enum.STATUS_NONE)

@@ -24,8 +24,6 @@ class Electro:
             
             pygame.display.flip()
 
-            clock.tick(30)
-
             win.loop(event)
 
         win.quit()

@@ -1,7 +1,35 @@
 import electrosb3.block_engine.enum as Enum
 from electrosb3.block_engine.block import Block
+from electrosb3.block_engine.block import Block
 
 from time import sleep as wait_blocking
+
+class ScriptStepper:
+    def __init__(self):
+        self.scripts = []
+
+        self.redraw_requested = False
+
+    def request_redraw(self):
+        self.redraw_requested = True
+
+    def add_script(self, script):
+        self.scripts.append(script)
+
+    def step_scripts(self):
+        self.redraw_requested = False
+
+        while (not self.redraw_requested):
+            for script in self.scripts:
+                if script.status == Enum.STATUS_YIELDED: # Now that its yielded, step again.
+                    self.set_status(Enum.STATUS_NONE)
+                elif script.status == Enum.STATUS_NONE: # Step thread normally
+                    script.step()
+                elif script.status == Enum.STATUS_DONE: # Done, no need to step thread
+                    continue
+
+        for script in self.scripts:
+            script.set_status(Enum.STATUS_NONE)
 
 class Script:
     def __init__(self):
@@ -10,16 +38,18 @@ class Script:
 
         self.step_next = None # Value set by a block that determines what to step to next
 
+        self.script_stepper = None
+
         self.stack = []
 
         self.running = False
-        self.yielding = Enum.YIELD_NONE # This concept is stolen from the VM.
+        self.status = Enum.STATUS_NONE # This concept is stolen from the VM.
 
         self.sprite = None
 
-    def is_yielding(self): return (self.yielding == Enum.YIELD)
-    def set_yield(self, yield_type): 
-        self.yielding = yield_type
+    def is_yielding(self): return (self.status == Enum.STATUS_YIELDED)
+    def set_status(self, status_type): 
+        self.status = status_type
 
     #  This concept is once again... DRUMROLL.............. Stolen from the VM!!!!!!
     def branch_to(self, block: str, loop: bool): 
@@ -34,7 +64,10 @@ class Script:
 
     def step_block(self):
         #print(self.current_block.opcode)
-        if self.current_block.next == None: # Stop the script if there is no next
+        if self.step_next: # Stop to the custom step if it exists
+            self.goto(self.step_next)
+            self.step_next = None
+        elif self.current_block.next == None: # Stop the script if there is no next
             if len(self.stack) > 0:  # Check if stack has any data
                 stack_last = self.stack.pop()
 
@@ -55,6 +88,8 @@ class Script:
     def run_block(self, block): 
         return block.run_block(self)
     
+    def request_redraw(self): self.script_stepper.request_redraw()
+    
     def get_block(self, id): 
         if not (id in self.sprite.blocks):
             debug_block = self.sprite.debug_blocks[id]
@@ -63,28 +98,26 @@ class Script:
 
         return self.sprite.blocks[id]
 
-    def update(self):
-       # print(self.yielding)
+    """
+        New idea (From vm)
 
-        if self.yielding == Enum.YIELD_TILL_NEXT_FRAME: 
+        Run until we have either done a full frame or a redraw is requested (do we need frame yield?)
+    """
+    def step(self):
+       # print(self.status)
+
+        if (not self.running):
+            self.current_block = self.start_block
+            hat_result = self.run_block(self.current_block)
+            if hat_result: 
+                self.running = True
+                self.step_block()
+        else:
+            print(self.current_block.opcode)
+            oldstatus = self.status
+
+            self.run_block(self.current_block)
             self.step_block()
-            self.set_yield(Enum.YIELD_NONE)
-
-        while True: # forever until we yield.
-            if (not self.running):
-                self.current_block = self.start_block
-                hat_result = self.run_block(self.current_block)
-                if hat_result: 
-                    self.running = True
-                    self.step_block()
-
-                break
-            else:
-                print(self.current_block.opcode)
-                self.run_block(self.current_block)
-
-                if self.step_next: # Custom step
-                    self.goto(self.step_next)
-                    self.step_next = None
-                elif self.yielding == Enum.YIELD_NONE: self.step_block()
-                else: break # All other cases break.
+            
+            if oldstatus == self.status:
+                self.set_status(Enum.STATUS_DONE)

@@ -21,7 +21,7 @@ class Deserialize:
 
         project_json = self.get_as_json("project.json")
 
-        for target in project_json["targets"]: Project.sprites.append(self.deserialize_target(target))
+        for target in project_json["targets"]: Project.sprites.append(self.deserialize_target(target, Project))
 
         # lemme js sort by layer
         # just learned you could also just use a lambda for this
@@ -55,7 +55,7 @@ class Deserialize:
 
         return sounds
     
-    def deserialize_blocks(self, serialized_blocks, sprite):
+    def deserialize_blocks(self, serialized_blocks, sprite, project):
         missing_opcodes = 0
 
         sprite.debug_blocks = serialized_blocks
@@ -83,12 +83,14 @@ class Deserialize:
                 "fields": block_value["fields"]
             }
 
+            # Every hat we encounter, add a new script object
             if block_data["type"] == BlockEngine.Enum.BLOCK_HAT:
                 script = BlockEngine.Script()
                 script.start_block = block
                 script.sprite = sprite
+                script.script_stepper = project.script_stepper
 
-                sprite.scripts.append(script)
+                project.script_stepper.add_script(script)
 
             sprite.blocks.update({block_id: block})
             #except:
@@ -106,7 +108,7 @@ class Deserialize:
 
         print(f"{missing_opcodes} Missing opcodes for {sprite.name}")
 
-    def deserialize_target(self, target):
+    def deserialize_target(self, target, project):
         sprite = Sprite()
 
         if (not target["isStage"]): # The stage target always will not have any transformation info
@@ -118,7 +120,7 @@ class Deserialize:
 
         sprite.name = target["name"]
 
-        self.deserialize_blocks(target["blocks"], sprite)
+        self.deserialize_blocks(target["blocks"], sprite, project)
         sounds = self.deserialize_sounds(target["sounds"])
 
         sprite.sounds = sounds

@@ -47,20 +47,36 @@ class BlocksMotion:
             }
         }
 
+    # TODO: Rewrite motion extension
+
     def _changeby(self,x,y,api): 
         api.sprite.position += Vector2(x,y)
+        api.request_redraw()
 
-    def _setrotation(self, rotation, sprite): sprite.rotation = rotation
-    def _changerotation(self, rotation, sprite): sprite.rotation += rotation
+    def _setrotation(self, rotation, sprite): 
+        sprite.rotation = rotation
+        
+    def _changerotation(self, rotation, sprite): 
+        sprite.rotation += rotation
 
-    def pointindirection(self, args, script): self._setrotation(args.direction, script.sprite)
+    def pointindirection(self, args, script): 
+        self._setrotation(args.direction, script.sprite)
 
-    def changexby(self, args, script): self._changeby(args.dx,0,script)
-    def changeyby(self, args, script): self._changeby(0,args.dy,script)
+    def changexby(self, args, script): 
+        script.request_redraw()
+        self._changeby(args.dx,0,script)
 
-    def gotoxy(self, args, script): script.sprite.position = Vector2(args.x, args.y)
+    def changeyby(self, args, script): 
+        script.request_redraw()
+        self._changeby(0,args.dy,script)
 
-    def setx(self, args, script): script.sprite.position.x = float(args.x) # TODO: Properly convert digits
+    def gotoxy(self, args, script): 
+        script.request_redraw()
+        script.sprite.position = Vector2(args.x, args.y)
+
+    def setx(self, args, script): 
+        script.request_redraw()
+        script.sprite.position.x = float(args.x) # TODO: Properly convert digits
 
     def sety(self, args, script):
         print(args)
@@ -68,7 +84,9 @@ class BlocksMotion:
     def xposition(self, args, script): return script.sprite.position.x
     def yposition(self, args, script): return script.sprite.position.y
 
-    def turnright(self, args, script): self._changerotation(-float(args.degrees), script.sprite)
+    def turnright(self, args, script): 
+        script.request_redraw()
+        self._changerotation(-float(args.degrees), script.sprite)
 
     def move_steps(self, args, api):
         sprite = api.sprite
