@@ -7,9 +7,21 @@ class BlocksProcedures:
                 "type": BlockEngine.Enum.BLOCK_HAT,
                 "function": self.definition
             },
+            "prototype": {
+                "type": BlockEngine.Enum.BLOCK_INPUT,
+                "function": self.prototype
+            },
+            "call": {
+                "type": BlockEngine.Enum.BLOCK_STACK,
+                "function": self.prototype
+            },
         }
 
     def definition(self, args, api):
         pass
+
+    def prototype(self, args, api):
+        pass
+
 
 BlockEngine.register_extension("procedures", BlocksProcedures())

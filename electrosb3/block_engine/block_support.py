@@ -13,17 +13,19 @@ class API:
 
         self.loops = 0
 
-    def wait_frame(self): self.script.set_yield(Enum.YIELD_TILL_NEXT_FRAME)
+    #def wait_frame(self): self.script.set_yield(Enum.YIELD_TILL_NEXT_FRAME)
 
     def start_timer(self, duration):
         self.timer = time.time()
-        self.timer_end = duration
+        self.timer_end = float(duration)
         self.timer_started = True
 
     def end_timer(self): self.timer_started = False
 
     def timer_finished(self): 
         #print((time.time() - self.timer))
+        #print(self.timer_end)
+        #print((time.time() - self.timer) > self.timer_end)
         return (time.time() - self.timer) > self.timer_end
 
     def request_redraw(self):
@@ -32,6 +34,3 @@ class API:
     def set_script(self, script): self.script = script
 
     def do_yield(self): self.script.set_status(Enum.STATUS_YIELDED)
-
-    def stop_yield(self): 
-        self.end_timer()

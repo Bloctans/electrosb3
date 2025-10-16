@@ -11,11 +11,23 @@ class BlocksLooks:
                 "type": BlockEngine.Enum.BLOCK_INPUT,
                 "function": self.costume
             },
+            "costumenumbername": {
+                "type": BlockEngine.Enum.BLOCK_INPUT,
+                "function": self.costumenumbername
+            },
             "nextcostume": {
                 "type": BlockEngine.Enum.BLOCK_STACK,
                 "function": self.nextcostume
             },
             "changesizeby": {
+                "type": BlockEngine.Enum.BLOCK_STACK,
+                "function": self.changesizeby
+            },
+            "changeeffectby": {
+                "type": BlockEngine.Enum.BLOCK_STACK,
+                "function": self.changesizeby
+            },
+            "seteffectto": {
                 "type": BlockEngine.Enum.BLOCK_STACK,
                 "function": self.changesizeby
             },
@@ -34,6 +46,10 @@ class BlocksLooks:
             "size": {
                 "type": BlockEngine.Enum.BLOCK_INPUT,
                 "function": self.size
+            },
+            "gotofrontback": {
+                "type": BlockEngine.Enum.BLOCK_STACK,
+                "function": self.gotofrontback
             }
         }
 
@@ -49,18 +65,30 @@ class BlocksLooks:
 
         costume = args.costume or 0
 
-        #sprite.set_costume(costume)
+        sprite.set_costume(costume)
 
     def size(self, args, api):
-        return 100
+        return api.sprite.size
 
     def changesizeby(self, args, api):
+        api.request_redraw()
+        print(args)
+        #api.sprite.size += args.
+
+    def changeeffectby(self, args, api):
         pass
 
+    def gotofrontback(self, args, api):
+        pass
+
+    def costumenumbername(self, args, api):
+        print(args)
+
     def nextcostume(self, args, api):
+        print("next costume")
         sprite = api.sprite
 
-        #sprite.set_costume(sprite.current_costume.id+1)
+        sprite.set_costume(sprite.current_costume.id+1)
 
     def costume(self, args, script):
         script.request_redraw()

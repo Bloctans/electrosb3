@@ -34,7 +34,7 @@ class ScriptStepper:
 
         while (not self.redraw_requested) and (time.time() - start_time < (1/60 * 0.75)):
             for script in self.scripts:
-                print("Step script")
+                #print("Step script")
                 script.step()
 
 class StackEntry:
@@ -66,7 +66,7 @@ class Script:
     #  This concept is once again... DRUMROLL.............. Stolen from the VM!!!!!!
     def branch_to(self, block: str, loop: bool): 
         self.goto(block) # we should be able to directly branch, hopefully, maybe, potentially.
-        self.stack.append(StackEntry(block, loop))
+        self.stack.append(StackEntry(self.current_block, loop))
 
     def goto(self, block: str): 
         if type(block) == Block:
@@ -123,6 +123,9 @@ class Script:
 
             if stack_last.is_loop:
                 print("loop")
+                """
+                    i was thinking if its a loop, we store the substacks block in the stack
+                """
                 self.branch_to(stack_last.block, True)
                 #self.just_branched = True
                 #self.goto(stack_last.block)
@@ -130,6 +133,7 @@ class Script:
             else:
                 print("go to next")
                 self.goto(stack_last.block)
+                self.step_to_next_block()
         elif self.status == Enum.STATUS_YIELDED:
             return True
         else:

@@ -28,7 +28,7 @@ class Block:
         self.args = {}
 
     def parse_fields(self, field): 
-        if field[1] == None: return field[0] # Return only the name
+        if field[1] == None: return Field(field[0], None) # Return only the name
         else: return Field(field[0], field[1])
 
     def parse_input(self, input, script):
