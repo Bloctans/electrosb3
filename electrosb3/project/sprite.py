@@ -22,13 +22,13 @@ class Sprite:
         self.debug_blocks = {}
             
     def set_costume(self, costume): 
-        print(costume)
+        #print(costume)
 
         if type(costume) == float or type(costume) == int: 
             costume = round(costume)
             costume = self.costumes[costume % (len(self.costumes)-1)]
 
-        print(costume)
+        #print(costume)
 
         self.current_costume = costume
 

@@ -82,17 +82,17 @@ class BlocksLooks:
         pass
 
     def costumenumbername(self, args, api):
-        print(args)
+        #print(args)
+        pass
 
     def nextcostume(self, args, api):
-        print("next costume")
+        #print("next costume")
+        api.request_redraw()
         sprite = api.sprite
 
         sprite.set_costume(sprite.current_costume.id+1)
 
     def costume(self, args, script):
-        script.request_redraw()
-
         sprite = script.sprite
 
         return self.costume_from_name(args.costume, sprite.costumes)

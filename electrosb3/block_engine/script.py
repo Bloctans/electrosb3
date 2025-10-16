@@ -20,7 +20,7 @@ class ScriptStepper:
         self.inc = 0
 
     def request_redraw(self):
-        print("Request redraw"+str(self.inc))
+        #print("Request redraw"+str(self.inc))
         self.inc += 1
         self.redraw_requested = True
 
@@ -32,13 +32,19 @@ class ScriptStepper:
 
         start_time = time.time()
 
-        while (not self.redraw_requested) and (time.time() - start_time < (1/60 * 0.75)):
+        while (not self.redraw_requested) and (time.time() - start_time < (1/30 * 0.75)):
             for script in self.scripts:
                 #print("Step script")
                 script.step()
 
+        start_time = time.time()
+
+        while (time.time() - start_time) < 1/30:
+            pass
+
 class StackEntry:
-    def __init__(self, block, is_loop):
+    def __init__(self, block, is_loop, stack_parent):
+        self.parent = stack_parent
         self.block = block
         self.is_loop = is_loop
 
@@ -54,6 +60,8 @@ class Script:
 
         self.stack = []
 
+        self.dont_step = False
+
         self.running = False
         self.status = Enum.STATUS_NONE # This concept is stolen from the VM.
 
@@ -65,8 +73,9 @@ class Script:
 
     #  This concept is once again... DRUMROLL.............. Stolen from the VM!!!!!!
     def branch_to(self, block: str, loop: bool): 
-        self.goto(block) # we should be able to directly branch, hopefully, maybe, potentially.
-        self.stack.append(StackEntry(self.current_block, loop))
+        self.stack.append(StackEntry(block, loop, self.current_block))
+        self.dont_step = True
+        self.goto(block)
 
     def goto(self, block: str): 
         if type(block) == Block:
@@ -108,7 +117,9 @@ class Script:
         #    self.goto(self.step_next)
         #    self.step_next = None
 
-        if self.status == Enum.STATUS_NONE:
+        should_step = (self.status == Enum.STATUS_NONE) and (not self.dont_step)
+
+        if should_step:
             could_step = self.step_to_next_block()
 
             if could_step:
@@ -122,11 +133,11 @@ class Script:
             stack_last = self.stack.pop()
 
             if stack_last.is_loop:
-                print("loop")
+                #print("loop")
                 """
                     i was thinking if its a loop, we store the substacks block in the stack
                 """
-                self.branch_to(stack_last.block, True)
+                self.goto(stack_last.parent)
                 #self.just_branched = True
                 #self.goto(stack_last.block)
                 return True # now break, as loops need to allow other threads to run.
@@ -136,8 +147,8 @@ class Script:
                 self.step_to_next_block()
         elif self.status == Enum.STATUS_YIELDED:
             return True
-        else:
-            print("INVALID STATUS")
+
+        self.dont_step = False
 
     def step(self):
        # print(self.status)

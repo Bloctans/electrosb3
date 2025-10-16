@@ -26,6 +26,4 @@ class Electro:
 
             win.loop(event)
 
-            clock.tick(60)
-
         win.quit()
