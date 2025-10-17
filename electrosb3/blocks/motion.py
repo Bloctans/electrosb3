@@ -63,11 +63,9 @@ class BlocksMotion:
         self._setrotation(args.direction, script.sprite)
 
     def changexby(self, args, script): 
-        script.request_redraw()
         self._changeby(args.dx,0,script)
 
     def changeyby(self, args, script): 
-        script.request_redraw()
         self._changeby(0,args.dy,script)
 
     def gotoxy(self, args, script): 

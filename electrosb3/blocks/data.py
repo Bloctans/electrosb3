@@ -25,16 +25,17 @@ class BlocksData:
     
     def set_variable(self, id, value): 
         self.setup_variable(id)
+        #print(f"{id}: {value}")
         self.variables[id] = value
 
-    def setvariableto(self, args, script): self.set_variable(args.variable, args.value)
+    def setvariableto(self, args, script): 
+        #print(args.value)
+        self.set_variable(args.variable.id, args.value)
 
     def changevariableby(self, args, api):
         variable_id = args.variable.id
 
         variable = self.get_variable(variable_id)
-        print(f"{variable_id}: {variable}")
-        print(args.value)
         self.set_variable(variable_id, variable + float(args.value)) # Always assume this will be a float
 
 

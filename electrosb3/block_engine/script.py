@@ -32,7 +32,7 @@ class ScriptStepper:
 
         start_time = time.time()
 
-        while (not self.redraw_requested) and (time.time() - start_time < (1/30 * 0.75)):
+        while (not self.redraw_requested) and (time.time() - start_time < (1/60 * 0.75)):
             for script in self.scripts:
                 #print("Step script")
                 script.step()
@@ -142,8 +142,8 @@ class Script:
                 #self.goto(stack_last.block)
                 return True # now break, as loops need to allow other threads to run.
             else:
-                print("go to next")
-                self.goto(stack_last.block)
+                #print("go to next")
+                self.goto(stack_last.parent)
                 self.step_to_next_block()
         elif self.status == Enum.STATUS_YIELDED:
             return True

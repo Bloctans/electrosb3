@@ -29,6 +29,10 @@ class BlocksOperator:
                 "type": BlockEngine.Enum.BLOCK_INPUT,
                 "function": self.compare_or
             },
+            "and": {
+                "type": BlockEngine.Enum.BLOCK_INPUT,
+                "function": self.compare_and
+            },
             "mod": {
                 "type": BlockEngine.Enum.BLOCK_INPUT,
                 "function": self.mod
@@ -63,7 +67,8 @@ class BlocksOperator:
     
     def divide(self, args, script): return args.num1/args.num2
     
-    def multiply(self, args, script): return args.num1*args.num2
+    def multiply(self, args, script): 
+        return float(args.num1)*float(args.num2)
 
     def mod(self, args, script): return args.num1%args.num2
 
@@ -81,7 +86,10 @@ class BlocksOperator:
     def mathop(self, args, script): return self.operations[args.operator.name](args.num)
 
     def compare_or(self, args, script):
-        return args.operand1 and args.operand1 or args.operand2
+        return args.operand1 or args.operand2
+    
+    def compare_and(self, args, script):
+        return args.operand1 and args.operand2
 
     def gt(self, args, script): return args.operand1>args.operand2
     def lt(self, args, script): return args.operand1<args.operand2

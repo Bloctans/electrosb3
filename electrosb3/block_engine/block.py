@@ -41,10 +41,11 @@ class Block:
 
         if type(wrapper_value) == list: # Input is a simple number
             return self.parse_input(wrapper_value, script)
-        elif wrapper_type > 3 and wrapper_type < 11: # All literals
-            if wrapper_value.isdigit(): return float(wrapper_value) # Return float
-            else: return wrapper_value # Return string
-        elif wrapper_type < 4: # Input in block, or a substack
+        elif wrapper_type >= 4 and wrapper_type <= 9: # All number literals
+            return float(wrapper_value)
+        elif wrapper_type == 10:
+            return wrapper_value # string
+        elif wrapper_type <= 3: # Input in block, or a substack
             if not (wrapper_value in blocks):
                 debug_block = self.sprite.debug_blocks[wrapper_value]
 

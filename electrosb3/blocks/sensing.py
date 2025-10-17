@@ -2,6 +2,8 @@
 import electrosb3.block_engine as BlockEngine
 import time
 
+from pygame import key
+
 class BlocksSensing:
     def __init__(self):
         self.block_map = {
@@ -36,11 +38,11 @@ class BlocksSensing:
     def mouse_down(self, api):
         pass
 
-    def keypressed(self, api):
-        pass
+    def keypressed(self, args, api):
+        return BlockEngine.BlockUtil.is_key_down(args.key_option)
 
-    def keyoptions(self, api):
-        pass
+    def keyoptions(self, args, api):
+        return args.key_option.name
 
     def timer(self, api):
         return time.time() - self.start_time

@@ -14,10 +14,17 @@ class BlocksEvent:
             "whenbroadcastreceived": {
                 "type": BlockEngine.Enum.BLOCK_HAT,
                 "function": self.broadcast
-            }
+            },
+            "whenkeypressed": {
+                "type": BlockEngine.Enum.BLOCK_HAT,
+                "function": self.whenkeypressed
+            },
         }
 
     def broadcast(self,args,api):
+        pass
+
+    def whenkeypressed(self, args, api):
         pass
 
     def whenflagclicked(self, args, api):
