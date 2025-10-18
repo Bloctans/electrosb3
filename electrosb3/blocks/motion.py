@@ -77,7 +77,8 @@ class BlocksMotion:
         script.sprite.position.x = float(args.x) # TODO: Properly convert digits
 
     def sety(self, args, script):
-        print(args)
+        #print(args)
+        pass
 
     def xposition(self, args, script): return script.sprite.position.x
     def yposition(self, args, script): return script.sprite.position.y
@@ -88,7 +89,7 @@ class BlocksMotion:
 
     def move_steps(self, args, api):
         sprite = api.sprite
-        steps = args.steps
+        steps = float(args.steps)
 
         rotation = radians(sprite.rotation)
 

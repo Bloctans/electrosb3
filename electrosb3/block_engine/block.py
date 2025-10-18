@@ -15,7 +15,10 @@ class Block:
 
     def __init__(self, sprite):
         self.opcode = None
+        self.set = None
+
         self.id = None
+
         self.info = {}
 
         self.next = None
@@ -26,6 +29,9 @@ class Block:
         self.sprite = sprite
 
         self.args = {}
+
+    def get_opcode(self):
+        return self.set+"_"+self.opcode
 
     def parse_fields(self, field): 
         if field[1] == None: return Field(field[0], None) # Return only the name
@@ -62,7 +68,17 @@ class Block:
         else:
             pass
 
-    def run_block(self, script):
+    def parse_only_fields(self):
+        args = Args()
+
+        fields = self.args["fields"]
+
+        for i in fields:
+            args.__dict__.update({i.lower():self.parse_fields(fields[i])})
+
+        return args
+
+    def parse_args(self, script):
         args = Args()
 
         inputs = self.args["inputs"]
@@ -74,8 +90,11 @@ class Block:
         for i in fields:
             args.__dict__.update({i.lower():self.parse_fields(fields[i])})
 
+        return args
+
+    def run_block(self, script):
         self.api.set_script(script)
         self.api.loops += 1
 
         # TODO: Replace the script API with a better one
-        return ExtensionSupport.run_block_func(self, args, self.api)
+        return ExtensionSupport.run_block_func(self, self.parse_args(script), self.api)

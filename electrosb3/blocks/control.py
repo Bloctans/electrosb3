@@ -63,7 +63,8 @@ class BlocksControl:
 
     def repeat_until(self, args, api):
         #print("Branch repeat")
-        api.script.branch_to(args.substack, True)
+        if not args.condition:
+            api.script.branch_to(args.substack, True)
 
     def wait(self, args, api):
         if (not api.timer_started):

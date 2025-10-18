@@ -1,46 +1,5 @@
 import electrosb3.block_engine.enum as Enum
 from electrosb3.block_engine.block import Block
-from electrosb3.block_engine.block import Block
-
-import time
-
-"""
-    Execution flow:
-        In a frame, go step through all scripts repeatedly until either a redraw is requested or the thread execution is taking too much time
-
-        one script
-
-"""
-
-class ScriptStepper:
-    def __init__(self):
-        self.scripts = []
-
-        self.redraw_requested = False
-        self.inc = 0
-
-    def request_redraw(self):
-        #print("Request redraw"+str(self.inc))
-        self.inc += 1
-        self.redraw_requested = True
-
-    def add_script(self, script):
-        self.scripts.append(script)
-
-    def step_scripts(self):
-        self.redraw_requested = False
-
-        start_time = time.time()
-
-        while (not self.redraw_requested) and (time.time() - start_time < (1/60 * 0.75)):
-            for script in self.scripts:
-                #print("Step script")
-                script.step()
-
-        start_time = time.time()
-
-        while (time.time() - start_time) < 1/30:
-            pass
 
 class StackEntry:
     def __init__(self, block, is_loop, stack_parent):
@@ -55,14 +14,12 @@ class StackEntry:
 class Script:
     def __init__(self):
         self.current_block = None
-        self.start_block = None
         self.script_stepper = None
 
         self.stack = []
 
         self.dont_step = False
 
-        self.running = False
         self.status = Enum.STATUS_NONE # This concept is stolen from the VM.
 
         self.sprite = None
@@ -126,7 +83,7 @@ class Script:
                 return # Nothing else needs to happen
             
             if len(self.stack) == 0:  # Stack has no data, stop running thread.
-                print("kill thread")
+                #print("kill thread")
                 self.running = False
                 return True
             
@@ -153,13 +110,6 @@ class Script:
     def step(self):
        # print(self.status)
 
-        if (not self.running):
-            self.current_block = self.start_block
-            hat_result = self.run_block(self.current_block)
-            if hat_result: 
-                self.running = True
-                self.step_to_next_block()
-        else:
-            while True:
-                do_break = self.step_once()
-                if do_break: break
+        while True:
+            do_break = self.step_once()
+            if do_break: break

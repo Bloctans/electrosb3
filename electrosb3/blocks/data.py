@@ -12,7 +12,7 @@ class BlocksData:
             "changevariableby": {
                 "type": BlockEngine.Enum.BLOCK_STACK,
                 "function": self.changevariableby
-            }
+            },
         }
 
     def setup_variable(self, id): 
@@ -35,7 +35,8 @@ class BlocksData:
     def changevariableby(self, args, api):
         variable_id = args.variable.id
 
-        variable = self.get_variable(variable_id)
+        variable = float(self.get_variable(variable_id))
+        print(variable)
         self.set_variable(variable_id, variable + float(args.value)) # Always assume this will be a float
 
 

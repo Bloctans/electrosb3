@@ -7,6 +7,8 @@ class API:
         self.sprite = sprite
         self.block = block
 
+        self.info = {}
+
         self.timer = 0
         self.timer_end = 0
         self.timer_started = False

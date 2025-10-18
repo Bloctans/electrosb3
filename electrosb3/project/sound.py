@@ -3,4 +3,4 @@ class Sound:
         self.sound = None
         self.name = "Placeholder"
 
-    def play(self): self.sound.play()
+    def play(self): return self.sound.play()

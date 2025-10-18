@@ -4,8 +4,7 @@ class BlocksEvent:
     def __init__(self):
         self.block_map = {
             "whenflagclicked": {
-                "type": BlockEngine.Enum.BLOCK_HAT,
-                "function": self.whenflagclicked
+                "type": BlockEngine.Enum.BLOCK_HAT
             },
             "broadcast": {
                 "type": BlockEngine.Enum.BLOCK_HAT,
@@ -26,10 +25,5 @@ class BlocksEvent:
 
     def whenkeypressed(self, args, api):
         pass
-
-    def whenflagclicked(self, args, api):
-        if api.loops == 1:
-            print("Greenflag started")
-            return True
     
 BlockEngine.register_extension("event", BlocksEvent())

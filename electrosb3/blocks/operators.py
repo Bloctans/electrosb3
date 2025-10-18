@@ -65,7 +65,7 @@ class BlocksOperator:
 
     def add(self, args, script): return args.num1+args.num2
     
-    def divide(self, args, script): return args.num1/args.num2
+    def divide(self, args, script): return float(args.num1)/float(args.num2)
     
     def multiply(self, args, script): 
         return float(args.num1)*float(args.num2)
@@ -79,7 +79,8 @@ class BlocksOperator:
         # Fucking nasty hack because python hates when you use a keyword in syntax like that
         return random.randint(args.__dict__["from"], args.to)
 
-    def equals(self, args, script): return args.operand1 == args.operand2
+    def equals(self, args, script): 
+        return str(args.operand1) == str(args.operand2)
 
     def subtract(self, args, script): return args.num1-args.num2
 
@@ -91,8 +92,8 @@ class BlocksOperator:
     def compare_and(self, args, script):
         return args.operand1 and args.operand2
 
-    def gt(self, args, script): return args.operand1>args.operand2
-    def lt(self, args, script): return args.operand1<args.operand2
+    def gt(self, args, script): return float(args.operand1)>float(args.operand2)
+    def lt(self, args, script): return float(args.operand1)<float(args.operand2)
 
 # This stays unregistered until we actually make progress on it
 BlockEngine.register_extension("operator", BlocksOperator())

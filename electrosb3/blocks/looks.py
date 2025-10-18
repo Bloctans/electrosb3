@@ -31,6 +31,10 @@ class BlocksLooks:
                 "type": BlockEngine.Enum.BLOCK_STACK,
                 "function": self.changesizeby
             },
+            "cleargraphiceffects": {
+                "type": BlockEngine.Enum.BLOCK_STACK,
+                "function": self.changesizeby
+            },
             "setsizeto": {
                 "type": BlockEngine.Enum.BLOCK_STACK,
                 "function": self.changesizeby
@@ -82,9 +86,12 @@ class BlocksLooks:
         pass
 
     def costumenumbername(self, args, api):
-        #print(args)
-        pass
-
+        sprite = api.sprite
+        number_or_name = args.number_name.name
+        
+        if number_or_name == "number":
+            return sprite.current_costume.id+1
+        
     def nextcostume(self, args, api):
         #print("next costume")
         api.request_redraw()

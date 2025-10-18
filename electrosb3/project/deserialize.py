@@ -67,7 +67,12 @@ class Deserialize:
             print(block_value)
 
             #try:
-            block_data,opcode,map = BlockEngine.get_raw_block(block_value["opcode"])
+                #if type(block_value) == list:
+                #    continue
+
+            print(block_value["opcode"], block_value["fields"])
+            
+            block_data,opcode,set = BlockEngine.get_raw_block(block_value["opcode"])
 
             block = BlockEngine.Block(sprite)
 
@@ -75,6 +80,7 @@ class Deserialize:
             block.parent = block_value["parent"]
 
             block.opcode = opcode
+            block.set = set
             block.info = block_data
             block.id = block_id
 
@@ -85,17 +91,12 @@ class Deserialize:
 
             # Every hat we encounter, add a new script object
             if block_data["type"] == BlockEngine.Enum.BLOCK_HAT:
-                script = BlockEngine.Script()
-                script.start_block = block
-                script.sprite = sprite
-                script.script_stepper = project.script_stepper
-
-                project.script_stepper.add_script(script)
+                project.script_stepper.add_hat(block)
 
             sprite.blocks.update({block_id: block})
             #except:
             #    missing_opcodes += 1
-            #    print(f"{block_value["opcode"]} Could not be found! Skipping!")
+                #print(f"{block_value["opcode"]} Could not be found! Skipping!")
 
         for block in sprite.blocks: # Go through all blocks and assign next and parent properly
             current_block = sprite.blocks[block]
@@ -124,7 +125,7 @@ class Deserialize:
         sounds = self.deserialize_sounds(target["sounds"])
 
         sprite.sounds = sounds
-
+        
         # Load costumes
         i = 0
         for costume in target["costumes"]: 

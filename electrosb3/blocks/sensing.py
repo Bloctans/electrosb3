@@ -23,6 +23,14 @@ class BlocksSensing:
                 "type": BlockEngine.Enum.BLOCK_INPUT,
                 "function": self.keypressed
             },
+            "of": {
+                "type": BlockEngine.Enum.BLOCK_INPUT,
+                "function": self.of
+            },
+            "of_object_menu": {
+                "type": BlockEngine.Enum.BLOCK_INPUT,
+                "function": self.of_object_menu
+            },
             "keyoptions": {
                 "type": BlockEngine.Enum.BLOCK_INPUT,
                 "function": self.keyoptions
@@ -37,6 +45,15 @@ class BlocksSensing:
 
     def mouse_down(self, api):
         pass
+
+    def of(self, args, api):
+        property = args.property.name
+
+        if property == "x position":
+            pass
+
+    def of_object_menu(self, args, api):
+       pass
 
     def keypressed(self, args, api):
         return BlockEngine.BlockUtil.is_key_down(args.key_option)

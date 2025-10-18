@@ -3,16 +3,23 @@ import pygame
 from electrosb3.window import Window
 from electrosb3.project import Project
 
-VERSION = "Alpha 1.1"
+VERSION = "0.4"
 
 class Electro:
     def __init__(self):
-        print(f"ElectroSB3 Version {VERSION}")
+        pass
 
     def run(self, file):
         self.proj = Project(file)
 
-        win = Window(self.proj)
+        print()
+        print(f"ElectroSB3 {VERSION}")
+        print("A Python reimplementation of the Scratch VM, Read the README for more info.")
+        print("Originally Created by Touchcreator, Taken over by Bloctans.")
+        print("2025")
+        print()
+
+        win = Window(self.proj, f"ElectroSB3 {VERSION}")
         running = True
 
         clock = pygame.time.Clock()
