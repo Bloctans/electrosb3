@@ -65,6 +65,10 @@ class Deserialize:
             print(block_value)
 
             #print(block_value["opcode"], block_value["fields"])
+
+            if type(block_value) == list:
+                sprite.blocks.update({block_id: block_value}) # add and pray because im too lazy
+                continue
             
             block_data,opcode,set = BlockEngine.get_raw_block(block_value["opcode"])
 
@@ -92,11 +96,12 @@ class Deserialize:
         for block in sprite.blocks: # Go through all blocks and assign next and parent properly
             current_block = sprite.blocks[block]
 
-            if current_block.next:
-                current_block.next = sprite.blocks[current_block.next]
+            if not (type(block_value) == list):
+                if current_block.next:
+                    current_block.next = sprite.blocks[current_block.next]
 
-            if current_block.parent:
-                current_block.parent = sprite.blocks[current_block.parent]
+                if current_block.parent:
+                    current_block.parent = sprite.blocks[current_block.parent]
 
     def deserialize_target(self, target, project):
         sprite = Sprite()

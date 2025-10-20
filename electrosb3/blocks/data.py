@@ -31,7 +31,7 @@ class BlocksData:
 
         return self.variables[id]
     
-    def hide_variable(self, args, api):
+    def hide_variable(self, args, util):
         pass
     
     def set_variable(self, id, value): 
@@ -42,7 +42,7 @@ class BlocksData:
     def setvariableto(self, args, script): 
         self.set_variable(args.variable.id, args.value)
 
-    def changevariableby(self, args, api):
+    def changevariableby(self, args, util):
         variable_id = args.variable.id
 
         variable = float(self.get_variable(variable_id))

@@ -95,5 +95,4 @@ class BlocksOperator:
     def gt(self, args, script): return float(args.operand1)>float(args.operand2)
     def lt(self, args, script): return float(args.operand1)<float(args.operand2)
 
-# This stays unregistered until we actually make progress on it
 BlockEngine.register_extension("operator", BlocksOperator())

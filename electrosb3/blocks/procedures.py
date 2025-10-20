@@ -17,11 +17,10 @@ class BlocksProcedures:
             },
         }
 
-    def definition(self, args, api):
+    def definition(self, args, util):
         pass
 
-    def prototype(self, args, api):
+    def prototype(self, args, util):
         pass
-
 
 BlockEngine.register_extension("procedures", BlocksProcedures())

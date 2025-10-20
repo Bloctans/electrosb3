@@ -59,7 +59,13 @@ class BlocksLooks:
                 "type": BlockEngine.Enum.BLOCK_INPUT,
                 "function": self.size
             },
+
+            # Layering blocks will be passed for now
             "gotofrontback": {
+                "type": BlockEngine.Enum.BLOCK_STACK,
+                "function": self.gotofrontback
+            },
+            "goforwardbackwardlayers": {
                 "type": BlockEngine.Enum.BLOCK_STACK,
                 "function": self.gotofrontback
             }
@@ -69,40 +75,40 @@ class BlocksLooks:
         for costume in costumes:
             if costume.name == name: return costume
 
-    def hide(self, args, api): api.sprite.visible = False
-    def show(self, args, api): api.sprite.visible = True
+    def hide(self, args, util): util.sprite.visible = False
+    def show(self, args, util): util.sprite.visible = True
 
-    def switchcostumeto(self, args, api):
-        sprite = api.sprite
+    def switchcostumeto(self, args, util):
+        sprite = util.sprite
 
         costume = args.costume or 0
 
         sprite.set_costume(costume)
 
-    def size(self, args, api):
-        return api.sprite.size
+    def size(self, args, util):
+        return util.sprite.size
 
-    def changesizeby(self, args, api):
-        api.request_redraw()
-        #api.sprite.size += args.
+    def changesizeby(self, args, util):
+        util.request_redraw()
+        #util.sprite.size += args.
 
-    def changeeffectby(self, args, api):
+    def changeeffectby(self, args, util):
         pass
 
-    def gotofrontback(self, args, api):
+    def gotofrontback(self, args, util):
         pass
 
-    def costumenumbername(self, args, api):
-        sprite = api.sprite
+    def costumenumbername(self, args, util):
+        sprite = util.sprite
         number_or_name = args.number_name.name
         
         if number_or_name == "number":
             return sprite.current_costume.id+1
         
-    def nextcostume(self, args, api):
+    def nextcostume(self, args, util):
         #print("next costume")
-        api.request_redraw()
-        sprite = api.sprite
+        util.request_redraw()
+        sprite = util.sprite
 
         sprite.set_costume(sprite.current_costume.id+1)
 
@@ -116,5 +122,4 @@ class BlocksLooks:
 
         return self.costume_from_name(args.backdrop, sprite.costumes)
 
-# This stays unregistered until we actually make progress on it
 BlockEngine.register_extension("looks", BlocksLooks())

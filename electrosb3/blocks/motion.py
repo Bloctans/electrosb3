@@ -44,14 +44,18 @@ class BlocksMotion:
             "turnright": {
                 "type": BlockEngine.Enum.BLOCK_STACK,
                 "function": self.turnright
+            },
+            "direction": {
+                "type": BlockEngine.Enum.BLOCK_STACK,
+                "function": self.direction
             }
         }
 
     # TODO: Rewrite motion extension
 
-    def _changeby(self,x,y,api): 
-        api.sprite.position += Vector2(x,y)
-        api.request_redraw()
+    def _changeby(self,x,y,util): 
+        util.sprite.position += Vector2(x,y)
+        util.request_redraw()
 
     def _setrotation(self, rotation, sprite): 
         sprite.rotation = rotation
@@ -59,36 +63,38 @@ class BlocksMotion:
     def _changerotation(self, rotation, sprite): 
         sprite.rotation += rotation
 
-    def pointindirection(self, args, script): 
-        self._setrotation(args.direction, script.sprite)
+    def pointindirection(self, args, util): 
+        self._setrotation(args.direction, util.sprite)
 
-    def changexby(self, args, script): 
-        self._changeby(args.dx,0,script)
+    def direction(self, args, util): return util.sprite.rotation
 
-    def changeyby(self, args, script): 
-        self._changeby(0,args.dy,script)
+    def changexby(self, args, util): 
+        self._changeby(args.dx,0,util)
 
-    def gotoxy(self, args, script): 
-        script.request_redraw()
-        script.sprite.position = Vector2(args.x, args.y)
+    def changeyby(self, args, util): 
+        self._changeby(0,args.dy,util)
 
-    def setx(self, args, script): 
-        script.request_redraw()
-        script.sprite.position.x = float(args.x) # TODO: Properly convert digits
+    def gotoxy(self, args, util): 
+        util.request_redraw()
+        util.sprite.position = Vector2(args.x, args.y)
 
-    def sety(self, args, script):
+    def setx(self, args, util): 
+        util.request_redraw()
+        util.sprite.position.x = float(args.x) # TODO: Properly convert digits
+
+    def sety(self, args, util):
         #print(args)
         pass
 
-    def xposition(self, args, script): return script.sprite.position.x
-    def yposition(self, args, script): return script.sprite.position.y
+    def xposition(self, args, util): return util.sprite.position.x
+    def yposition(self, args, util): return util.sprite.position.y
 
-    def turnright(self, args, script): 
-        script.request_redraw()
-        self._changerotation(float(args.degrees), script.sprite)
+    def turnright(self, args, util): 
+        util.request_redraw()
+        self._changerotation(float(args.degrees), util.sprite)
 
-    def move_steps(self, args, api):
-        sprite = api.sprite
+    def move_steps(self, args, util):
+        sprite = util.sprite
         steps = float(args.steps)
 
         rotation = radians(sprite.rotation)
@@ -96,7 +102,7 @@ class BlocksMotion:
         self._changeby(
             sin(rotation)*steps,
             cos(rotation)*steps,
-            api
+            util
         )
     
 BlockEngine.register_extension("motion", BlocksMotion())

@@ -26,7 +26,7 @@ class BlocksEvent:
             "broadcast_option": args.broadcast_input
         })
 
-    def whenkeypressed(self, args, api):
+    def whenkeypressed(self, args, util):
         pass
     
 BlockEngine.register_extension("event", BlocksEvent())
