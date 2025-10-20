@@ -7,18 +7,6 @@ from pygame import key
 class BlocksSensing:
     def __init__(self):
         self.block_map = {
-            "mousedown": {
-                "type": BlockEngine.Enum.BLOCK_INPUT,
-                "function": self.mouse_down
-            },
-            "touchingobject": {
-                "type": BlockEngine.Enum.BLOCK_INPUT,
-                "function": self.mouse_down
-            },
-            "touchingobjectmenu": {
-                "type": BlockEngine.Enum.BLOCK_INPUT,
-                "function": self.mouse_down
-            },
             "keypressed": {
                 "type": BlockEngine.Enum.BLOCK_INPUT,
                 "function": self.keypressed
@@ -26,10 +14,6 @@ class BlocksSensing:
             "of": {
                 "type": BlockEngine.Enum.BLOCK_INPUT,
                 "function": self.of
-            },
-            "of_object_menu": {
-                "type": BlockEngine.Enum.BLOCK_INPUT,
-                "function": self.of_object_menu
             },
             "keyoptions": {
                 "type": BlockEngine.Enum.BLOCK_INPUT,
@@ -39,12 +23,13 @@ class BlocksSensing:
                 "type": BlockEngine.Enum.BLOCK_INPUT,
                 "function": self.timer
             },
+            "mousex": {
+                "type": BlockEngine.Enum.BLOCK_INPUT,
+                "function": self.mousex
+            },
         }
 
         self.start_time = time.time()
-
-    def mouse_down(self, api):
-        pass
 
     def of(self, args, api):
         property = args.property.name
@@ -52,8 +37,8 @@ class BlocksSensing:
         if property == "x position":
             pass
 
-    def of_object_menu(self, args, api):
-       pass
+    def mousex(self, args, api):
+        return 0
 
     def keypressed(self, args, api):
         return BlockEngine.BlockUtil.is_key_down(args.key_option)
@@ -63,8 +48,5 @@ class BlocksSensing:
 
     def timer(self, api):
         return time.time() - self.start_time
-
-    def touchingobject(self, api):
-        pass
 
 BlockEngine.register_extension("sensing", BlocksSensing())

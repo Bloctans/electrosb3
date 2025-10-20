@@ -7,9 +7,17 @@ class BlocksLooks:
                 "type": BlockEngine.Enum.BLOCK_STACK,
                 "function": self.switchcostumeto
             },
+            "switchbackdropto": {
+                "type": BlockEngine.Enum.BLOCK_STACK,
+                "function": self.switchcostumeto
+            },
             "costume": {
                 "type": BlockEngine.Enum.BLOCK_INPUT,
                 "function": self.costume
+            },
+            "backdrops": {
+                "type": BlockEngine.Enum.BLOCK_INPUT,
+                "function": self.backdrops
             },
             "costumenumbername": {
                 "type": BlockEngine.Enum.BLOCK_INPUT,
@@ -76,7 +84,6 @@ class BlocksLooks:
 
     def changesizeby(self, args, api):
         api.request_redraw()
-        print(args)
         #api.sprite.size += args.
 
     def changeeffectby(self, args, api):
@@ -103,6 +110,11 @@ class BlocksLooks:
         sprite = script.sprite
 
         return self.costume_from_name(args.costume, sprite.costumes)
+    
+    def backdrops(self, args, script):
+        sprite = script.sprite
+
+        return self.costume_from_name(args.backdrop, sprite.costumes)
 
 # This stays unregistered until we actually make progress on it
 BlockEngine.register_extension("looks", BlocksLooks())

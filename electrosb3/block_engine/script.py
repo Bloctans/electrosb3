@@ -19,6 +19,7 @@ class Script:
         self.stack = []
 
         self.dont_step = False
+        self.running = True
 
         self.status = Enum.STATUS_NONE # This concept is stolen from the VM.
 
@@ -51,15 +52,11 @@ class Script:
     def run_block(self, block): 
         return block.run_block(self)
     
-    def request_redraw(self): self.script_stepper.request_redraw()
-    
     def get_block(self, id): 
-        if not (id in self.sprite.blocks):
-            debug_block = self.sprite.debug_blocks[id]
-
-            print(f"Couldn't get block! Missing opcode {debug_block["opcode"]}, fields: {debug_block["fields"]}, inputs: {debug_block["inputs"]}")
-
         return self.sprite.blocks[id]
+    
+    def kill(self):
+        self.running = False
 
     # Step the script once
     # TODO: we shouldnt need to return to break tbh
@@ -112,4 +109,4 @@ class Script:
 
         while True:
             do_break = self.step_once()
-            if do_break: break
+            if do_break or (not self.running): break

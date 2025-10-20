@@ -1,4 +1,5 @@
 import electrosb3.block_engine as BlockEngine
+from electrosb3.block_engine.block_support import API
 
 class BlocksEvent:
     def __init__(self):
@@ -12,7 +13,6 @@ class BlocksEvent:
             },
             "whenbroadcastreceived": {
                 "type": BlockEngine.Enum.BLOCK_HAT,
-                "function": self.broadcast
             },
             "whenkeypressed": {
                 "type": BlockEngine.Enum.BLOCK_HAT,
@@ -20,8 +20,11 @@ class BlocksEvent:
             },
         }
 
-    def broadcast(self,args,api):
-        pass
+    def broadcast(self,args,api: API):
+        print(args.broadcast_input)
+        api.start_hats("event_whenbroadcastreceived", {
+            "broadcast_option": args.broadcast_input
+        })
 
     def whenkeypressed(self, args, api):
         pass

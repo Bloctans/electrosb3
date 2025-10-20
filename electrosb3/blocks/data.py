@@ -13,6 +13,14 @@ class BlocksData:
                 "type": BlockEngine.Enum.BLOCK_STACK,
                 "function": self.changevariableby
             },
+            "hidevariable": {
+                "type": BlockEngine.Enum.BLOCK_STACK,
+                "function": self.hide_variable
+            },
+            "showvariable": {
+                "type": BlockEngine.Enum.BLOCK_STACK,
+                "function": self.hide_variable
+            },
         }
 
     def setup_variable(self, id): 
@@ -23,20 +31,21 @@ class BlocksData:
 
         return self.variables[id]
     
+    def hide_variable(self, args, api):
+        pass
+    
     def set_variable(self, id, value): 
         self.setup_variable(id)
         #print(f"{id}: {value}")
         self.variables[id] = value
 
     def setvariableto(self, args, script): 
-        #print(args.value)
         self.set_variable(args.variable.id, args.value)
 
     def changevariableby(self, args, api):
         variable_id = args.variable.id
 
         variable = float(self.get_variable(variable_id))
-        print(variable)
         self.set_variable(variable_id, variable + float(args.value)) # Always assume this will be a float
 
 

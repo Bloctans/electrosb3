@@ -6,6 +6,8 @@ class Sprite:
     def __init__(self):
         self.costumes = []
         self.sounds = []
+
+        self.clones = []
         self.current_costume = None
 
         self.position = pygame.Vector2(0,0)
@@ -19,7 +21,6 @@ class Sprite:
 
         # we can always refactor later
         self.blocks = {}
-        self.debug_blocks = {}
             
     def set_costume(self, costume): 
         if type(costume) == float or type(costume) == int: 

@@ -11,13 +11,13 @@ class BlocksControl:
                 "type": BlockEngine.Enum.BLOCK_STACK,
                 "function": self.wait
             },
-            "wait_until": {
-                "type": BlockEngine.Enum.BLOCK_STACK,
-                "function": self.wait_until
-            },
             "if": {
                 "type": BlockEngine.Enum.BLOCK_C,
                 "function": self.block_if,
+            },
+            "stop": {
+                "type": BlockEngine.Enum.BLOCK_STACK,
+                "function": self.stop,
             },
             "if_else": {
                 "type": BlockEngine.Enum.BLOCK_C,
@@ -31,26 +31,6 @@ class BlocksControl:
                 "type": BlockEngine.Enum.BLOCK_C,
                 "function": self.repeat_until
             },
-            "create_clone_of": {
-                "type": BlockEngine.Enum.BLOCK_STACK,
-                "function": self.create_clone_of
-            },
-            "start_as_clone": {
-                "type": BlockEngine.Enum.BLOCK_STACK,
-                "function": self.start_as_clone
-            },
-            "delete_this_clone": {
-                "type": BlockEngine.Enum.BLOCK_STACK,
-                "function": self.start_as_clone
-            },
-            "stop": {
-                "type": BlockEngine.Enum.BLOCK_STACK,
-                "function": self.stop
-            },
-            "create_clone_of_menu": {
-                "type": BlockEngine.Enum.BLOCK_STACK,
-                "function": self.create_clone_of
-            }
         }
 
     def forever(self, args, api):
@@ -60,6 +40,15 @@ class BlocksControl:
         if api.loops <= args.times:
             #print("Branch repeat")
             api.script.branch_to(args.substack, True)
+
+    def stop(self, args, api):
+        if args.stop_option == "other scripts in sprite":
+            def other_scripts(script):
+                if script.sprite == api.sprite: script.kill()
+
+            api.stepper.each_script(other_scripts)
+        else:
+            print("Invalid stop option: "+args.stop_option)
 
     def repeat_until(self, args, api):
         #print("Branch repeat")
@@ -76,18 +65,6 @@ class BlocksControl:
             api.do_yield()
         else:
             api.end_timer()
-
-    def wait_until(self, args, api):
-        pass
-
-    def create_clone_of(self,args,api):
-        pass # TODO
-
-    def start_as_clone(self,args,api):
-        pass # TODO
-
-    def stop(self,args,api):
-        pass # TODO
 
     def block_if(self, args, api):
         if args.condition:

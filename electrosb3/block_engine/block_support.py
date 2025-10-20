@@ -4,6 +4,8 @@ import time
 class API:
     def __init__(self, sprite, block):
         self.script = None
+        self.stepper = None
+
         self.sprite = sprite
         self.block = block
 
@@ -16,6 +18,8 @@ class API:
         self.loops = 0
 
     #def wait_frame(self): self.script.set_yield(Enum.YIELD_TILL_NEXT_FRAME)
+
+    def start_hats(self, hat, args = None): self.stepper.start_hats(hat, args)
 
     def start_timer(self, duration):
         self.timer = time.time()
@@ -31,8 +35,10 @@ class API:
         return (time.time() - self.timer) > self.timer_end
 
     def request_redraw(self):
-        self.script.request_redraw()
+        self.stepper.request_redraw()
 
-    def set_script(self, script): self.script = script
+    def set_script(self, script): 
+        self.script = script
+        self.stepper = self.script.script_stepper
 
     def do_yield(self): self.script.set_status(Enum.STATUS_YIELDED)

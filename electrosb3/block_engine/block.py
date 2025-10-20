@@ -59,22 +59,24 @@ class Block:
 
             block = blocks[wrapper_value]
 
-            if block.info["type"] == Enum.BLOCK_INPUT: # Parse inputs normally
+            if block.info["type"] == Enum.BLOCK_INPUT: # For now, input blocks are ran recursively, 
                 return block.run_block(script)  
             else: # Return so that it can be branched, i dont believe this is assuming anyth
                 return block.id
+        elif wrapper_type == 11: # Variable
+            return input[1]
         elif wrapper_type == 12: # Variable
             return data.get_variable(input[2])
         else:
             pass
 
     def parse_only_fields(self):
-        args = Args()
+        args = {}
 
         fields = self.args["fields"]
 
         for i in fields:
-            args.__dict__.update({i.lower():self.parse_fields(fields[i])})
+            args.update({i.lower():self.parse_fields(fields[i])})
 
         return args
 

@@ -56,8 +56,6 @@ class Deserialize:
         return sounds
     
     def deserialize_blocks(self, serialized_blocks, sprite, project):
-        missing_opcodes = 0
-
         sprite.debug_blocks = serialized_blocks
 
         for block_id in serialized_blocks:
@@ -66,11 +64,7 @@ class Deserialize:
             print(block_id)
             print(block_value)
 
-            #try:
-                #if type(block_value) == list:
-                #    continue
-
-            print(block_value["opcode"], block_value["fields"])
+            #print(block_value["opcode"], block_value["fields"])
             
             block_data,opcode,set = BlockEngine.get_raw_block(block_value["opcode"])
 
@@ -94,9 +88,6 @@ class Deserialize:
                 project.script_stepper.add_hat(block)
 
             sprite.blocks.update({block_id: block})
-            #except:
-            #    missing_opcodes += 1
-                #print(f"{block_value["opcode"]} Could not be found! Skipping!")
 
         for block in sprite.blocks: # Go through all blocks and assign next and parent properly
             current_block = sprite.blocks[block]
@@ -106,8 +97,6 @@ class Deserialize:
 
             if current_block.parent:
                 current_block.parent = sprite.blocks[current_block.parent]
-
-        print(f"{missing_opcodes} Missing opcodes for {sprite.name}")
 
     def deserialize_target(self, target, project):
         sprite = Sprite()
