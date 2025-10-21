@@ -58,6 +58,8 @@ class Deserialize:
     def deserialize_blocks(self, serialized_blocks, sprite, project):
         sprite.debug_blocks = serialized_blocks
 
+        stepper = project.script_stepper
+
         for block_id in serialized_blocks:
             block_value = serialized_blocks[block_id]
 
@@ -67,7 +69,7 @@ class Deserialize:
             #print(block_value["opcode"], block_value["fields"])
 
             if type(block_value) == list:
-                sprite.blocks.update({block_id: block_value}) # add and pray because im too lazy
+                stepper.add_block(block_id, block) # add and pray because im too lazy
                 continue
             
             block_data,opcode,set = BlockEngine.get_raw_block(block_value["opcode"])
@@ -91,17 +93,17 @@ class Deserialize:
             if block_data["type"] == BlockEngine.Enum.BLOCK_HAT:
                 project.script_stepper.add_hat(block)
 
-            sprite.blocks.update({block_id: block})
+            stepper.add_block(block_id, block)
 
-        for block in sprite.blocks: # Go through all blocks and assign next and parent properly
-            current_block = sprite.blocks[block]
+        for block in stepper.blocks: # Go through all blocks and assign next and parent properly
+            current_block = stepper.blocks[block]
 
-            if not (type(block_value) == list):
+            if not (type(block) == list):
                 if current_block.next:
-                    current_block.next = sprite.blocks[current_block.next]
+                    current_block.next = stepper.get_block(current_block.next)
 
                 if current_block.parent:
-                    current_block.parent = sprite.blocks[current_block.parent]
+                    current_block.parent = stepper.get_block(current_block.parent)
 
     def deserialize_target(self, target, project):
         sprite = Sprite()
@@ -112,8 +114,10 @@ class Deserialize:
             sprite.rotation = target["direction"]
             sprite.visible = target["visible"]
             sprite.layer_order = target["layerOrder"]
-
+        
+        sprite.is_stage = target["isStage"]
         sprite.name = target["name"]
+        sprite.project = project
 
         self.deserialize_blocks(target["blocks"], sprite, project)
         sounds = self.deserialize_sounds(target["sounds"])

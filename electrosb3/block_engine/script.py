@@ -14,7 +14,7 @@ class StackEntry:
 class Script:
     def __init__(self):
         self.current_block = None
-        self.script_stepper = None
+        self.stepper = None
 
         self.stack = []
 
@@ -52,8 +52,8 @@ class Script:
     def run_block(self, block): 
         return block.run_block(self)
     
-    def get_block(self, id): 
-        return self.sprite.blocks[id]
+    def get_block(self, id):
+        return self.stepper.get_block(id)
     
     def kill(self):
         self.running = False
@@ -64,12 +64,10 @@ class Script:
         if self.status == Enum.STATUS_YIELDED: # Now that its yielded, step again.
             self.set_status(Enum.STATUS_NONE)
 
-        #print(self.current_block.opcode)
+        print(self.current_block.opcode)
+        print(self.sprite.name)
+        print(self.current_block.id)
         self.run_block(self.current_block)
-
-        #if self.step_next: # Stop to the custom step if it exists
-        #    self.goto(self.step_next)
-        #    self.step_next = None
 
         should_step = (self.status == Enum.STATUS_NONE) and (not self.dont_step)
 
@@ -77,17 +75,18 @@ class Script:
             could_step = self.step_to_next_block()
 
             if could_step:
+                print("step")
                 return # Nothing else needs to happen
             
             if len(self.stack) == 0:  # Stack has no data, stop running thread.
-                #print("kill thread")
+                print("kill thread")
                 self.running = False
                 return True
             
             stack_last = self.stack.pop()
 
             if stack_last.is_loop:
-                #print("loop")
+                print("loop")
                 """
                     i was thinking if its a loop, we store the substacks block in the stack
                 """
@@ -96,7 +95,7 @@ class Script:
                 #self.goto(stack_last.block)
                 return True # now break, as loops need to allow other threads to run.
             else:
-                #print("go to next")
+                print("go to next")
                 self.goto(stack_last.parent)
                 self.step_to_next_block()
         elif self.status == Enum.STATUS_YIELDED:

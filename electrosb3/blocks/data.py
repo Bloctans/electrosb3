@@ -3,6 +3,7 @@ import electrosb3.block_engine as BlockEngine
 class BlocksData:
     def __init__(self):
         self.variables = {}
+        self.lists = {}
 
         self.block_map = {
             "setvariableto": {
@@ -21,6 +22,28 @@ class BlocksData:
                 "type": BlockEngine.Enum.BLOCK_STACK,
                 "function": self.hide_variable
             },
+
+            # TODO
+            "lengthoflist": {
+                "type": BlockEngine.Enum.BLOCK_INPUT,
+                "function": self.hide_variable
+            },
+            "itemoflist": {
+                "type": BlockEngine.Enum.BLOCK_INPUT,
+                "function": self.hide_variable
+            },
+            "replaceitemoflist": {
+                "type": BlockEngine.Enum.BLOCK_INPUT,
+                "function": self.hide_variable
+            },
+            "deletealloflist": {
+                "type": BlockEngine.Enum.BLOCK_INPUT,
+                "function": self.hide_variable
+            },
+            "addtolist": {
+                "type": BlockEngine.Enum.BLOCK_INPUT,
+                "function": self.hide_variable
+            }
         }
 
     def setup_variable(self, id): 
@@ -32,7 +55,7 @@ class BlocksData:
         return self.variables[id]
     
     def hide_variable(self, args, util):
-        pass
+        return 0
     
     def set_variable(self, id, value): 
         self.setup_variable(id)

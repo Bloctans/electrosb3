@@ -34,7 +34,7 @@ class BlocksSound:
     def play_base(self, sound, util):
         channel = sound.play()
         self.sounds_playing.update({
-            api.block.id: channel
+            util.block.id: channel
         })
 
     def play(self, args, util): self.play_base(args.sound_menu, util)
@@ -42,18 +42,18 @@ class BlocksSound:
     def playuntildone(self, args, util):
         sound_entry = None
 
-        if not (api.block.id in self.sounds_playing):
+        if not (util.block.id in self.sounds_playing):
             self.play_base(args.sound_menu, util)
-            api.do_yield()
+            util.do_yield()
             print("Start sound entry")
         else:
-            sound_entry = self.sounds_playing[api.block.id]
+            sound_entry = self.sounds_playing[util.block.id]
 
             if sound_entry.get_busy():
                 print("Yielding play")
-                api.do_yield()
+                util.do_yield()
             else:
-                self.sounds_playing.pop(api.block.id)
+                self.sounds_playing.pop(util.block.id)
     
     def stopallsounds(self, args, util):
         for sound in self.sounds_playing:

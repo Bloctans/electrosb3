@@ -13,7 +13,7 @@ class BlocksPen:
             }
         }
 
-    def pass_block(self): pass
+    def pass_block(self, args, util): pass
 
 # This stays unregistered until we actually make progress on it
 register_extension("pen", BlocksPen())

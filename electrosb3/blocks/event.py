@@ -18,6 +18,14 @@ class BlocksEvent:
                 "type": BlockEngine.Enum.BLOCK_HAT,
                 "function": self.whenkeypressed
             },
+            "whenthisspriteclicked": {
+                "type": BlockEngine.Enum.BLOCK_HAT,
+                "function": self.whenthisspriteclicked
+            },
+            "whengreaterthan": {
+                "type": BlockEngine.Enum.BLOCK_HAT,
+                "function": self.whenthisspriteclicked
+            },
         }
 
     def broadcast(self,args,api: API):
@@ -26,7 +34,14 @@ class BlocksEvent:
             "broadcast_option": args.broadcast_input
         })
 
+    # Rarely used
     def whenkeypressed(self, args, util):
         pass
+
+    def whenthisspriteclicked(self, args, util):
+        pass
+
+    # Usually used as a when stop clicked, will not implement.
+    def whengreaterthan(self, args, util): pass
     
 BlockEngine.register_extension("event", BlocksEvent())

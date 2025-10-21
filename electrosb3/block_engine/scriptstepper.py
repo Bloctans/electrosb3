@@ -1,4 +1,5 @@
 from electrosb3.block_engine.script import Script
+from electrosb3.block_engine.block import Block
 import time
 import uuid
 
@@ -6,9 +7,15 @@ class ScriptStepper:
     def __init__(self):
         self.scripts = {}
         self.hats = []
+        self.blocks = {}
+
+        self.script_queue = []
 
         self.redraw_requested = False
         self.inc = 0
+
+    def add_block(self, id, block):
+        self.blocks.update({id: block})
 
     def request_redraw(self):
         #print("Request redraw"+str(self.inc))
@@ -19,13 +26,21 @@ class ScriptStepper:
 
     def uuid(self): return uuid.uuid4().hex
 
-    def create_script(self, hat, sprite):
-        script = Script()
-        script.current_block = hat.next
-        script.sprite = sprite
-        script.script_stepper = self
+    def get_block(self, block: str):
+        if type(block) == Block:
+            return block
+        else:
+            return self.blocks[block]
 
-        self.scripts.update({self.uuid(): script})
+    def create_script(self, hat, sprite):
+        print("New script")
+        print(self.get_block(hat.next))
+        script = Script()
+        script.current_block = self.get_block(hat.next)
+        script.sprite = sprite
+        script.stepper = self
+
+        self.script_queue.append({self.uuid(): script})
 
     def start_hat(self, hat):
         sprite = hat.sprite
@@ -78,16 +93,23 @@ class ScriptStepper:
         start_time = time.time()
 
         while (not self.redraw_requested) and (time.time() - start_time < (1/60 * 0.75)):
+            to_kill = []
+
             for script_id in self.scripts:
                 script = self.scripts[script_id]
 
-                print(script.__dict__)
+                #print(script.__dict__)
 
                 if (not script.running):
-                    self.scripts.pop(script_id)
+                    to_kill.append(script_id)
                     continue
 
                 #print("Step script")
                 script.step()
+
+            for pop in to_kill: self.scripts.pop(pop)
+
+            for script in self.script_queue: self.scripts.update(script)
+            self.script_queue = []
 
         time.sleep(1/30)

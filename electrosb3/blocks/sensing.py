@@ -24,7 +24,7 @@ class BlocksSensing:
                 "function": self.timer
             },
             "resettimer": {
-                "type": Enum.BLOCK_INPUT,
+                "type": Enum.BLOCK_STACK,
                 "function": self.resettimer
             },
             "mousex": {
@@ -35,6 +35,10 @@ class BlocksSensing:
                 "type": Enum.BLOCK_INPUT,
                 "function": self.mousey
             },
+            "mousedown": {
+                "type": Enum.BLOCK_INPUT,
+                "function": self.mousedown
+            },
             "touchingobject": {
                 "type": Enum.BLOCK_INPUT,
                 "function": self.touchingobject
@@ -42,6 +46,10 @@ class BlocksSensing:
             "touchingobjectmenu": {
                 "type": Enum.BLOCK_INPUT,
                 "function": self.touchingobjectmenu
+            },
+            "loudness": {
+                "type": Enum.BLOCK_INPUT,
+                "function": self.loudness
             },
         }
 
@@ -53,11 +61,11 @@ class BlocksSensing:
         if property == "x position":
             pass
 
-    def mousex(self, args, util):
-        return util.get_cursor().x
-    
-    def mousey(self, args, util):
-        return util.get_cursor().y
+    def mousex(self, args, util): return util.get_cursor().x
+    def mousey(self, args, util): return util.get_cursor().y
+    def mousedown(self, args, util): return util.get_mouse_down()
+
+    def loudness(self, args, util): return 0
     
     def touchingobject(self, args, util):
         return util.is_touching(args.touchingobjectmenu, util.sprite)
@@ -70,10 +78,10 @@ class BlocksSensing:
     def keyoptions(self, args, util):
         return args.key_option.name
 
-    def timer(self, util):
+    def timer(self, args, util):
         return time.time() - self.start_time
     
-    def resettimer(self, util):
+    def resettimer(self, args, util):
         self.start_time = time.time()
 
 register_extension("sensing", BlocksSensing())

@@ -9,7 +9,7 @@ class BlocksLooks:
             },
             "switchbackdropto": {
                 "type": BlockEngine.Enum.BLOCK_STACK,
-                "function": self.switchcostumeto
+                "function": self.switchbackdropto
             },
             "costume": {
                 "type": BlockEngine.Enum.BLOCK_INPUT,
@@ -73,6 +73,7 @@ class BlocksLooks:
 
     def costume_from_name(self, name, costumes):
         for costume in costumes:
+            print(costume.name)
             if costume.name == name: return costume
 
     def hide(self, args, util): util.sprite.visible = False
@@ -82,6 +83,13 @@ class BlocksLooks:
         sprite = util.sprite
 
         costume = args.costume or 0
+
+        sprite.set_costume(costume)
+
+    def switchbackdropto(self, args, util):
+        sprite = util.sprite
+
+        costume = args.backdrop or 0
 
         sprite.set_costume(costume)
 
@@ -115,11 +123,11 @@ class BlocksLooks:
     def costume(self, args, script):
         sprite = script.sprite
 
-        return self.costume_from_name(args.costume, sprite.costumes)
+        return self.costume_from_name(args.costume.name, sprite.costumes)
     
     def backdrops(self, args, script):
         sprite = script.sprite
 
-        return self.costume_from_name(args.backdrop, sprite.costumes)
+        return self.costume_from_name(args.backdrop.name, sprite.get_stage().costumes)
 
 BlockEngine.register_extension("looks", BlocksLooks())

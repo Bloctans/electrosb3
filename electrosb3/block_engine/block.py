@@ -10,6 +10,16 @@ class Field:
 class Args:
     def __init__(self): pass
 
+class InputReturnedNilException(Exception):
+    """Exception raised for custom error in the application."""
+
+    def __init__(self, message):
+        super().__init__(message)
+        self.message = message
+
+    def __str__(self):
+        return f"{self.message}, \nIt is possible that you defined an opcode with the wrong type, to prevent headaches, this custom exception handles this error."
+
 class Block:   
     timer_end = 0
 
@@ -38,7 +48,7 @@ class Block:
         else: return Field(field[0], field[1])
 
     def parse_input(self, input, script):
-        blocks = self.sprite.blocks
+        blocks = self.api.stepper.blocks
 
         data = ExtensionSupport.get_block_set("data")
 
@@ -60,7 +70,13 @@ class Block:
             block = blocks[wrapper_value]
 
             if block.info["type"] == Enum.BLOCK_INPUT: # For now, input blocks are ran recursively, 
-                return block.run_block(script)  
+                response = block.run_block(script)
+
+                print(response)
+                if response == None:
+                    raise InputReturnedNilException(f"Opcode - {block.set + "_" + block.opcode}, ID - {block.id}, Sprite - {block.sprite.name}")
+
+                return response 
             else: # Return so that it can be branched, i dont believe this is assuming anyth
                 return block.id
         elif wrapper_type == 11: # Variable

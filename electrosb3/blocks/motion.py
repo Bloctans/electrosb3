@@ -80,11 +80,11 @@ class BlocksMotion:
 
     def setx(self, args, util): 
         util.request_redraw()
-        util.sprite.position.x = float(args.x) # TODO: Properly convert digits
+        util.sprite.position.x = float(args.x)
 
     def sety(self, args, util):
-        #print(args)
-        pass
+        util.request_redraw()
+        util.sprite.position.y = float(args.y)
 
     def xposition(self, args, util): return util.sprite.position.x
     def yposition(self, args, util): return util.sprite.position.y

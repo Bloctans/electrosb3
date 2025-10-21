@@ -31,49 +31,78 @@ class BlocksControl:
                 "type": BlockEngine.Enum.BLOCK_C,
                 "function": self.repeat_until
             },
+            "wait_until": {
+                "type": BlockEngine.Enum.BLOCK_STACK,
+                "function": self.wait_until
+            },
+            "start_as_clone": {
+                "type": BlockEngine.Enum.BLOCK_HAT
+            },
+            "delete_this_clone": {
+                "type": BlockEngine.Enum.BLOCK_HAT,
+                "function": self.delete_this_clone
+            },
+            "create_clone_of": {
+                "type": BlockEngine.Enum.BLOCK_HAT,
+                "function": self.create_clone_of
+            },
+            "create_clone_of_menu": {
+                "type": BlockEngine.Enum.BLOCK_HAT,
+                "function": self.create_clone_of_menu
+            }
         }
 
     def forever(self, args, util):
-        api.script.branch_to(args.substack, True)
+        util.script.branch_to(args.substack, True)
 
     def repeat(self, args, util):
-        if api.loops <= args.times:
+        if util.loops <= args.times:
             #print("Branch repeat")
-            api.script.branch_to(args.substack, True)
+            util.script.branch_to(args.substack, True)
 
     def stop(self, args, util):
         if args.stop_option == "other scripts in sprite":
             def other_scripts(script):
-                if script.sprite == api.sprite: script.kill()
+                if script.sprite == util.sprite: script.kill()
 
-            api.stepper.each_script(other_scripts)
+            util.stepper.each_script(other_scripts)
         else:
             print("Invalid stop option: "+args.stop_option)
 
     def repeat_until(self, args, util):
         #print("Branch repeat")
-        if not args.condition:
-            api.script.branch_to(args.substack, True)
+        if not args.condition: util.script.branch_to(args.substack, True)
+
+    def wait_until(self, args, util):
+        if not args.condition: util.do_yield()
+
+    def delete_this_clone(self, args, util): util.sprite.delete_this_clone()
+
+    def create_clone_of(self, args, util):
+        if args.clone_option == "myself":
+            util.sprite.create_clone()
+
+    def create_clone_of_menu(self, args, util): return "myself"
 
     def wait(self, args, util):
-        if (not api.timer_started):
+        if (not util.timer_started):
             #print("timer start")
-            api.do_yield()
-            api.request_redraw()
-            api.start_timer(args.duration)
-        elif (not api.timer_finished()):
-            api.do_yield()
+            util.do_yield()
+            util.request_redraw()
+            util.start_timer(args.duration)
+        elif (not util.timer_finished()):
+            util.do_yield()
         else:
-            api.end_timer()
+            util.end_timer()
 
     def block_if(self, args, util):
         if args.condition:
-            api.script.branch_to(args.substack, False)
+            util.script.branch_to(args.substack, False)
 
     def block_if_else(self, args, util):
         if args.condition:
-            api.script.branch_to(args.substack, False)
+            util.script.branch_to(args.substack, False)
         else:
-            api.script.branch_to(args.substack2, False)
+            util.script.branch_to(args.substack2, False)
 
 BlockEngine.register_extension("control", BlocksControl())

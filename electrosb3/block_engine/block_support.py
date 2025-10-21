@@ -8,7 +8,8 @@ keymap = {
     "a": pygame.K_a,
     "s": pygame.K_s,
     "d": pygame.K_d,
-    "space": pygame.K_SPACE
+    "b": pygame.K_b,
+    "space": pygame.K_SPACE,
 }
 
 class API:
@@ -29,7 +30,20 @@ class API:
 
     #def wait_frame(self): self.script.set_yield(Enum.YIELD_TILL_NEXT_FRAME)
 
-    def is_key_down(self, key): return pygame.key.get_pressed()[keymap[key]]
+    def is_key_down(self, key): 
+        if key == "any":
+            for key in pygame.key.get_pressed():
+                if key:
+                    return True
+                
+            return False
+        else:
+            return pygame.key.get_pressed()[keymap[key]]
+
+    def get_cursor(self): return pygame.Vector2(pygame.mouse.get_pos())
+    def get_mouse_down(self): return pygame.mouse.get_pressed()[0]
+
+    def is_touching(self, menu, sprite): return False # TODO
 
     def start_hats(self, hat, args = None): self.stepper.start_hats(hat, args)
 
@@ -48,6 +62,6 @@ class API:
 
     def set_script(self, script): 
         self.script = script
-        self.stepper = self.script.script_stepper
+        self.stepper = self.script.stepper
 
     def do_yield(self): self.script.set_status(Enum.STATUS_YIELDED)
