@@ -108,4 +108,4 @@ class ScriptStepper:
             for script in self.script_queue: self.scripts.update(script)
             self.script_queue = []
 
-        time.sleep(1/30)
+        while (time.time() - start_time < (1/30)): pass

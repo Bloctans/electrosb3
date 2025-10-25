@@ -1,3 +1,5 @@
+import pygame
+
 class Drawer:
     def __init__(self):
         self.drawables = []
@@ -15,6 +17,9 @@ class Drawer:
         for drawable in self.drawables:
             if drawable.visible:
                 image, rect = drawable.get_image()
+
+                pygame.draw.rect(screen, (255,0,0), rect, 2)
+
                 screen.blit(
                     image, 
                     rect

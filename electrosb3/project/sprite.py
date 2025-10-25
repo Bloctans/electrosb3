@@ -16,7 +16,7 @@ class Sprite:
         self.size = 100
         self.rotation = 90
 
-        self.alpha = 200
+        self.alpha = 0
 
         self.project = None
         self.renderer = None
@@ -78,7 +78,15 @@ class Sprite:
         image = self.current_costume.image
         center = self.get_pos()
 
-        rotated_image = pygame.transform.rotate(image, self.rotation-90)
+        transformed_size = self.size/100
+
+        if self.rotation == 0:
+            rotated_image = image
+        else:
+            rotated_image = pygame.transform.rotate(image, self.rotation-90)
+
+        rotated_image = pygame.transform.scale_by(rotated_image, (transformed_size, transformed_size))
+
         rotated_image.set_alpha(255-self.alpha)
 
         new_rect = rotated_image.get_rect(center = image.get_rect(topleft = (center[0], center[1])).center)

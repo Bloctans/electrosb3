@@ -1,6 +1,7 @@
 import electrosb3.block_engine.block_support as BlockSupport
 import electrosb3.block_engine.extension_support as ExtensionSupport
 import electrosb3.block_engine.enum as Enum
+import json
 
 class Field:
     def __init__(self, name, id):
@@ -16,7 +17,7 @@ class Mutation:
         
         # im way too lazy
         if has("proccode"): self.proc_code = raw["proccode"]
-        if has("argumentids"): self.args = raw["argumentids"]
+        if has("argumentids"): self.args = json.loads(raw["argumentids"])
         #if has("warp"): self.warp = raw["warp"]
 
         # ?
@@ -45,6 +46,8 @@ class Block:
 
         self.next = None
         self.parent = None
+
+        self.mutations = None
 
         self.api = BlockSupport.API(sprite, self)
 

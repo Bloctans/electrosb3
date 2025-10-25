@@ -41,11 +41,11 @@ class BlocksLooks:
             },
             "cleargraphiceffects": {
                 "type": BlockEngine.Enum.BLOCK_STACK,
-                "function": self.changesizeby
+                "function": self.cleargraphiceffects
             },
             "setsizeto": {
                 "type": BlockEngine.Enum.BLOCK_STACK,
-                "function": self.changesizeby
+                "function": self.setsizeto
             },
             "hide": {
                 "type": BlockEngine.Enum.BLOCK_STACK,
@@ -99,13 +99,22 @@ class BlocksLooks:
 
     def changesizeby(self, args, util):
         util.request_redraw()
-        #util.sprite.size += args.
+        util.sprite.size += args.change
+
+    def cleargraphiceffects(self, args, util):
+        pass
+
+    def setsizeto(self, args, util):
+        util.request_redraw()
+        util.sprite.size = args.size
 
     def changeeffectby(self, args, util):
+        util.request_redraw()
         if args.effect.name == "GHOST":
             util.sprite.alpha += float(args.change)*2.5
 
     def seteffectto(self, args, util):
+        util.request_redraw()
         if args.effect.name == "GHOST":
             util.sprite.alpha = float(args.value)*2.5
 

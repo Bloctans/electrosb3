@@ -64,7 +64,7 @@ class Deserialize:
             block_value = serialized_blocks[block_id]
 
             #print(block_id)
-            #print(block_value)
+            print(block_value)
 
             if type(block_value) == list:
                 stepper.add_block(block_id, block) # add and pray because im too lazy
@@ -83,7 +83,7 @@ class Deserialize:
             block.id = block_id
 
             if "mutation" in block_value.keys():
-                print(block_value["mutation"])
+                block.mutations = BlockEngine.Mutation(block_value["mutation"])
 
             block.args = {
                 "inputs": block_value["inputs"],

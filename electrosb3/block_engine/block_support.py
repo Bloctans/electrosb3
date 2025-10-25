@@ -42,6 +42,8 @@ class API:
             return False
         else:
             return pygame.key.get_pressed()[keymap[key]]
+        
+    def get_script_info(self): return self.script.data
 
     def get_cursor(self): return Util.reverse_scratch_pos(pygame.Vector2(pygame.mouse.get_pos()))
     def get_mouse_down(self): return pygame.mouse.get_pressed()[0]
@@ -68,13 +70,14 @@ class API:
     def end_timer(self): self.timer_started = False
 
     def timer_finished(self): 
-        return (time.time() - self.timer) > self.timer_end
+        return (time.time() - self.timer) >= self.timer_end
 
     def request_redraw(self):
-        self.stepper.request_redraw()
+        if (not self.script.warp): self.stepper.request_redraw()
 
     def set_script(self, script): 
         self.script = script
         self.stepper = self.script.stepper
 
-    def do_yield(self): self.script.set_status(Enum.STATUS_YIELDED)
+    def do_yield(self): 
+        if (not self.script.warp): self.script.set_status(Enum.STATUS_YIELDED)
