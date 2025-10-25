@@ -23,6 +23,8 @@ class Sprite:
         self.visible = True
         self.layer_order = 0
 
+        self.t = 0
+
         self.name = "Placeholder"
 
         # we can always refactor later
@@ -61,21 +63,46 @@ class Sprite:
             costume = round(costume)
             costume = self.costumes[costume % len(self.costumes)]
 
-        #print(costume)
-
         self.current_costume = costume
+
+    def get_image(self):
+        image = self.current_costume.image
+        center = self.get_pos()
+
+        rotated_image = pygame.transform.rotate(image, self.rotation-90)
+
+        new_rect = rotated_image.get_rect(center = image.get_rect(topleft = (center[0], center[1])).center)
+
+        return rotated_image, new_rect
+
+    def get_bounds(self):
+        image, _ = self.get_image()
+
+        width = image.get_width()
+        height = image.get_height()
+
+        position = self.get_pos()
+
+        return {
+            "x1": position[0],
+            "y1": position[1],
+            "x2": position[0] + width,
+            "y2": position[1] + height
+        }
 
     def setup(self):
         self.current_costume = self.costumes[0]
 
     def update(self, screen):
+        self.t += 1
         if self.visible:
+            image, rect = self.get_image()
             screen.blit(
-                self.current_costume.image, 
-                Util.to_scratch_pos(self.get_pos())
+                image, 
+                rect
             )
 
         for clone in self.clones: clone.update(screen)
 
     def get_pos(self):
-        return self.position - self.current_costume.rotation_center
+        return Util.to_scratch_pos(self.position - self.current_costume.rotation_center)

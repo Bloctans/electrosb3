@@ -1,5 +1,6 @@
 import electrosb3.block_engine.enum as Enum
 import time
+import electrosb3.util as Util
 
 import pygame
 
@@ -10,6 +11,8 @@ keymap = {
     "d": pygame.K_d,
     "b": pygame.K_b,
     "space": pygame.K_SPACE,
+    "down arrow": pygame.K_DOWN,
+    "up arrow": pygame.K_UP
 }
 
 class API:
@@ -40,10 +43,20 @@ class API:
         else:
             return pygame.key.get_pressed()[keymap[key]]
 
-    def get_cursor(self): return pygame.Vector2(pygame.mouse.get_pos())
+    def get_cursor(self): return Util.reverse_scratch_pos(pygame.Vector2(pygame.mouse.get_pos()))
     def get_mouse_down(self): return pygame.mouse.get_pressed()[0]
 
-    def is_touching(self, menu, sprite): return False # TODO
+    def is_touching(self, menu, sprite): 
+        sprite1_bounds = sprite.get_bounds()
+        cursor = self.get_cursor()
+
+        if menu.name == "_mouse_":
+            #if cursor[0] > sprite1_bounds["x1"] and cursor[0] < sprite1_bounds["x2"]:
+            if cursor[1] > sprite1_bounds["y1"] and cursor[1] < sprite1_bounds["y2"]:
+                print("Mouse2")
+                return True
+
+        return False # TODO
 
     def start_hats(self, hat, args = None): self.stepper.start_hats(hat, args)
 

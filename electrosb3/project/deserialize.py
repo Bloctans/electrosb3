@@ -66,8 +66,6 @@ class Deserialize:
             print(block_id)
             print(block_value)
 
-            #print(block_value["opcode"], block_value["fields"])
-
             if type(block_value) == list:
                 stepper.add_block(block_id, block) # add and pray because im too lazy
                 continue

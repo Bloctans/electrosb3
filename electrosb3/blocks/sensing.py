@@ -61,8 +61,8 @@ class BlocksSensing:
         if property == "x position":
             pass
 
-    def mousex(self, args, util): return util.get_cursor().x
-    def mousey(self, args, util): return util.get_cursor().y
+    def mousex(self, args, util): return util.get_cursor()[0]
+    def mousey(self, args, util): return util.get_cursor()[1]
     def mousedown(self, args, util): return util.get_mouse_down()
 
     def loudness(self, args, util): return 0

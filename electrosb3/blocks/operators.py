@@ -60,11 +60,21 @@ class BlocksOperator:
             "join": {
                 "type": BlockEngine.Enum.BLOCK_INPUT,
                 "function": self.join
+            },
+            "contains": {
+                "type": BlockEngine.Enum.BLOCK_INPUT,
+                "function": self.contains
+            },
+            "round": {
+                "type": BlockEngine.Enum.BLOCK_INPUT,
+                "function": self.round
             }
         }
 
         self.operations = {
-            "floor": math.floor
+            "floor": math.floor,
+            "cos": math.cos,
+            "sin": math.sin
         }
 
     def add(self, args, util): return args.num1+args.num2
@@ -73,15 +83,24 @@ class BlocksOperator:
     
     def multiply(self, args, util): 
         return float(args.num1)*float(args.num2)
+    
+    def contains(self, args, util):
+        return (str(args.string2) in str(args.string1))
+    
+    def round(self, args, util):
+        return math.round(args.num)
 
     def mod(self, args, util): return args.num1%args.num2
 
     def block_not(self,args,api):
-        return not args.operand
+        try:
+            return not args.operand
+        except:
+            return True
 
     def random(self, args, util): 
         # Fucking nasty hack because python hates when you use a keyword in syntax like that
-        return random.randint(args.__dict__["from"], args.to)
+        return random.randint(float(args.__dict__["from"]), float(args.to))
 
     def equals(self, args, util): 
         return str(args.operand1) == str(args.operand2)
@@ -89,7 +108,8 @@ class BlocksOperator:
     def join(self, args, util): 
         return str(args.string1)+str(args.string2)
 
-    def subtract(self, args, util): return args.num1-args.num2
+    def subtract(self, args, util): 
+        return float(args.num1)-float(args.num2)
 
     def mathop(self, args, util): return self.operations[args.operator.name](args.num)
 

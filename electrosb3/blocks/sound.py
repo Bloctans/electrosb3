@@ -50,7 +50,7 @@ class BlocksSound:
             sound_entry = self.sounds_playing[util.block.id]
 
             if sound_entry.get_busy():
-                print("Yielding play")
+                #print("Yielding play")
                 util.do_yield()
             else:
                 self.sounds_playing.pop(util.block.id)

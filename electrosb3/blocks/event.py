@@ -8,8 +8,12 @@ class BlocksEvent:
                 "type": BlockEngine.Enum.BLOCK_HAT
             },
             "broadcast": {
-                "type": BlockEngine.Enum.BLOCK_HAT,
+                "type": BlockEngine.Enum.BLOCK_STACK,
                 "function": self.broadcast
+            },
+            "broadcastandwait": {
+                "type": BlockEngine.Enum.BLOCK_STACK,
+                "function": self.broadcastandwait
             },
             "whenbroadcastreceived": {
                 "type": BlockEngine.Enum.BLOCK_HAT,
@@ -29,6 +33,14 @@ class BlocksEvent:
         }
 
     def broadcast(self,args,api: API):
+        #print("do broadcast")
+        print(args.broadcast_input)
+        api.start_hats("event_whenbroadcastreceived", {
+            "broadcast_option": args.broadcast_input
+        })
+
+    def broadcastandwait(self,args,api: API):
+        #print("do broadcast")
         print(args.broadcast_input)
         api.start_hats("event_whenbroadcastreceived", {
             "broadcast_option": args.broadcast_input

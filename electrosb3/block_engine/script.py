@@ -41,13 +41,12 @@ class Script:
         else:
             self.current_block = self.get_block(block)
 
-    def step_to_next_block(self):
+    def next_block(self):
         if self.current_block.next:
             self.goto(self.current_block.next)
             return True
         else:
             return False
-        #print(self.current_block.opcode)
 
     def run_block(self, block): 
         return block.run_block(self)
@@ -58,46 +57,47 @@ class Script:
     def kill(self):
         self.running = False
 
+    def step_to_next_block(self):
+        could_step = self.next_block()
+
+        if could_step:
+            #print("step")
+            return # Nothing else needs to happen
+        
+        if len(self.stack) == 0:  # Stack has no data, stop running thread.
+            print("kill")
+            self.running = False
+            return
+        
+        stack_last = self.stack.pop()
+
+        if stack_last.is_loop:
+            #print("loop")
+            """
+                i was thinking if its a loop, we store the substacks block in the stack
+            """
+            self.goto(stack_last.parent)
+            return True # now break, as loops need to allow other threads to run.
+        else:
+            #print("go to next")
+            self.goto(stack_last.parent)
+            return self.step_to_next_block()
+
     # Step the script once
     # TODO: we shouldnt need to return to break tbh
     def step_once(self):
         if self.status == Enum.STATUS_YIELDED: # Now that its yielded, step again.
             self.set_status(Enum.STATUS_NONE)
 
-        print(self.current_block.opcode)
-        print(self.sprite.name)
-        print(self.current_block.id)
+        #print(self.current_block.opcode)
+        #print(self.sprite.name)
+        #print(self.current_block.id)
         self.run_block(self.current_block)
 
         should_step = (self.status == Enum.STATUS_NONE) and (not self.dont_step)
 
         if should_step:
-            could_step = self.step_to_next_block()
-
-            if could_step:
-                print("step")
-                return # Nothing else needs to happen
-            
-            if len(self.stack) == 0:  # Stack has no data, stop running thread.
-                print("kill thread")
-                self.running = False
-                return True
-            
-            stack_last = self.stack.pop()
-
-            if stack_last.is_loop:
-                print("loop")
-                """
-                    i was thinking if its a loop, we store the substacks block in the stack
-                """
-                self.goto(stack_last.parent)
-                #self.just_branched = True
-                #self.goto(stack_last.block)
-                return True # now break, as loops need to allow other threads to run.
-            else:
-                print("go to next")
-                self.goto(stack_last.parent)
-                self.step_to_next_block()
+            return self.step_to_next_block()
         elif self.status == Enum.STATUS_YIELDED:
             return True
 

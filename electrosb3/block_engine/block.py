@@ -72,7 +72,6 @@ class Block:
             if block.info["type"] == Enum.BLOCK_INPUT: # For now, input blocks are ran recursively, 
                 response = block.run_block(script)
 
-                print(response)
                 if response == None:
                     raise InputReturnedNilException(f"Opcode - {block.set + "_" + block.opcode}, ID - {block.id}, Sprite - {block.sprite.name}")
 

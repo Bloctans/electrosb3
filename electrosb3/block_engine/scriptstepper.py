@@ -33,14 +33,14 @@ class ScriptStepper:
             return self.blocks[block]
 
     def create_script(self, hat, sprite):
-        print("New script")
-        print(self.get_block(hat.next))
-        script = Script()
-        script.current_block = self.get_block(hat.next)
-        script.sprite = sprite
-        script.stepper = self
+        #print("New script")
+        if hat.next:
+            script = Script()
+            script.current_block = self.get_block(hat.next)
+            script.sprite = sprite
+            script.stepper = self
 
-        self.script_queue.append({self.uuid(): script})
+            self.script_queue.append({self.uuid(): script})
 
     def start_hat(self, hat):
         sprite = hat.sprite
@@ -52,10 +52,9 @@ class ScriptStepper:
 
     def each_script(self, callback):
         for script in self.scripts:
-            callback(script)
+            callback(self.scripts[script])
 
     def each_hat(self, opcode, fields, callback):
-        #print(self.hats)
         for hat in self.hats:
             if hat.get_opcode() == opcode:
                 hat_fields = hat.parse_only_fields()
@@ -98,13 +97,10 @@ class ScriptStepper:
             for script_id in self.scripts:
                 script = self.scripts[script_id]
 
-                #print(script.__dict__)
-
                 if (not script.running):
                     to_kill.append(script_id)
                     continue
 
-                #print("Step script")
                 script.step()
 
             for pop in to_kill: self.scripts.pop(pop)

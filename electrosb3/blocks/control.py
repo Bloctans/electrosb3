@@ -57,20 +57,24 @@ class BlocksControl:
 
     def repeat(self, args, util):
         if util.loops <= args.times:
-            #print("Branch repeat")
             util.script.branch_to(args.substack, True)
 
     def stop(self, args, util):
-        if args.stop_option == "other scripts in sprite":
+        stop_option = args.stop_option.name
+
+        if stop_option == "other scripts in sprite":
             def other_scripts(script):
-                if script.sprite == util.sprite: script.kill()
+                if (script.sprite == util.sprite) and (not (script == util.script)): 
+                    script.kill()
 
             util.stepper.each_script(other_scripts)
+        elif stop_option == "this script":
+            print("this script")
+            util.script.kill()
         else:
-            print("Invalid stop option: "+args.stop_option)
+            print("Invalid stop option: "+stop_option)
 
     def repeat_until(self, args, util):
-        #print("Branch repeat")
         if not args.condition: util.script.branch_to(args.substack, True)
 
     def wait_until(self, args, util):
@@ -86,7 +90,6 @@ class BlocksControl:
 
     def wait(self, args, util):
         if (not util.timer_started):
-            #print("timer start")
             util.do_yield()
             util.request_redraw()
             util.start_timer(args.duration)

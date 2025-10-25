@@ -73,7 +73,6 @@ class BlocksLooks:
 
     def costume_from_name(self, name, costumes):
         for costume in costumes:
-            print(costume.name)
             if costume.name == name: return costume
 
     def hide(self, args, util): util.sprite.visible = False
@@ -90,6 +89,8 @@ class BlocksLooks:
         sprite = util.sprite
 
         costume = args.backdrop or 0
+
+        
 
         sprite.set_costume(costume)
 

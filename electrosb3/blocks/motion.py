@@ -46,8 +46,12 @@ class BlocksMotion:
                 "function": self.turnright
             },
             "direction": {
-                "type": BlockEngine.Enum.BLOCK_STACK,
+                "type": BlockEngine.Enum.BLOCK_INPUT,
                 "function": self.direction
+            },
+            "setrotationstyle": {
+                "type": BlockEngine.Enum.BLOCK_INPUT,
+                "function": self.setrotationstyle
             }
         }
 
@@ -68,6 +72,9 @@ class BlocksMotion:
 
     def direction(self, args, util): return util.sprite.rotation
 
+    def setrotationstyle(self, args, util):
+        print("Unimplemented: setrotationstyle")
+
     def changexby(self, args, util): 
         self._changeby(args.dx,0,util)
 
@@ -76,7 +83,7 @@ class BlocksMotion:
 
     def gotoxy(self, args, util): 
         util.request_redraw()
-        util.sprite.position = Vector2(args.x, args.y)
+        util.sprite.position = Vector2(float(args.x), float(args.y))
 
     def setx(self, args, util): 
         util.request_redraw()
