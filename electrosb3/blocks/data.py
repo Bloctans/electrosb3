@@ -43,6 +43,14 @@ class BlocksData:
             "addtolist": {
                 "type": BlockEngine.Enum.BLOCK_INPUT,
                 "function": self.hide_variable
+            },
+            "itemnumoflist": {
+                "type": BlockEngine.Enum.BLOCK_INPUT,
+                "function": self.hide_variable
+            },
+            "listcontainsitem": {
+                "type": BlockEngine.Enum.BLOCK_INPUT,
+                "function": self.hide_variable
             }
         }
 

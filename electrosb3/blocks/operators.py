@@ -90,7 +90,9 @@ class BlocksOperator:
     def round(self, args, util):
         return math.round(args.num)
 
-    def mod(self, args, util): return args.num1%args.num2
+    def mod(self, args, util): 
+        print(args.__dict__)
+        return args.num1%args.num2
 
     def block_not(self,args,api):
         try:
@@ -100,7 +102,10 @@ class BlocksOperator:
 
     def random(self, args, util): 
         # Fucking nasty hack because python hates when you use a keyword in syntax like that
-        return random.randint(float(args.__dict__["from"]), float(args.to))
+        rand_from = float(args.__dict__["from"])
+        rand_to = float(args.to)
+
+        return rand_from + (random.random() * (rand_to - rand_from))
 
     def equals(self, args, util): 
         return str(args.operand1) == str(args.operand2)

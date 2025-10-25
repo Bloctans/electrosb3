@@ -16,7 +16,10 @@ class Sprite:
         self.size = 100
         self.rotation = 90
 
+        self.alpha = 200
+
         self.project = None
+        self.renderer = None
 
         self.parent = None
 
@@ -28,10 +31,14 @@ class Sprite:
         self.name = "Placeholder"
 
         # we can always refactor later
+
+    def set_layer(self, layer):
+        self.layer_order = layer
         
     def create_clone(self):
         clone = Sprite()
 
+        clone.layer_order = self.layer_order + 1
         clone.position = self.position
         clone.size = self.size
         clone.rotation = self.rotation
@@ -40,8 +47,10 @@ class Sprite:
         clone.sounds = self.sounds
         clone.current_costume = self.current_costume
         clone.parent = self.parent or self
+        clone.renderer = self.renderer
 
         self.clones.append(clone)
+        self.renderer.add(clone)
 
         stepper = self.project.script_stepper
 
@@ -70,6 +79,7 @@ class Sprite:
         center = self.get_pos()
 
         rotated_image = pygame.transform.rotate(image, self.rotation-90)
+        rotated_image.set_alpha(255-self.alpha)
 
         new_rect = rotated_image.get_rect(center = image.get_rect(topleft = (center[0], center[1])).center)
 
@@ -95,14 +105,6 @@ class Sprite:
 
     def update(self, screen):
         self.t += 1
-        if self.visible:
-            image, rect = self.get_image()
-            screen.blit(
-                image, 
-                rect
-            )
-
-        for clone in self.clones: clone.update(screen)
-
+        
     def get_pos(self):
         return Util.to_scratch_pos(self.position - self.current_costume.rotation_center)

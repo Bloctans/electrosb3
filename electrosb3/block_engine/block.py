@@ -10,6 +10,18 @@ class Field:
 class Args:
     def __init__(self): pass
 
+class Mutation:
+    def __init__(self, raw):
+        def has(value): return value in raw.keys()
+        
+        # im way too lazy
+        if has("proccode"): self.proc_code = raw["proccode"]
+        if has("argumentids"): self.args = raw["argumentids"]
+        #if has("warp"): self.warp = raw["warp"]
+
+        # ?
+        if has("hasnext"): self.has_next = raw["hasnext"]
+
 class InputReturnedNilException(Exception):
     """Exception raised for custom error in the application."""
 

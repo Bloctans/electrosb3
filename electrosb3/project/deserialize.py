@@ -63,8 +63,8 @@ class Deserialize:
         for block_id in serialized_blocks:
             block_value = serialized_blocks[block_id]
 
-            print(block_id)
-            print(block_value)
+            #print(block_id)
+            #print(block_value)
 
             if type(block_value) == list:
                 stepper.add_block(block_id, block) # add and pray because im too lazy
@@ -81,6 +81,9 @@ class Deserialize:
             block.set = set
             block.info = block_data
             block.id = block_id
+
+            if "mutation" in block_value.keys():
+                print(block_value["mutation"])
 
             block.args = {
                 "inputs": block_value["inputs"],
@@ -116,6 +119,10 @@ class Deserialize:
         sprite.is_stage = target["isStage"]
         sprite.name = target["name"]
         sprite.project = project
+
+        sprite.renderer = project.drawer
+
+        project.drawer.add(sprite)
 
         self.deserialize_blocks(target["blocks"], sprite, project)
         sounds = self.deserialize_sounds(target["sounds"])

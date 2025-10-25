@@ -58,6 +58,8 @@ class BlocksControl:
     def repeat(self, args, util):
         if util.loops <= args.times:
             util.script.branch_to(args.substack, True)
+        else:
+            util.loops = 0
 
     def stop(self, args, util):
         stop_option = args.stop_option.name

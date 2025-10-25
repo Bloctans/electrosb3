@@ -31,13 +31,13 @@ class BlocksLooks:
                 "type": BlockEngine.Enum.BLOCK_STACK,
                 "function": self.changesizeby
             },
-            "changeeffectby": {
-                "type": BlockEngine.Enum.BLOCK_STACK,
-                "function": self.changesizeby
-            },
             "seteffectto": {
                 "type": BlockEngine.Enum.BLOCK_STACK,
-                "function": self.changesizeby
+                "function": self.seteffectto
+            },
+            "changeeffectby": {
+                "type": BlockEngine.Enum.BLOCK_STACK,
+                "function": self.changeeffectby
             },
             "cleargraphiceffects": {
                 "type": BlockEngine.Enum.BLOCK_STACK,
@@ -67,7 +67,7 @@ class BlocksLooks:
             },
             "goforwardbackwardlayers": {
                 "type": BlockEngine.Enum.BLOCK_STACK,
-                "function": self.gotofrontback
+                "function": self.gotoforwardbackwardlayers
             }
         }
 
@@ -102,10 +102,31 @@ class BlocksLooks:
         #util.sprite.size += args.
 
     def changeeffectby(self, args, util):
-        pass
+        if args.effect.name == "GHOST":
+            util.sprite.alpha += float(args.change)*2.5
+
+    def seteffectto(self, args, util):
+        if args.effect.name == "GHOST":
+            util.sprite.alpha = float(args.value)*2.5
 
     def gotofrontback(self, args, util):
-        pass
+        renderer = util.sprite.renderer
+        layer_to_set = 0
+
+        if args.front_back.name == "front":
+            layer_to_set = renderer.get_highest_layer()
+        else:
+            layer_to_set = 0
+
+        util.sprite.set_layer(layer_to_set)
+
+    def gotoforwardbackwardlayers(self, args, util):
+        layer = util.sprite.layer_order
+
+        if args.forward_backward.name == "forward":
+            util.sprite.set_layer(layer+args.num)
+        else:
+            util.sprite.set_layer(layer-args.num)
 
     def costumenumbername(self, args, util):
         sprite = util.sprite

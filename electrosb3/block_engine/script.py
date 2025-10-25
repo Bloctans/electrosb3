@@ -65,7 +65,7 @@ class Script:
             return # Nothing else needs to happen
         
         if len(self.stack) == 0:  # Stack has no data, stop running thread.
-            print("kill")
+            #print("kill")
             self.running = False
             return
         
@@ -79,7 +79,7 @@ class Script:
             self.goto(stack_last.parent)
             return True # now break, as loops need to allow other threads to run.
         else:
-            #print("go to next")
+            print("go to next")
             self.goto(stack_last.parent)
             return self.step_to_next_block()
 
