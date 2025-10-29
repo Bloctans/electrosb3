@@ -13,6 +13,8 @@ from electrosb3.project.sprite import *
 from electrosb3.project.deserialize import *
 import electrosb3.block_engine as BlockEngine
 
+# TODO: Reuse field
+
 # is there a way to put all the json values into the class variables without this mess, cuz i havent touched python in a WHILE - bloctans
 class Deserialize:
     def __init__(self, ProjectFile: ZipFile, Project):
@@ -22,10 +24,6 @@ class Deserialize:
         project_json = self.get_as_json("project.json")
 
         for target in project_json["targets"]: Project.sprites.append(self.deserialize_target(target, Project))
-
-        # lemme js sort by layer
-        # just learned you could also just use a lambda for this
-        Project.sprites.sort(key=lambda sprite: sprite.layer_order)
 
         print("Deserialization finished!")
 
@@ -64,7 +62,7 @@ class Deserialize:
             block_value = serialized_blocks[block_id]
 
             #print(block_id)
-            print(block_value)
+            #print(block_value)
 
             if type(block_value) == list:
                 stepper.add_block(block_id, block) # add and pray because im too lazy
@@ -83,6 +81,8 @@ class Deserialize:
             block.id = block_id
 
             if "mutation" in block_value.keys():
+                print(block_id)
+                print(block_value["mutation"])
                 block.mutations = BlockEngine.Mutation(block_value["mutation"])
 
             block.args = {
@@ -116,6 +116,10 @@ class Deserialize:
             sprite.visible = target["visible"]
             sprite.layer_order = target["layerOrder"]
         
+        for variable_id in target["variables"]:
+            variable = target["variables"][variable_id]
+            sprite.variables.update({variable_id: Variable(variable)})
+
         sprite.is_stage = target["isStage"]
         sprite.name = target["name"]
         sprite.project = project

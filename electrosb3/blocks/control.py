@@ -39,15 +39,15 @@ class BlocksControl:
                 "type": BlockEngine.Enum.BLOCK_HAT
             },
             "delete_this_clone": {
-                "type": BlockEngine.Enum.BLOCK_HAT,
+                "type": BlockEngine.Enum.BLOCK_STACK,
                 "function": self.delete_this_clone
             },
             "create_clone_of": {
-                "type": BlockEngine.Enum.BLOCK_HAT,
+                "type": BlockEngine.Enum.BLOCK_STACK,
                 "function": self.create_clone_of
             },
             "create_clone_of_menu": {
-                "type": BlockEngine.Enum.BLOCK_HAT,
+                "type": BlockEngine.Enum.BLOCK_INPUT,
                 "function": self.create_clone_of_menu
             }
         }
@@ -87,6 +87,8 @@ class BlocksControl:
     def create_clone_of(self, args, util):
         if args.clone_option == "myself":
             util.sprite.create_clone()
+        else:
+            pass
 
     def create_clone_of_menu(self, args, util): return "myself"
 

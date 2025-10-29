@@ -49,7 +49,7 @@ class Block:
 
         self.mutations = None
 
-        self.api = BlockSupport.API(sprite, self)
+        self.api = BlockSupport.API(self)
 
         self.sprite = sprite
 
@@ -64,8 +64,6 @@ class Block:
 
     def parse_input(self, input, script):
         blocks = self.api.stepper.blocks
-
-        data = ExtensionSupport.get_block_set("data")
 
         wrapper_type = input[0]
         wrapper_value = input[1]
@@ -96,7 +94,7 @@ class Block:
         elif wrapper_type == 11: # Variable
             return input[1]
         elif wrapper_type == 12: # Variable
-            return data.get_variable(input[2])
+            return self.api.get_variable(input[2]).value
         else:
             pass
 
@@ -125,7 +123,7 @@ class Block:
         return args
 
     def run_block(self, script):
-        self.api.set_script(script)
+        self.api.configure(script)
         self.api.loops += 1
 
         # TODO: Replace the script API with a better one

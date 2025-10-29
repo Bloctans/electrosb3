@@ -142,7 +142,7 @@ class BlocksLooks:
         number_or_name = args.number_name.name
         
         if number_or_name == "number":
-            return sprite.current_costume.id+1
+            return sprite.current_costume.id
         
     def nextcostume(self, args, util):
         #print("next costume")

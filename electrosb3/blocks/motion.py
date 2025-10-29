@@ -68,7 +68,7 @@ class BlocksMotion:
         sprite.rotation += rotation
 
     def pointindirection(self, args, util): 
-        self._setrotation(args.direction, util.sprite)
+        self._setrotation(float(args.direction), util.sprite)
 
     def direction(self, args, util): return util.sprite.rotation
 

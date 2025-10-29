@@ -77,7 +77,8 @@ class BlocksOperator:
             "sin": math.sin
         }
 
-    def add(self, args, util): return args.num1+args.num2
+    def add(self, args, util): 
+        return args.num1+float(args.num2)
     
     def divide(self, args, util): return float(args.num1)/float(args.num2)
     

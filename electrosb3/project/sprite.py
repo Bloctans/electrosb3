@@ -2,10 +2,21 @@ import pygame
 
 import electrosb3.util as Util
 
+class Variable:
+    def __init__(self, variable):
+        self.name = variable[0]
+        self.value = variable[1]
+
+    def copy(self):
+        return Variable([self.name, self.value])
+
 class Sprite:
     def __init__(self):
         self.costumes = []
         self.sounds = []
+
+        self.variables = {}
+        self.lists = {}
 
         self.clones = []
         self.current_costume = None
@@ -34,9 +45,21 @@ class Sprite:
 
     def set_layer(self, layer):
         self.layer_order = layer
+
+    def copy_variables(self):
+        variables = {}
+
+        for variable in self.variables:
+            variable_data = self.variables[variable]
+
+            variables.update({variable: variable_data.copy()})
+
+        return variables
         
     def create_clone(self):
         clone = Sprite()
+
+        print("new clone")
 
         clone.layer_order = self.layer_order + 1
         clone.position = self.position
@@ -48,6 +71,11 @@ class Sprite:
         clone.current_costume = self.current_costume
         clone.parent = self.parent or self
         clone.renderer = self.renderer
+        clone.lists = self.lists
+        clone.variables = self.copy_variables()
+        clone.project = self.project
+
+        print(clone.current_costume.name)
 
         self.clones.append(clone)
         self.renderer.add(clone)

@@ -23,12 +23,20 @@ class BlocksProcedures:
         return args.custom_block
 
     def prototype(self, args, util):
-        pass
+        return util.block
 
     def call(self, args, util):
-        pass
+        for input in args.__dict__:
+            print(input)
 
-        # Here, instead of a system like a broadcast, where it 
+        def find_block(hat):
+            block = hat.run_block(util.script)
+
+            if block.mutations.proc_code == util.get_mutations().proc_code:
+                print("Branch to procedure")
+                util.script.branch_to(hat.id, False, True)
+
+        util.stepper.each_hat("procedures_definition", {}, find_block)
 
 class BlocksArg:
     def __init__(self):
