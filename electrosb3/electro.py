@@ -3,7 +3,7 @@ import pygame
 from electrosb3.window import Window
 from electrosb3.project import Project
 
-VERSION = "0.4"
+VERSION = "0.5"
 
 class Electro:
     def __init__(self):

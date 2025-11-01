@@ -68,6 +68,14 @@ class BlocksOperator:
             "round": {
                 "type": BlockEngine.Enum.BLOCK_INPUT,
                 "function": self.round
+            },
+            "letter_of": {
+                "type": BlockEngine.Enum.BLOCK_INPUT,
+                "function": self.letter_of
+            },
+            "length": {
+                "type": BlockEngine.Enum.BLOCK_INPUT,
+                "function": self.length
             }
         }
 
@@ -87,6 +95,12 @@ class BlocksOperator:
     
     def contains(self, args, util):
         return (str(args.string2) in str(args.string1))
+    
+    def length(self, args, util):
+        return len(args.string)
+    
+    def letter_of(self, args, util):
+        return args.string[int(args.letter)]
     
     def round(self, args, util):
         return math.round(args.num)

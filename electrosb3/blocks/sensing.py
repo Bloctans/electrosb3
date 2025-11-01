@@ -51,15 +51,28 @@ class BlocksSensing:
                 "type": Enum.BLOCK_INPUT,
                 "function": self.loudness
             },
+            "of_object_menu": {
+                "type": Enum.BLOCK_INPUT,
+                "function": self.of_object_menu
+            },
+            "username": {
+                "type": Enum.BLOCK_INPUT,
+                "function": self.username
+            }
         }
 
         self.start_time = time.time()
+
+    def username(self, args, util): return "ElectroUser"
 
     def of(self, args, util):
         property = args.property.name
 
         if property == "x position":
             pass
+
+    def of_object_menu(self, args, util):
+        return util.get_sprite(args.object.name)
 
     def mousex(self, args, util): return util.get_cursor()[0]
     def mousey(self, args, util): return util.get_cursor()[1]

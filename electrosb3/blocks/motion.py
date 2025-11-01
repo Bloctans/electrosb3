@@ -45,6 +45,10 @@ class BlocksMotion:
                 "type": BlockEngine.Enum.BLOCK_STACK,
                 "function": self.turnright
             },
+            "turnleft": {
+                "type": BlockEngine.Enum.BLOCK_STACK,
+                "function": self.turnleft
+            },
             "direction": {
                 "type": BlockEngine.Enum.BLOCK_INPUT,
                 "function": self.direction
@@ -99,6 +103,10 @@ class BlocksMotion:
     def turnright(self, args, util): 
         util.request_redraw()
         self._changerotation(float(args.degrees), util.sprite)
+
+    def turnleft(self, args, util): 
+        util.request_redraw()
+        self._changerotation(-float(args.degrees), util.sprite)
 
     def move_steps(self, args, util):
         sprite = util.sprite

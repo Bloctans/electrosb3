@@ -23,45 +23,80 @@ class BlocksData:
             # TODO
             "lengthoflist": {
                 "type": BlockEngine.Enum.BLOCK_INPUT,
-                "function": self.hide_variable
+                "function": self.lengthoflist
+            },
+            "deletealloflist": {
+                "type": BlockEngine.Enum.BLOCK_STACK,
+                "function": self.deletealloflist
             },
             "itemoflist": {
                 "type": BlockEngine.Enum.BLOCK_INPUT,
-                "function": self.hide_variable
-            },
-            "replaceitemoflist": {
-                "type": BlockEngine.Enum.BLOCK_INPUT,
-                "function": self.hide_variable
-            },
-            "deletealloflist": {
-                "type": BlockEngine.Enum.BLOCK_INPUT,
-                "function": self.hide_variable
-            },
-            "addtolist": {
-                "type": BlockEngine.Enum.BLOCK_INPUT,
-                "function": self.hide_variable
+                "function": self.itemoflist
             },
             "itemnumoflist": {
                 "type": BlockEngine.Enum.BLOCK_INPUT,
-                "function": self.hide_variable
+                "function": self.itemnumoflist
+            },
+            "replaceitemoflist": {
+                "type": BlockEngine.Enum.BLOCK_STACK,
+                "function": self.replaceitemoflist
+            },
+            "addtolist": {
+                "type": BlockEngine.Enum.BLOCK_STACK,
+                "function": self.addtolist
             },
             "listcontainsitem": {
-                "type": BlockEngine.Enum.BLOCK_INPUT,
-                "function": self.hide_variable
-            }
+                "type": BlockEngine.Enum.BLOCK_STACK,
+                "function": self.listcontainsitem
+            },
+            "insertatlist": {
+                "type": BlockEngine.Enum.BLOCK_STACK,
+                "function": self.insertatlist
+            },
         }
     
     def hide_variable(self, args, util):
         return 0
 
     def setvariableto(self, args, util): 
-        util.set_variable(args.variable.id, args.value)
+        variable = util.get_variable(args.variable.id)
+        variable.value = args.value
+
+    def deletealloflist(self, args, util):
+        print(args.__dict__)
+
+    def itemoflist(self, args, util):
+        list = util.get_list(args.list.id)
+
+        return list.get_item(args.index)
+    
+    def itemnumoflist(self, args, util):
+        list = util.get_list(args.list.id)
+
+        return list.get_item_from_number(args.index)
+    
+    def listcontainsitem(self, args, util):
+        list = util.get_list(args.list.id)
+
+        return list.contains(args.index)
+
+    def replaceitemoflist(self, args, util):
+        print(args.__dict__)
+
+    def insertatlist(self, args, util):
+        print(args.__dict__)
+
+    def addtolist(self, args, util):
+        print(args.__dict__)
+
+    def lengthoflist(self, args, util):
+        list = util.get_list(args.list.id)
+
+        return list.get_length()
 
     def changevariableby(self, args, util):
-        variable_id = args.variable.id
-
-        variable = float(util.get_variable(variable_id).value)
-        util.set_variable(variable_id, variable + float(args.value)) # Always assume this will be a float
+        variable = util.get_variable(args.variable.id)
+        variable.value = float(variable.value) + float(args.value) # Always assume this will be a float
 
 
 BlockEngine.register_extension("data", BlocksData())

@@ -9,6 +9,17 @@ class Variable:
 
     def copy(self):
         return Variable([self.name, self.value])
+    
+class List:
+    def __init__(self, variable):
+        self.name = variable[0]
+        self.list = variable[1]
+
+    def get_length(self):
+        return len(self.list)
+    
+    def get_item(self, index):
+        return self.list[int(index)-1]
 
 class Sprite:
     def __init__(self):
@@ -49,13 +60,17 @@ class Sprite:
     def copy_variables(self):
         variables = {}
 
-        for variable in self.variables:
-            variable_data = self.variables[variable]
-
-            variables.update({variable: variable_data.copy()})
+        for variable in self.variables: variables.update({variable: self.variables[variable].copy()})
 
         return variables
         
+    def copy_lists(self):
+        lists = {}
+
+        for list in self.lists: lists.update({list: self.lists[list].copy()})
+
+        return lists
+    
     def create_clone(self):
         clone = Sprite()
 
@@ -71,11 +86,9 @@ class Sprite:
         clone.current_costume = self.current_costume
         clone.parent = self.parent or self
         clone.renderer = self.renderer
-        clone.lists = self.lists
+        clone.lists = self.copy_lists()
         clone.variables = self.copy_variables()
         clone.project = self.project
-
-        print(clone.current_costume.name)
 
         self.clones.append(clone)
         self.renderer.add(clone)
@@ -89,11 +102,6 @@ class Sprite:
 
     def delete_this_clone(self): self.parent.delete_clone(self)
     def delete_clone(self, clone): self.clones.pop(self.clones.index(clone))
-
-    def get_stage(self):
-        for sprite in self.project.sprites:
-            if sprite.is_stage:
-                return sprite
 
     def set_costume(self, costume): 
         if type(costume) == float or type(costume) == int: 

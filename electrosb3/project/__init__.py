@@ -13,7 +13,7 @@ class Project:
     def __init__(self, file):
         self.game_name = Path(file).stem
 
-        self.sprites: list[Sprite] = []
+        self.sprites: dict[Sprite] = {}
 
         self.script_stepper = ScriptStepper()
         self.drawer = Drawer()

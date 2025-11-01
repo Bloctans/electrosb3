@@ -23,7 +23,9 @@ class Deserialize:
 
         project_json = self.get_as_json("project.json")
 
-        for target in project_json["targets"]: Project.sprites.append(self.deserialize_target(target, Project))
+        for target in project_json["targets"]:
+            sprite = self.deserialize_target(target, Project)
+            Project.sprites.update({sprite.name: sprite})
 
         print("Deserialization finished!")
 
@@ -62,7 +64,7 @@ class Deserialize:
             block_value = serialized_blocks[block_id]
 
             #print(block_id)
-            #print(block_value)
+            print(block_value)
 
             if type(block_value) == list:
                 stepper.add_block(block_id, block) # add and pray because im too lazy
@@ -81,8 +83,6 @@ class Deserialize:
             block.id = block_id
 
             if "mutation" in block_value.keys():
-                print(block_id)
-                print(block_value["mutation"])
                 block.mutations = BlockEngine.Mutation(block_value["mutation"])
 
             block.args = {
@@ -119,6 +119,10 @@ class Deserialize:
         for variable_id in target["variables"]:
             variable = target["variables"][variable_id]
             sprite.variables.update({variable_id: Variable(variable)})
+
+        for list_id in target["lists"]:
+            list = target["lists"][list_id]
+            sprite.lists.update({list_id: List(list)})
 
         sprite.is_stage = target["isStage"]
         sprite.name = target["name"]

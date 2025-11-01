@@ -45,10 +45,10 @@ class BlocksArg:
                 "type": BlockEngine.Enum.BLOCK_HAT,
                 "function": self.reporter_string_number
             },
-            #"reporter_boolean": {
-            #    "type": BlockEngine.Enum.BLOCK_INPUT,
-            #    "function": self.prototype
-            #},
+            "reporter_boolean": {
+                "type": BlockEngine.Enum.BLOCK_HAT,
+                "function": self.reporter_boolean
+            },
         }
 
     def reporter_string_number(self, args, util):
@@ -59,6 +59,15 @@ class BlocksArg:
             return info["procedure_args"][value]
         else:
             return 0
+        
+    def reporter_boolean(self, args, util):
+        value = args.value.name
+        info = util.get_script_info()
+        
+        if "procedure_args" in info.keys():
+            return info["procedure_args"][value]
+        else:
+            return False
 
     def prototype(self, args, util):
         pass

@@ -48,7 +48,12 @@ class API:
     def get_mouse_down(self): return pygame.mouse.get_pressed()[0]
 
     def get_mutations(self): return self.block.mutations
-    def get_stage(self): return self.sprite.get_stage()
+    def get_stage(self):
+        for sprite in self.project.sprites:
+            if sprite.is_stage:
+                return sprite
+
+    def get_sprite(self, name): return self.project.sprites[name]
 
     def is_touching(self, menu, sprite): 
         sprite1_bounds = sprite.get_bounds()
@@ -80,9 +85,14 @@ class API:
         else:
             return stage_vars[id]
 
-    def set_variable(self, id, value): 
-        #print(f"{id}: {value}")
-        self.get_variable(id).value = value
+    def get_list(self, id):
+        sprite_lists = self.sprite.lists
+        stage_lists = self.get_stage().lists
+
+        if id in sprite_lists.keys():
+            return sprite_lists[id]
+        else:
+            return stage_lists[id]
 
     def timer_finished(self): 
         return (time.time() - self.timer) >= self.timer_end
