@@ -11,11 +11,13 @@ class Field:
         self.id = id
 
 class Args:
-    def __init__(self): 
-        # Hack for now until we figure out how to error handle this stuff
-        self.operand = False
-        self.operand1 = False
-        self.operand2 = False
+    def __init__(self): pass
+
+    def get(self, arg):
+        if (arg in self.__dict__.keys()):
+            return self.__dict__[arg]
+        else:
+            return None
 
 class Mutation:
     def __init__(self, raw):
@@ -98,7 +100,7 @@ class Block:
         elif wrapper_type == 11: # Variable
             return input[1]
         elif wrapper_type == 12: # Variable
-            return self.api.get_variable(input[2]).value
+            return self.api.get_variable(Field(wrapper_value, input[2])).value
         else:
             pass
 

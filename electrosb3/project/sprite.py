@@ -113,7 +113,9 @@ class Sprite:
         stepper.each_hat("control_start_as_clone", {}, start_clone_hat)
 
     def delete_this_clone(self): self.parent.delete_clone(self)
-    def delete_clone(self, clone): self.clones.pop(self.clones.index(clone))
+    def delete_clone(self, clone): 
+        print(clone.name)
+        self.clones.pop(self.clones.index(clone))
 
     def costume_from_name(self, name):
         for costume in self.costumes:

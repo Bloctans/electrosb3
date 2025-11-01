@@ -4,6 +4,7 @@ class Drawer:
     def __init__(self):
         self.drawables = []
 
+
     def get_highest_layer(self):
         return len(self.drawables)
 
@@ -14,6 +15,7 @@ class Drawer:
         self.drawables.append(object)
 
     def update(self, screen):
+        self.sort_drawables()
         for drawable in self.drawables:
             if drawable.visible:
                 image, rect = drawable.get_image()

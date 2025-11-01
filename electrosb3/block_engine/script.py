@@ -35,6 +35,8 @@ class Script:
 
     #  This concept is once again... DRUMROLL.............. Stolen from the VM!!!!!!
     def branch_to(self, block: str, loop: bool, procedure: bool = False): 
+        #print(block)
+
         self.stack.append(StackEntry(block, loop, procedure, self.current_block))
         self.dont_step = True
         self.goto(block)

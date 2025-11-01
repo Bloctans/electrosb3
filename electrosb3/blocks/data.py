@@ -72,8 +72,8 @@ class BlocksData:
         return 0
 
     def setvariableto(self, args, util): 
-        variable = util.get_variable(args.variable.id)
-        variable.value = args.value
+        variable = util.get_variable(args.get("variable"))
+        variable.value = args.get("value")
 
     def deletealloflist(self, args, util):
         print("delete")
@@ -84,25 +84,24 @@ class BlocksData:
         print(args.__dict__)
 
     def itemoflist(self, args, util):
-        list = util.get_list(args.list.id)
+        list = util.get_list(args.get("list"))
 
-        return list.get_item(args.index)
+        return list.get_item(args.get("index"))
     
     def itemnumoflist(self, args, util):
-        list = util.get_list(args.list.id)
+        list = util.get_list(args.get("list"))
 
-        return list.number_of(args.item)
+        return list.number_of(args.get("item"))
     
     def listcontainsitem(self, args, util):
-        list = util.get_list(args.list.id)
+        list = util.get_list(args.get("list"))
 
-        return list.contains(args.index)
+        return list.contains(args.get("index"))
 
     def replaceitemoflist(self, args, util):
-        print("replace of")
-        list = util.get_list(args.list.id)
+        list = util.get_list(args.get("list"))
 
-        return list.replace(args.index, args.item)
+        return list.replace(args.get("index"), args.get("item"))
 
     def insertatlist(self, args, util):
         print("insert at")
@@ -113,13 +112,13 @@ class BlocksData:
         print(args.__dict__)
 
     def lengthoflist(self, args, util):
-        list = util.get_list(args.list.id)
+        list = util.get_list(args.get("list"))
 
         return list.get_length()
 
     def changevariableby(self, args, util):
-        variable = util.get_variable(args.variable.id)
-        variable.value = float(variable.value) + float(args.value) # Always assume this will be a float
+        variable = util.get_variable(args.get("variable"))
+        variable.value = float(variable.value) + float(args.get("value")) # Always assume this will be a float
 
 
 BlockEngine.register_extension("data", BlocksData())

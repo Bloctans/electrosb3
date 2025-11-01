@@ -117,12 +117,11 @@ class BlocksOperator:
         return util.int(args.num1)%util.int(args.num2)
 
     def block_not(self,args,api):
-        return not args.operand
+        return not args.get("operand")
 
     def random(self, args, util): 
-        # Fucking nasty hack because python hates when you use a keyword in syntax like that
-        rand_from = util.float(args.__dict__["from"])
-        rand_to = util.float(args.to)
+        rand_from = util.float(args.get("from"))
+        rand_to = util.float(args.get("to"))
 
         return rand_from + (random.random() * (rand_to - rand_from))
 

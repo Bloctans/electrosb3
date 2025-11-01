@@ -82,33 +82,29 @@ class API:
 
     def end_timer(self): self.timer_started = False
 
-    def get_variable(self, id):
-        sprite_vars = self.sprite.variables
-        stage_vars = self.get_stage().variables
+    def get_store(self, is_variable, sprite):
+        if is_variable: return sprite.variables
+        else: return sprite.lists
 
-        if id in sprite_vars.keys():
-            return sprite_vars[id]
-        elif id in stage_vars.keys():
-            return stage_vars[id]
+    def get_data(self, data, is_variable):
+        id = data.id
+
+        sprite_data = self.get_store(is_variable, self.sprite)
+        stage_data = self.get_store(is_variable, self.get_stage())
+
+        if id in sprite_data.keys():
+            return sprite_data[id]
+        elif id in stage_data.keys():
+            return stage_data[id]
         else:
-            # this is probably a variable from another sprite, but we just create a new variable in the current sprite anyways since i dont wanna do through more pain
-            sprite_vars.update({id: Variable(["unknown", 0])})
+            # this is probably a variable from another sprite, so we just create a new variable in the current sprite
+            if is_variable: sprite_data.update({id: Variable([data.name, 0])})
+            else: sprite_data.update({id: List([data.name, []])})
 
-            return sprite_vars[id]
+            return sprite_data[id]
 
-    def get_list(self, id):
-        sprite_lists = self.sprite.lists
-        stage_lists = self.get_stage().lists
-
-        if id in sprite_lists.keys():
-            return sprite_lists[id]
-        elif id in stage_lists.keys():
-            return stage_lists[id]
-        else:
-            # this is probably a list from another sprite, but we just create a new list in the current sprite anyways since i dont wanna do through more pain
-            sprite_lists.update({id: List(["unknown", []])})
-
-            return sprite_lists[id]
+    def get_variable(self, variable): return self.get_data(variable, True)
+    def get_list(self, list): return self.get_data(list, False)
 
     def timer_finished(self): 
         return (time.time() - self.timer) >= self.timer_end

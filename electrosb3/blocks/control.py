@@ -53,16 +53,16 @@ class BlocksControl:
         }
 
     def forever(self, args, util):
-        util.script.branch_to(args.substack, True)
+        util.script.branch_to(args.get("substack"), True)
 
     def repeat(self, args, util):
-        if util.loops <= args.times:
-            util.script.branch_to(args.substack, True)
+        if util.loops <= args.get("times"):
+            util.script.branch_to(args.get("substack"), True)
         else:
             util.loops = 0
 
     def stop(self, args, util):
-        stop_option = args.stop_option.name
+        stop_option = args.get("stop_option").name
 
         if stop_option == "other scripts in sprite":
             def other_scripts(script):
@@ -77,15 +77,15 @@ class BlocksControl:
             print("Invalid stop option: "+stop_option)
 
     def repeat_until(self, args, util):
-        if not args.condition: util.script.branch_to(args.substack, True)
+        if not args.get("condition"): util.script.branch_to(args.get("substack"), True)
 
     def wait_until(self, args, util):
-        if not args.condition: util.do_yield()
+        if not args.get("condition"): util.do_yield()
 
     def delete_this_clone(self, args, util): util.sprite.delete_this_clone()
 
     def create_clone_of(self, args, util):
-        if args.clone_option == "myself":
+        if args.get("clone_option") == "myself":
             util.sprite.create_clone()
         else:
             pass
@@ -96,23 +96,20 @@ class BlocksControl:
         if (not util.timer_started):
             util.do_yield()
             util.request_redraw()
-            util.start_timer(args.duration)
+            util.start_timer(args.get("duration"))
         elif (not util.timer_finished()):
             util.do_yield()
         else:
             util.end_timer()
 
     def block_if(self, args, util):
-        try: # dumb
-            if args.condition:
-                util.script.branch_to(args.substack, False)
-        except:
-            pass
+        if args.get("condition"):
+            util.script.branch_to(args.get("substack"), False)
 
     def block_if_else(self, args, util):
-        if args.condition:
-            util.script.branch_to(args.substack, False)
-        elif ("substack2" in args.__dict__):
-            util.script.branch_to(args.substack2, False)
+        if args.get("condition"):
+            util.script.branch_to(args.get("substack"), False)
+        else:
+            util.script.branch_to(args.get("substack2"), False)
 
 BlockEngine.register_extension("control", BlocksControl())
