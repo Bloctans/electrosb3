@@ -68,15 +68,18 @@ class BlocksLooks:
             "goforwardbackwardlayers": {
                 "type": BlockEngine.Enum.BLOCK_STACK,
                 "function": self.gotoforwardbackwardlayers
-            }
+            },
+            "say": {
+                "type": BlockEngine.Enum.BLOCK_STACK,
+                "function": self.say
+            },
         }
-
-    def costume_from_name(self, name, costumes):
-        for costume in costumes:
-            if costume.name == name: return costume
 
     def hide(self, args, util): util.sprite.visible = False
     def show(self, args, util): util.sprite.visible = True
+
+    def say(self, args, util):
+        print(args.__dict__) # no renderer for say rn
 
     def switchcostumeto(self, args, util):
         sprite = util.sprite
@@ -143,6 +146,8 @@ class BlocksLooks:
         
         if number_or_name == "number":
             return sprite.current_costume.id
+        elif number_or_name == "name":
+            return sprite.current_costume.name
         
     def nextcostume(self, args, util):
         #print("next costume")
@@ -154,11 +159,12 @@ class BlocksLooks:
     def costume(self, args, script):
         sprite = script.sprite
 
-        return self.costume_from_name(args.costume.name, sprite.costumes)
+        return sprite.costume_from_name(args.costume.name) or sprite.costumes[0]
     
     def backdrops(self, args, script):
         sprite = script.sprite
+        stage = script.get_stage()
 
-        return self.costume_from_name(args.backdrop.name, sprite.get_stage().costumes)
+        return stage.costume_from_name(args.backdrop.name)
 
 BlockEngine.register_extension("looks", BlocksLooks())

@@ -3,13 +3,19 @@ import electrosb3.block_engine.extension_support as ExtensionSupport
 import electrosb3.block_engine.enum as Enum
 import json
 
+import electrosb3.util as Util
+
 class Field:
     def __init__(self, name, id):
         self.name = name
         self.id = id
 
 class Args:
-    def __init__(self): pass
+    def __init__(self): 
+        # Hack for now until we figure out how to error handle this stuff
+        self.operand = False
+        self.operand1 = False
+        self.operand2 = False
 
 class Mutation:
     def __init__(self, raw):
@@ -68,18 +74,16 @@ class Block:
         wrapper_type = input[0]
         wrapper_value = input[1]
 
+        if wrapper_value == None:
+            return None
+
         if type(wrapper_value) == list: # Input is a simple number
             return self.parse_input(wrapper_value, script)
         elif wrapper_type >= 4 and wrapper_type <= 9: # All number literals
-            return float(wrapper_value)
+            return Util.to_float(wrapper_value)
         elif wrapper_type == 10:
             return wrapper_value # string
         elif wrapper_type <= 3: # Input in block, or a substack
-            if not (wrapper_value in blocks):
-                debug_block = self.sprite.debug_blocks[wrapper_value]
-
-                print(f"Couldn't get wrapped block! Missing opcode {debug_block["opcode"]}, fields: {debug_block["fields"]}, inputs: {debug_block["inputs"]}")
-
             block = blocks[wrapper_value]
 
             if block.info["type"] == Enum.BLOCK_INPUT: # For now, input blocks are ran recursively, 

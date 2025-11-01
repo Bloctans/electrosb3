@@ -13,13 +13,25 @@ class Variable:
 class List:
     def __init__(self, variable):
         self.name = variable[0]
-        self.list = variable[1]
+        self.list: list = variable[1]
 
     def get_length(self):
         return len(self.list)
     
+    def can_get(self, index):
+        return self.get_length() > (int(index)-1)
+
     def get_item(self, index):
-        return self.list[int(index)-1]
+        return self.can_get(index) and self.list[int(index)-1] or 0
+    
+    def number_of(self, number):
+        if number in self.list:
+            return self.list.index(number)
+        else:
+            return 0
+        
+    def replace(self, index, item):
+        self.list[int(index)-1] = item
 
 class Sprite:
     def __init__(self):
@@ -103,10 +115,17 @@ class Sprite:
     def delete_this_clone(self): self.parent.delete_clone(self)
     def delete_clone(self, clone): self.clones.pop(self.clones.index(clone))
 
+    def costume_from_name(self, name):
+        for costume in self.costumes:
+            if costume.name == name: return costume
+
     def set_costume(self, costume): 
         if type(costume) == float or type(costume) == int: 
             costume = round(costume)
             costume = self.costumes[costume % len(self.costumes)]
+
+        if type(costume) == str:
+            costume = self.costume_from_name(costume)
 
         self.current_costume = costume
 

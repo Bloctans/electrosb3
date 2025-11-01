@@ -22,6 +22,14 @@ class BlocksSound:
             "setvolumeto": {
                 "type": BlockEngine.Enum.BLOCK_STACK,
                 "function": lambda args, util: print("Unimplemented")
+            },
+            "changevolumeby": {
+                "type": BlockEngine.Enum.BLOCK_STACK,
+                "function": lambda args, util: print("Unimplemented")
+            },
+            "volume": {
+                "type": BlockEngine.Enum.BLOCK_INPUT,
+                "function": self.volume
             }
         }
 
@@ -30,6 +38,10 @@ class BlocksSound:
     def sound_from_name(self, name, sounds):
         for sound in sounds:
             if sound.name == name: return sound
+
+    def volume(self, args, util):
+        print("unimplemented: volume")
+        return 100
 
     def play_base(self, sound, util):
         channel = sound.play()

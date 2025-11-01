@@ -2,6 +2,8 @@ import electrosb3.block_engine.enum as Enum
 import time
 import electrosb3.util as Util
 
+from electrosb3.project.sprite import *
+
 import pygame
 
 keymap = {
@@ -49,9 +51,13 @@ class API:
 
     def get_mutations(self): return self.block.mutations
     def get_stage(self):
-        for sprite in self.project.sprites:
+        for sprite_name in self.project.sprites:
+            sprite = self.get_sprite(sprite_name)
             if sprite.is_stage:
                 return sprite
+            
+    def float(self, num): return Util.to_float(num)
+    def int(self, num): return Util.to_int(num)
 
     def get_sprite(self, name): return self.project.sprites[name]
 
@@ -82,8 +88,13 @@ class API:
 
         if id in sprite_vars.keys():
             return sprite_vars[id]
-        else:
+        elif id in stage_vars.keys():
             return stage_vars[id]
+        else:
+            # this is probably a variable from another sprite, but we just create a new variable in the current sprite anyways since i dont wanna do through more pain
+            sprite_vars.update({id: Variable(["unknown", 0])})
+
+            return sprite_vars[id]
 
     def get_list(self, id):
         sprite_lists = self.sprite.lists
@@ -91,8 +102,13 @@ class API:
 
         if id in sprite_lists.keys():
             return sprite_lists[id]
-        else:
+        elif id in stage_lists.keys():
             return stage_lists[id]
+        else:
+            # this is probably a list from another sprite, but we just create a new list in the current sprite anyways since i dont wanna do through more pain
+            sprite_lists.update({id: List(["unknown", []])})
+
+            return sprite_lists[id]
 
     def timer_finished(self): 
         return (time.time() - self.timer) >= self.timer_end

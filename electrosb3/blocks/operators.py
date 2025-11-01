@@ -82,16 +82,18 @@ class BlocksOperator:
         self.operations = {
             "floor": math.floor,
             "cos": math.cos,
-            "sin": math.sin
+            "sin": math.sin,
+            "ceiling": math.ceil,
+            "abs": abs
         }
 
     def add(self, args, util): 
-        return args.num1+float(args.num2)
+        return util.float(args.num1)+util.float(args.num2)
     
-    def divide(self, args, util): return float(args.num1)/float(args.num2)
+    def divide(self, args, util): return util.float(args.num1)/util.float(args.num2)
     
     def multiply(self, args, util): 
-        return float(args.num1)*float(args.num2)
+        return util.float(args.num1)*util.float(args.num2)
     
     def contains(self, args, util):
         return (str(args.string2) in str(args.string1))
@@ -100,25 +102,27 @@ class BlocksOperator:
         return len(args.string)
     
     def letter_of(self, args, util):
-        return args.string[int(args.letter)]
+        letter = int(args.letter)
+        string = str(args.string)
+
+        if len(string) <= letter:
+            return ""
+        else:
+            return string[letter]
     
     def round(self, args, util):
-        return math.round(args.num)
+        return round(args.num)
 
     def mod(self, args, util): 
-        print(args.__dict__)
-        return args.num1%args.num2
+        return util.int(args.num1)%util.int(args.num2)
 
     def block_not(self,args,api):
-        try:
-            return not args.operand
-        except:
-            return True
+        return not args.operand
 
     def random(self, args, util): 
         # Fucking nasty hack because python hates when you use a keyword in syntax like that
-        rand_from = float(args.__dict__["from"])
-        rand_to = float(args.to)
+        rand_from = util.float(args.__dict__["from"])
+        rand_to = util.float(args.to)
 
         return rand_from + (random.random() * (rand_to - rand_from))
 
@@ -129,9 +133,9 @@ class BlocksOperator:
         return str(args.string1)+str(args.string2)
 
     def subtract(self, args, util): 
-        return float(args.num1)-float(args.num2)
+        return util.float(args.num1)-util.float(args.num2)
 
-    def mathop(self, args, util): return self.operations[args.operator.name](args.num)
+    def mathop(self, args, util): return self.operations[args.operator.name](util.float(args.num))
 
     def compare_or(self, args, util):
         return args.operand1 or args.operand2
@@ -139,7 +143,7 @@ class BlocksOperator:
     def compare_and(self, args, util):
         return args.operand1 and args.operand2
 
-    def gt(self, args, util): return float(args.operand1)>float(args.operand2)
-    def lt(self, args, util): return float(args.operand1)<float(args.operand2)
+    def gt(self, args, util): return util.float(args.operand1)>util.float(args.operand2)
+    def lt(self, args, util): return util.float(args.operand1)<util.float(args.operand2)
 
 BlockEngine.register_extension("operator", BlocksOperator())

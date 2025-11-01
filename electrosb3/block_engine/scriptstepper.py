@@ -42,6 +42,7 @@ class ScriptStepper:
 
             self.script_queue.append({self.uuid(): script})
 
+    # TODO: Hats with restart_existing_threads as true in the original VM should simply restart their scripts, not create new ones!
     def start_hat(self, hat):
         sprite = hat.sprite
 

@@ -103,13 +103,16 @@ class BlocksControl:
             util.end_timer()
 
     def block_if(self, args, util):
-        if args.condition:
-            util.script.branch_to(args.substack, False)
+        try: # dumb
+            if args.condition:
+                util.script.branch_to(args.substack, False)
+        except:
+            pass
 
     def block_if_else(self, args, util):
         if args.condition:
             util.script.branch_to(args.substack, False)
-        else:
+        elif ("substack2" in args.__dict__):
             util.script.branch_to(args.substack2, False)
 
 BlockEngine.register_extension("control", BlocksControl())

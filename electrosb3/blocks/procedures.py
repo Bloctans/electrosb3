@@ -42,11 +42,11 @@ class BlocksArg:
     def __init__(self):
         self.block_map = {
             "reporter_string_number": {
-                "type": BlockEngine.Enum.BLOCK_HAT,
+                "type": BlockEngine.Enum.BLOCK_INPUT,
                 "function": self.reporter_string_number
             },
             "reporter_boolean": {
-                "type": BlockEngine.Enum.BLOCK_HAT,
+                "type": BlockEngine.Enum.BLOCK_INPUT,
                 "function": self.reporter_boolean
             },
         }
@@ -58,6 +58,7 @@ class BlocksArg:
         if "procedure_args" in info.keys():
             return info["procedure_args"][value]
         else:
+            print("none")
             return 0
         
     def reporter_boolean(self, args, util):

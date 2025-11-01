@@ -54,8 +54,24 @@ class BlocksMotion:
                 "function": self.direction
             },
             "setrotationstyle": {
-                "type": BlockEngine.Enum.BLOCK_INPUT,
+                "type": BlockEngine.Enum.BLOCK_STACK,
                 "function": self.setrotationstyle
+            },
+            "goto": {
+                "type": BlockEngine.Enum.BLOCK_STACK,
+                "function": self.goto
+            },
+            "goto_menu": {
+                "type": BlockEngine.Enum.BLOCK_INPUT,
+                "function": self.sprite_menu
+            },
+            "pointtowards_menu": {
+                "type": BlockEngine.Enum.BLOCK_INPUT,
+                "function": self.sprite_menu
+            },
+            "pointtowards": {
+                "type": BlockEngine.Enum.BLOCK_INPUT,
+                "function": self.pointtowards
             }
         }
 
@@ -64,6 +80,10 @@ class BlocksMotion:
     def _changeby(self,x,y,util): 
         util.sprite.position += Vector2(x,y)
         util.request_redraw()
+
+    def pointtowards(self, args, util):
+        # pass on this for now
+        pass
 
     def _setrotation(self, rotation, sprite): 
         sprite.rotation = rotation
@@ -81,6 +101,12 @@ class BlocksMotion:
 
     def changexby(self, args, util): 
         self._changeby(args.dx,0,util)
+
+    def goto(self, args, util): 
+        print(args.__dict__)
+
+    def sprite_menu(self, args, util): 
+        return util.get_sprite(args.to.name)
 
     def changeyby(self, args, util): 
         self._changeby(0,args.dy,util)

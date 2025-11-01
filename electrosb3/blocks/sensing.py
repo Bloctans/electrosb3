@@ -58,6 +58,14 @@ class BlocksSensing:
             "username": {
                 "type": Enum.BLOCK_INPUT,
                 "function": self.username
+            },
+            "askandwait": {
+                "type": Enum.BLOCK_STACK,
+                "function": self.askandwait
+            },
+            "answer": {
+                "type": Enum.BLOCK_STACK,
+                "function": self.askandwait
             }
         }
 
@@ -65,11 +73,19 @@ class BlocksSensing:
 
     def username(self, args, util): return "ElectroUser"
 
+    def askandwait(self, args, util):
+        print(args.__dict__) # no renderer for ask & wait rn
+
     def of(self, args, util):
         property = args.property.name
 
+        print(property)
+        print(args.__dict__)
+
         if property == "x position":
             pass
+        else:
+            return 0
 
     def of_object_menu(self, args, util):
         return util.get_sprite(args.object.name)
