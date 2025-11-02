@@ -14,6 +14,9 @@ class Drawer:
     def add(self, object):
         self.drawables.append(object)
 
+    def remove(self, object):
+        self.drawables.remove(object)
+
     def update(self, screen):
         self.sort_drawables()
         for drawable in self.drawables:

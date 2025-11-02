@@ -1,6 +1,7 @@
 import electrosb3.block_engine.enum as Enum
 import time
 import electrosb3.util as Util
+import math
 
 from electrosb3.project.sprite import *
 
@@ -59,17 +60,26 @@ class API:
     def float(self, num): return Util.to_float(num)
     def int(self, num): return Util.to_int(num)
 
+    def compare(self, num1, num2):
+        #print(num1, num2)
+
+        num1 = self.float(num1)
+        num2 = self.float(num2)
+
+        #print(num1, num2)
+
+        return num1 - num2
+
     def get_sprite(self, name): return self.project.sprites[name]
 
     def is_touching(self, menu, sprite): 
         sprite1_bounds = sprite.get_bounds()
-        cursor = self.get_cursor()
+        cursor = pygame.mouse.get_pos()
 
         if menu.name == "_mouse_":
-            #if cursor[0] > sprite1_bounds["x1"] and cursor[0] < sprite1_bounds["x2"]:
-            if cursor[1] > sprite1_bounds["y1"] and cursor[1] < sprite1_bounds["y2"]:
-                print("Mouse2")
-                return True
+            if cursor[0] > sprite1_bounds["x1"] and cursor[0] < sprite1_bounds["x2"]:
+                if cursor[1] > sprite1_bounds["y1"] and cursor[1] < sprite1_bounds["y2"]:
+                    return True
 
         return False # TODO
 
@@ -102,6 +112,15 @@ class API:
             else: sprite_data.update({id: List([data.name, []])})
 
             return sprite_data[id]
+        
+    def variable_from_sprite(self, sprite, name):
+        sprite_data = self.get_store(True, sprite)
+
+        for variable_id in sprite_data:
+            variable = sprite_data[variable_id]
+
+            if variable.name == name:
+                return variable.value
 
     def get_variable(self, variable): return self.get_data(variable, True)
     def get_list(self, list): return self.get_data(list, False)

@@ -84,14 +84,14 @@ class BlocksLooks:
     def switchcostumeto(self, args, util):
         sprite = util.sprite
 
-        costume = args.costume or 0
+        costume = args.costume or 1
 
         sprite.set_costume(costume)
 
     def switchbackdropto(self, args, util):
         sprite = util.sprite
 
-        costume = args.backdrop or 0
+        costume = args.backdrop or 1
 
         
 
@@ -154,7 +154,7 @@ class BlocksLooks:
         util.request_redraw()
         sprite = util.sprite
 
-        sprite.set_costume(sprite.current_costume.id+1)
+        sprite.set_costume(sprite.current_costume.id)
 
     def costume(self, args, script):
         sprite = script.sprite

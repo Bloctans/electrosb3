@@ -26,14 +26,15 @@ class BlocksProcedures:
         return util.block
 
     def call(self, args, util):
-        for input in args.__dict__:
-            print(input)
+        #for input in args.__dict__:
+        #    print(input)
 
         def find_block(hat):
             block = hat.run_block(util.script)
+            mutations = util.get_mutations()
 
-            if block.mutations.proc_code == util.get_mutations().proc_code:
-                print("Branch to procedure")
+            if block.mutations.proc_code == mutations.proc_code:
+                util.script.warp = mutations.warp
                 util.script.branch_to(hat.id, False, True)
 
         util.stepper.each_hat("procedures_definition", {}, find_block)
@@ -58,7 +59,6 @@ class BlocksArg:
         if "procedure_args" in info.keys():
             return info["procedure_args"][value]
         else:
-            print("none")
             return 0
         
     def reporter_boolean(self, args, util):
@@ -69,9 +69,6 @@ class BlocksArg:
             return info["procedure_args"][value]
         else:
             return False
-
-    def prototype(self, args, util):
-        pass
 
 BlockEngine.register_extension("procedures", BlocksProcedures())
 BlockEngine.register_extension("argument", BlocksArg())

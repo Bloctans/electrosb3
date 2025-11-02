@@ -15,6 +15,8 @@ class StackEntry:
 class Script:
     def __init__(self):
         self.current_block = None
+        self.start_block = None
+        self.hat = None
         self.stepper = None
 
         self.stack = []
@@ -35,11 +37,19 @@ class Script:
 
     #  This concept is once again... DRUMROLL.............. Stolen from the VM!!!!!!
     def branch_to(self, block: str, loop: bool, procedure: bool = False): 
-        #print(block)
+        if (not block): return
 
         self.stack.append(StackEntry(block, loop, procedure, self.current_block))
         self.dont_step = True
         self.goto(block)
+
+    def restart(self):
+        self.goto(self.start_block)
+        self.stack = []
+        #self.data = {}
+        self.warp = False
+        self.dont_step = False
+        self.set_status(Enum.STATUS_NONE)
 
     def goto(self, block: str): 
         if type(block) == Block:
@@ -61,6 +71,7 @@ class Script:
         return self.stepper.get_block(id)
     
     def kill(self):
+        self.hat.scripts.remove(self)
         self.running = False
 
     def step_to_next_block(self):
@@ -100,7 +111,6 @@ class Script:
             self.set_status(Enum.STATUS_NONE)
 
         #print(self.current_block.opcode)
-        #print(self.sprite.name)
         #print(self.current_block.id)
         self.run_block(self.current_block)
 
@@ -114,8 +124,8 @@ class Script:
         self.dont_step = False
 
     def step(self):
-       # print(self.status)
-
         while True:
             do_break = self.step_once()
+
+            #if (not self.warp): 
             if do_break or (not self.running): break

@@ -79,6 +79,11 @@ class BlocksOperator:
             }
         }
 
+        self.needs_rad = [
+            "cos",
+            "sin"
+        ]
+
         self.operations = {
             "floor": math.floor,
             "cos": math.cos,
@@ -99,7 +104,7 @@ class BlocksOperator:
         return (str(args.string2) in str(args.string1))
     
     def length(self, args, util):
-        return len(args.string)
+        return len(str(args.string))
     
     def letter_of(self, args, util):
         letter = int(args.letter)
@@ -126,7 +131,9 @@ class BlocksOperator:
         return rand_from + (random.random() * (rand_to - rand_from))
 
     def equals(self, args, util): 
-        return str(args.operand1) == str(args.operand2)
+        #print("equals")
+
+        return util.compare(args.operand1, args.operand2) == 0
     
     def join(self, args, util): 
         return str(args.string1)+str(args.string2)
@@ -134,15 +141,24 @@ class BlocksOperator:
     def subtract(self, args, util): 
         return util.float(args.num1)-util.float(args.num2)
 
-    def mathop(self, args, util): return self.operations[args.operator.name](util.float(args.num))
+    def mathop(self, args, util): 
+        num = util.float(args.num)
+
+        if args.operator.name in self.needs_rad:
+            num = math.radians(num)
+
+        return self.operations[args.operator.name](num)
 
     def compare_or(self, args, util):
         return args.operand1 or args.operand2
     
     def compare_and(self, args, util):
-        return args.operand1 and args.operand2
+        return (args.get("operand1") and args.get("operand2")) or False
 
-    def gt(self, args, util): return util.float(args.operand1)>util.float(args.operand2)
-    def lt(self, args, util): return util.float(args.operand1)<util.float(args.operand2)
+    def gt(self, args, util): 
+        return util.compare(args.operand1, args.operand2) > 0
+    
+    def lt(self, args, util): 
+        return util.compare(args.operand1, args.operand2) < 0
 
 BlockEngine.register_extension("operator", BlocksOperator())

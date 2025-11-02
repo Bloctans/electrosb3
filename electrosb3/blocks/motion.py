@@ -1,6 +1,7 @@
 import electrosb3.block_engine as BlockEngine
 from pygame import Vector2
 from math import sin, cos, radians
+import random
 
 class BlocksMotion:
     def __init__(self):
@@ -78,7 +79,7 @@ class BlocksMotion:
     # TODO: Rewrite motion extension
 
     def _changeby(self,x,y,util): 
-        util.sprite.position += Vector2(x,y)
+        util.sprite.position += Vector2(float(x),float(y))
         util.request_redraw()
 
     def pointtowards(self, args, util):
@@ -86,7 +87,7 @@ class BlocksMotion:
         pass
 
     def _setrotation(self, rotation, sprite): 
-        sprite.rotation = rotation
+        sprite.rotation = -rotation
         
     def _changerotation(self, rotation, sprite): 
         sprite.rotation += rotation
@@ -103,7 +104,10 @@ class BlocksMotion:
         self._changeby(args.dx,0,util)
 
     def goto(self, args, util): 
-        print(args.__dict__)
+        sprite = util.get_sprite(args.to.name)
+
+        util.request_redraw()
+        util.sprite.position = sprite.position
 
     def sprite_menu(self, args, util): 
         return util.get_sprite(args.to.name)

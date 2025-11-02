@@ -76,8 +76,8 @@ class BlocksData:
         variable.value = args.get("value")
 
     def deletealloflist(self, args, util):
-        print("delete")
-        print(args.__dict__)
+        list = util.get_list(args.get("list"))
+        return list.clear()
 
     def deleteoflist(self, args, util):
         print("delete id")
@@ -96,6 +96,8 @@ class BlocksData:
     def listcontainsitem(self, args, util):
         list = util.get_list(args.get("list"))
 
+        print("contains")
+
         return list.contains(args.get("index"))
 
     def replaceitemoflist(self, args, util):
@@ -104,8 +106,9 @@ class BlocksData:
         return list.replace(args.get("index"), args.get("item"))
 
     def insertatlist(self, args, util):
-        print("insert at")
-        print(args.__dict__)
+        list = util.get_list(args.get("list"))
+
+        return list.insert_at(args.get("index"), args.get("item"))
 
     def addtolist(self, args, util):
         print("add to")
@@ -118,7 +121,7 @@ class BlocksData:
 
     def changevariableby(self, args, util):
         variable = util.get_variable(args.get("variable"))
-        variable.value = float(variable.value) + float(args.get("value")) # Always assume this will be a float
+        variable.value = util.float(variable.value) + float(args.get("value")) # Always assume this will be a float
 
 
 BlockEngine.register_extension("data", BlocksData())

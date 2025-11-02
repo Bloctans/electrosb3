@@ -26,7 +26,7 @@ class Mutation:
         # im way too lazy
         if has("proccode"): self.proc_code = raw["proccode"]
         if has("argumentids"): self.args = json.loads(raw["argumentids"])
-        #if has("warp"): self.warp = raw["warp"]
+        if has("warp"): self.warp = raw["warp"]
 
         # ?
         if has("hasnext"): self.has_next = raw["hasnext"]
@@ -50,7 +50,11 @@ class Block:
 
         self.id = None
 
-        self.info = {}
+        self.info = {
+            "restart_existing": False
+        }
+
+        self.scripts = []
 
         self.next = None
         self.parent = None

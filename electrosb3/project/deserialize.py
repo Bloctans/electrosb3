@@ -112,7 +112,7 @@ class Deserialize:
         if (not target["isStage"]): # The stage target always will not have any transformation info
             sprite.position = Vector2(target["x"],target["y"])
             sprite.size = target["size"]
-            sprite.rotation = target["direction"]
+            sprite.rotation = -target["direction"]
             sprite.visible = target["visible"]
             sprite.layer_order = target["layerOrder"]
         

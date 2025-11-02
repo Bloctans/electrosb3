@@ -36,20 +36,46 @@ class ScriptStepper:
         #print("New script")
         if hat.next:
             script = Script()
-            script.current_block = self.get_block(hat.next)
+            script.hat = hat
+            script.start_block = self.get_block(hat.next)
+            script.current_block = script.start_block
             script.sprite = sprite
             script.stepper = self
 
+            hat.scripts.append(script)
+
             self.script_queue.append({self.uuid(): script})
 
-    # TODO: Hats with restart_existing_threads as true in the original VM should simply restart their scripts, not create new ones!
-    def start_hat(self, hat):
-        sprite = hat.sprite
-
+    def create_hat_scripts(self, hat, sprite):
         for clone in sprite.clones:
             self.create_script(hat, clone)
 
         self.create_script(hat, sprite)
+
+    # TODO: Hats with restart_existing_threads as true in the original VM should simply restart their scripts, not create new ones!
+    def start_hat(self, hat):
+        sprite = hat.sprite.get_main_sprite()
+
+        if ("restart_existing" in hat.info.keys()):
+            threads_exist = []
+
+            def restart_threads(script): 
+                if script.hat == hat:
+                    threads_exist.append(script.sprite.id)
+                    script.restart()
+
+            self.each_script(restart_threads)
+
+            def create_if_none(thesprite):
+                if not (thesprite.id in threads_exist): 
+                    self.create_script(hat, thesprite)
+
+            create_if_none(sprite)
+            for clone in sprite.clones: 
+                create_if_none(clone)
+        else:
+            for clone in sprite.clones: self.create_script(hat, clone)
+            self.create_script(hat, sprite)
 
     def each_script(self, callback):
         for script in self.scripts:

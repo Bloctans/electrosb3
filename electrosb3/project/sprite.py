@@ -19,19 +19,27 @@ class List:
         return len(self.list)
     
     def can_get(self, index):
-        return self.get_length() > (int(index)-1)
+        return self.get_length() > int(index)
 
     def get_item(self, index):
-        return self.can_get(index) and self.list[int(index)-1] or 0
+        return self.can_get(index) and self.list[int(index)] or 0
     
     def number_of(self, number):
         if number in self.list:
-            return self.list.index(number)
+            return self.list.index(number)+1
         else:
             return 0
         
+    def insert_at(self, index, item):
+        self.list.insert(int(index), item)
+
+    def clear(self):
+        self.list = []
+        
     def replace(self, index, item):
         self.list[int(index)-1] = item
+
+import uuid
 
 class Sprite:
     def __init__(self):
@@ -43,6 +51,8 @@ class Sprite:
 
         self.clones = []
         self.current_costume = None
+
+        self.id = self.uuid()
 
         self.is_stage = False
 
@@ -66,13 +76,17 @@ class Sprite:
 
         # we can always refactor later
 
+    def uuid(self): return uuid.uuid4().hex
+
     def set_layer(self, layer):
         self.layer_order = layer
 
     def copy_variables(self):
         variables = {}
 
-        for variable in self.variables: variables.update({variable: self.variables[variable].copy()})
+        for variable in self.variables: 
+            print(self.variables[variable].value)
+            variables.update({variable: self.variables[variable].copy()})
 
         return variables
         
@@ -83,39 +97,60 @@ class Sprite:
 
         return lists
     
+    def get_main_sprite(self):
+        return self.parent or self
+    
     def create_clone(self):
         clone = Sprite()
 
-        print("new clone")
+        parent = self.get_main_sprite()
 
         clone.layer_order = self.layer_order + 1
-        clone.position = self.position
+        clone.position = self.position.copy()
+        clone.id = self.uuid()
         clone.size = self.size
         clone.rotation = self.rotation
         clone.name = self.name
         clone.costumes = self.costumes
         clone.sounds = self.sounds
         clone.current_costume = self.current_costume
-        clone.parent = self.parent or self
+        clone.parent = parent
         clone.renderer = self.renderer
         clone.lists = self.copy_lists()
         clone.variables = self.copy_variables()
         clone.project = self.project
 
-        self.clones.append(clone)
+        parent.clones.append(clone)
         self.renderer.add(clone)
 
         stepper = self.project.script_stepper
 
         def start_clone_hat(hat):
-            if hat.sprite == self: stepper.create_script(hat, clone)
+            if hat.sprite == parent: 
+                stepper.create_script(hat, clone)
 
         stepper.each_hat("control_start_as_clone", {}, start_clone_hat)
 
-    def delete_this_clone(self): self.parent.delete_clone(self)
-    def delete_clone(self, clone): 
-        print(clone.name)
-        self.clones.pop(self.clones.index(clone))
+    def delete_this_clone(self): 
+        if self.parent:
+            self.parent.delete_clone(self.id)
+        else:
+            print("attempt to delete parent")
+
+    def delete_clone(self, id): 
+        stepper = self.project.script_stepper
+
+        for clone in self.clones:
+            if clone.id == id:
+                self.clones.remove(clone)
+                self.renderer.remove(clone)
+
+                def kill_threads(script):
+                    if script.sprite.id == id:
+                        script.kill()
+
+                stepper.each_script(kill_threads)
+                break
 
     def costume_from_name(self, name):
         for costume in self.costumes:
@@ -129,10 +164,12 @@ class Sprite:
         if type(costume) == str:
             costume = self.costume_from_name(costume)
 
-        self.current_costume = costume
+        if costume:
+            self.current_costume = costume
 
     def get_image(self):
         image = self.current_costume.image
+
         center = self.get_pos()
 
         transformed_size = self.size/100
@@ -140,7 +177,7 @@ class Sprite:
         if self.rotation == 0:
             rotated_image = image
         else:
-            rotated_image = pygame.transform.rotate(image, self.rotation-90)
+            rotated_image = pygame.transform.rotate(image, self.rotation+90)
 
         rotated_image = pygame.transform.scale_by(rotated_image, (transformed_size, transformed_size))
 
@@ -151,18 +188,13 @@ class Sprite:
         return rotated_image, new_rect
 
     def get_bounds(self):
-        image, _ = self.get_image()
-
-        width = image.get_width()
-        height = image.get_height()
-
-        position = self.get_pos()
+        _, rect = self.get_image()
 
         return {
-            "x1": position[0],
-            "y1": position[1],
-            "x2": position[0] + width,
-            "y2": position[1] + height
+            "x1": rect[0],
+            "y1": rect[1],
+            "x2": rect[0] + rect[2],
+            "y2": rect[1] + rect[3]
         }
 
     def setup(self):

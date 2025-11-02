@@ -74,18 +74,26 @@ class BlocksSensing:
     def username(self, args, util): return "ElectroUser"
 
     def askandwait(self, args, util):
-        print(args.__dict__) # no renderer for ask & wait rn
+        pass
+        #print(args.__dict__) # no renderer for ask & wait rn
 
     def of(self, args, util):
         property = args.property.name
-
-        print(property)
-        print(args.__dict__)
+        object = args.object
 
         if property == "x position":
-            pass
+            return object.position.x
+        elif property == "direction":
+            return object.rotation
+        elif property == "costume name":
+            return object.current_costume.name
         else:
-            return 0
+            var = util.variable_from_sprite(object, property)
+
+            if var == None:
+                print(property)
+            else:
+                return var
 
     def of_object_menu(self, args, util):
         return util.get_sprite(args.object.name)

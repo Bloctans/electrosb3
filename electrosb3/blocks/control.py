@@ -71,7 +71,6 @@ class BlocksControl:
 
             util.stepper.each_script(other_scripts)
         elif stop_option == "this script":
-            print("this script")
             util.script.kill()
         else:
             print("Invalid stop option: "+stop_option)
