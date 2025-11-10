@@ -111,8 +111,9 @@ class BlocksData:
         return list.insert_at(args.get("index"), args.get("item"))
 
     def addtolist(self, args, util):
-        print("add to")
-        print(args.__dict__)
+        list = util.get_list(args.get("list"))
+
+        return list.add(args.get("item"))
 
     def lengthoflist(self, args, util):
         list = util.get_list(args.get("list"))

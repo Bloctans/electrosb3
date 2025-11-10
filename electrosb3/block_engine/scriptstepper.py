@@ -18,7 +18,6 @@ class ScriptStepper:
         self.blocks.update({id: block})
 
     def request_redraw(self):
-        #print("Request redraw"+str(self.inc))
         self.inc += 1
         self.redraw_requested = True
 
@@ -29,7 +28,7 @@ class ScriptStepper:
     def get_block(self, block: str):
         if type(block) == Block:
             return block
-        else:
+        elif block in self.blocks.keys():
             return self.blocks[block]
 
     def create_script(self, hat, sprite):
@@ -52,7 +51,7 @@ class ScriptStepper:
 
         self.create_script(hat, sprite)
 
-    # TODO: Hats with restart_existing_threads as true in the original VM should simply restart their scripts, not create new ones!
+    # TODO: an each_hat in clone mode may help shorten this script
     def start_hat(self, hat):
         sprite = hat.sprite.get_main_sprite()
 
@@ -67,12 +66,10 @@ class ScriptStepper:
             self.each_script(restart_threads)
 
             def create_if_none(thesprite):
-                if not (thesprite.id in threads_exist): 
-                    self.create_script(hat, thesprite)
+                if not (thesprite.id in threads_exist): self.create_script(hat, thesprite)
 
             create_if_none(sprite)
-            for clone in sprite.clones: 
-                create_if_none(clone)
+            for clone in sprite.clones: create_if_none(clone)
         else:
             for clone in sprite.clones: self.create_script(hat, clone)
             self.create_script(hat, sprite)
@@ -81,7 +78,7 @@ class ScriptStepper:
         for script in self.scripts:
             callback(self.scripts[script])
 
-    def each_hat(self, opcode, fields, callback):
+    def each_hat(self, opcode, fields, callback, clones=False):
         for hat in self.hats:
             if hat.get_opcode() == opcode:
                 hat_fields = hat.parse_only_fields()
@@ -94,8 +91,14 @@ class ScriptStepper:
 
                 if cannot_continue: continue
 
+                sprite = hat.sprite
+
                 # Hard code to only fields for now, as we need to setup thread infustructure for block utils
-                callback(hat)
+                if clones:
+                    for clone in sprite.clones: callback(hat, clone)
+                    callback(hat, sprite)
+                else:
+                    callback(hat)
 
     def start_hats(self, hat, args = {}):
         self.each_hat(hat, args, lambda hat_block: self.start_hat(hat_block))
@@ -135,4 +138,4 @@ class ScriptStepper:
             for script in self.script_queue: self.scripts.update(script)
             self.script_queue = []
 
-        while (time.time() - start_time < (1/30)): pass
+        while (time.time() - start_time < (1/25)): pass

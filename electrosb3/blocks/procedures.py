@@ -26,16 +26,27 @@ class BlocksProcedures:
         return util.block
 
     def call(self, args, util):
-        #for input in args.__dict__:
-        #    print(input)
+        info = util.get_script_info()
+        info["procedure_args"] = {}
 
         def find_block(hat):
             block = hat.run_block(util.script)
+            
             mutations = util.get_mutations()
 
+            if "log" in mutations.proc_code:
+                print(args.__dict__)
+
             if block.mutations.proc_code == mutations.proc_code:
-                util.script.warp = mutations.warp
-                util.script.branch_to(hat.id, False, True)
+                for input in args.__dict__:
+                    value = args.__dict__[input]
+                    name = block.mutations.args[input]["name"]
+
+                    info["procedure_args"].update({
+                        name: value
+                    })
+                
+                util.script.branch_to(hat.id, False, mutations.warp)
 
         util.stepper.each_hat("procedures_definition", {}, find_block)
 
@@ -56,7 +67,7 @@ class BlocksArg:
         value = args.value.name
         info = util.get_script_info()
         
-        if "procedure_args" in info.keys():
+        if value in info["procedure_args"].keys():
             return info["procedure_args"][value]
         else:
             return 0
@@ -65,7 +76,7 @@ class BlocksArg:
         value = args.value.name
         info = util.get_script_info()
         
-        if "procedure_args" in info.keys():
+        if value in info["procedure_args"].keys():
             return info["procedure_args"][value]
         else:
             return False

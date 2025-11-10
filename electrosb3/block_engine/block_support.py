@@ -13,6 +13,9 @@ keymap = {
     "s": pygame.K_s,
     "d": pygame.K_d,
     "b": pygame.K_b,
+    "x": pygame.K_x,
+    "/": pygame.K_SLASH,
+    "g": pygame.K_g,
     "space": pygame.K_SPACE,
     "down arrow": pygame.K_DOWN,
     "up arrow": pygame.K_UP
@@ -57,31 +60,41 @@ class API:
             if sprite.is_stage:
                 return sprite
             
-    def float(self, num): return Util.to_float(num)
-    def int(self, num): return Util.to_int(num)
+    def float(self, num, cannot_nan=False): return Util.to_float(num, cannot_nan)
+    def int(self, num, cannot_nan=False): return Util.to_int(num, cannot_nan)
+
+    def str(self, num):
+        if type(num) == float:
+            if int(num) == num:
+                return str(int(num))
+            else:
+                return str(num)
+        else:
+            return str(num)
 
     def compare(self, num1, num2):
-        #print(num1, num2)
+        to_num1 = Util.to_float(num1)
+        to_num2 = Util.to_float(num2)
 
-        num1 = self.float(num1)
-        num2 = self.float(num2)
+        if (to_num1 == "NAN") or (to_num2 == "NAN"):
+            # Handle string compare
 
-        #print(num1, num2)
+            num1 = str(num1).lower()
+            num2 = str(num2).lower()
 
-        return num1 - num2
+            if num1 > num2:
+                return 1
+            elif num1 < num2:
+                return -1
+            else:
+                return 0
+
+        return to_num1 - to_num2
 
     def get_sprite(self, name): return self.project.sprites[name]
 
     def is_touching(self, menu, sprite): 
-        sprite1_bounds = sprite.get_bounds()
-        cursor = pygame.mouse.get_pos()
-
-        if menu.name == "_mouse_":
-            if cursor[0] > sprite1_bounds["x1"] and cursor[0] < sprite1_bounds["x2"]:
-                if cursor[1] > sprite1_bounds["y1"] and cursor[1] < sprite1_bounds["y2"]:
-                    return True
-
-        return False # TODO
+        return Util.is_touching(menu.name, sprite)
 
     def start_hats(self, hat, args = None): self.stepper.start_hats(hat, args)
 

@@ -2,6 +2,7 @@ import pygame
 
 from electrosb3.window import Window
 from electrosb3.project import Project
+from electrosb3.block_engine import Enum as ElectroEnum
 
 VERSION = "0.6"
 
@@ -27,6 +28,8 @@ class Electro:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    self.proj.push_event(ElectroEnum.MOUSE_DOWN)
             
             pygame.display.flip()
 

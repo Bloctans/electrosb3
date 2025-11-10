@@ -34,8 +34,8 @@ class BlocksEvent:
         }
 
     def broadcast(self,args,api: API):
-        print("broadcasting")
-        print(args.broadcast_input)
+        #print("broadcasting")
+        #print(args.broadcast_input)
         api.start_hats("event_whenbroadcastreceived", {
             "broadcast_option": args.broadcast_input
         })

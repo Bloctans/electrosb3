@@ -131,18 +131,16 @@ class BlocksOperator:
         return rand_from + (random.random() * (rand_to - rand_from))
 
     def equals(self, args, util): 
-        #print("equals")
-
         return util.compare(args.operand1, args.operand2) == 0
     
     def join(self, args, util): 
-        return str(args.string1)+str(args.string2)
+        return util.str(args.string1)+util.str(args.string2)
 
     def subtract(self, args, util): 
         return util.float(args.num1)-util.float(args.num2)
 
     def mathop(self, args, util): 
-        num = util.float(args.num)
+        num = util.float(args.num, True)
 
         if args.operator.name in self.needs_rad:
             num = math.radians(num)

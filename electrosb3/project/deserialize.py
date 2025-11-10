@@ -124,8 +124,6 @@ class Deserialize:
             list = target["lists"][list_id]
             sprite.lists.update({list_id: List(list)})
 
-        print(target["name"])
-
         sprite.is_stage = target["isStage"]
         sprite.name = target["name"]
         sprite.project = project

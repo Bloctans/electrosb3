@@ -1,4 +1,5 @@
 import pygame
+import math
 
 import electrosb3.util as Util
 
@@ -22,8 +23,13 @@ class List:
         return self.get_length() > int(index)
 
     def get_item(self, index):
+        index = Util.to_int(index)
+
         return self.can_get(index) and self.list[int(index)] or 0
     
+    def add(self, item):
+        self.list.append(item)
+
     def number_of(self, number):
         if number in self.list:
             return self.list.index(number)+1
@@ -84,9 +90,7 @@ class Sprite:
     def copy_variables(self):
         variables = {}
 
-        for variable in self.variables: 
-            print(self.variables[variable].value)
-            variables.update({variable: self.variables[variable].copy()})
+        for variable in self.variables: variables.update({variable: self.variables[variable].copy()})
 
         return variables
         
@@ -157,15 +161,17 @@ class Sprite:
             if costume.name == name: return costume
 
     def set_costume(self, costume): 
-        if type(costume) == float or type(costume) == int: 
-            costume = round(costume)
+        to_num = Util.to_float(costume)
+
+        if not (to_num == "NAN"): 
+            costume = int(to_num)
+            costume = round(costume)-1
             costume = self.costumes[costume % len(self.costumes)]
 
         if type(costume) == str:
             costume = self.costume_from_name(costume)
 
-        if costume:
-            self.current_costume = costume
+        self.current_costume = costume
 
     def get_image(self):
         image = self.current_costume.image

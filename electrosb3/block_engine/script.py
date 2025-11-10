@@ -91,6 +91,7 @@ class Script:
 
         # This will signify we are exiting a custom block
         if stack_last.is_procedure:
+            #print("unwarp")
             self.warp = False # Always kill warp mode
 
         if stack_last.is_loop:
@@ -115,17 +116,20 @@ class Script:
         self.run_block(self.current_block)
 
         should_step = (self.status == Enum.STATUS_NONE) and (not self.dont_step)
+        do_break = False
 
         if should_step:
-            return self.step_to_next_block()
+            do_break = self.step_to_next_block()
         elif self.status == Enum.STATUS_YIELDED:
-            return True
+            do_break = True
+        else:
+            self.dont_step = False
 
-        self.dont_step = False
+        if (not self.warp):
+            return do_break
 
     def step(self):
         while True:
             do_break = self.step_once()
-
-            #if (not self.warp): 
+            
             if do_break or (not self.running): break

@@ -22,10 +22,24 @@ class Args:
 class Mutation:
     def __init__(self, raw):
         def has(value): return value in raw.keys()
+
+        #print(raw)
         
         # im way too lazy
         if has("proccode"): self.proc_code = raw["proccode"]
-        if has("argumentids"): self.args = json.loads(raw["argumentids"])
+        if has("argumentids") and has("argumentnames"):
+            self.args = {}
+
+            names = json.loads(raw["argumentnames"])
+            defaults = json.loads(raw["argumentdefaults"])
+            ids: list = json.loads(raw["argumentids"])
+
+            for arg in ids:
+                index = ids.index(arg)
+                self.args.update({arg.lower(): {
+                    "name": names[index],
+                    "default": defaults[index]
+                }})
         if has("warp"): self.warp = raw["warp"]
 
         # ?
@@ -71,7 +85,7 @@ class Block:
         return self.set+"_"+self.opcode
 
     def parse_fields(self, field): 
-        if field[1] == None: return Field(field[0], None) # Return only the name
+        if (len(field) == 1) or (field[1] == None): return Field(field[0], None) # Return only the name
         else: return Field(field[0], field[1])
 
     def parse_input(self, input, script):

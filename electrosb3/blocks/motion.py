@@ -142,7 +142,7 @@ class BlocksMotion:
         sprite = util.sprite
         steps = float(args.steps)
 
-        rotation = radians(sprite.rotation)
+        rotation = -radians(sprite.rotation)
 
         self._changeby(
             sin(rotation)*steps,

@@ -79,7 +79,8 @@ class BlocksLooks:
     def show(self, args, util): util.sprite.visible = True
 
     def say(self, args, util):
-        print(args.__dict__) # no renderer for say rn
+        pass
+        #print(args.__dict__) # no renderer for say rn
 
     def switchcostumeto(self, args, util):
         sprite = util.sprite
@@ -92,8 +93,6 @@ class BlocksLooks:
         sprite = util.sprite
 
         costume = args.backdrop or 1
-
-        
 
         sprite.set_costume(costume)
 
@@ -150,11 +149,11 @@ class BlocksLooks:
             return sprite.current_costume.name
         
     def nextcostume(self, args, util):
-        #print("next costume")
+        print("next costume")
         util.request_redraw()
         sprite = util.sprite
 
-        sprite.set_costume(sprite.current_costume.id)
+        sprite.set_costume(sprite.current_costume.id+2)
 
     def costume(self, args, script):
         sprite = script.sprite

@@ -56,7 +56,7 @@ class BlocksControl:
         util.script.branch_to(args.get("substack"), True)
 
     def repeat(self, args, util):
-        if util.loops <= args.get("times"):
+        if util.loops <= util.int(args.get("times")):
             util.script.branch_to(args.get("substack"), True)
         else:
             util.loops = 0
@@ -76,6 +76,7 @@ class BlocksControl:
             print("Invalid stop option: "+stop_option)
 
     def repeat_until(self, args, util):
+        #print(args.get("condition"))
         if not args.get("condition"): util.script.branch_to(args.get("substack"), True)
 
     def wait_until(self, args, util):
