@@ -13,19 +13,36 @@ def reverse_scratch_pos(Vector2: Vector2):
 
     return (round(x),round(y))
 
-def to_float(num, cant_nan=False):
-    try:
-        if type(num) == str and num.isalpha():
-            if cant_nan: return 0
-            else: return "NAN"
-        else:
-            return float(num or 0)
-    except:
-        if cant_nan: return 0
-        else: return "NAN"
+def to_float(num):  
+    if num == "":
+        return 0.0
+    elif type(num) == str and (not is_numeric(num)):
+        return 0.0       
+    elif type(num) == str or type(num) == int or type(num) == float:
+        return float(num)
+    else:
+        return 0.0
     
-def to_int(num, cant_nan=False):
-    return int(to_float(num, cant_nan))
+def is_numeric(num):
+    try:
+        float(num)
+        return True
+    except:
+        return False
+
+# im lazy
+def can_nan(num):  
+    if num == "":
+        return False
+    elif type(num) == str and is_numeric(num):
+        return True      
+    elif type(num) == str or type(num) == int or type(num) == float:
+        return False
+    else:
+        return True
+
+def to_int(num):
+    return int(to_float(num))
 
 def is_touching(menu, sprite):
     sprite1_bounds = sprite.get_bounds()

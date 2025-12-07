@@ -73,6 +73,10 @@ class BlocksLooks:
                 "type": BlockEngine.Enum.BLOCK_STACK,
                 "function": self.say
             },
+            "sayforsecs": {
+                "type": BlockEngine.Enum.BLOCK_STACK,
+                "function": self.say
+            },
         }
 
     def hide(self, args, util): util.sprite.visible = False
@@ -80,7 +84,6 @@ class BlocksLooks:
 
     def say(self, args, util):
         pass
-        #print(args.__dict__) # no renderer for say rn
 
     def switchcostumeto(self, args, util):
         sprite = util.sprite
@@ -135,9 +138,9 @@ class BlocksLooks:
         layer = util.sprite.layer_order
 
         if args.forward_backward.name == "forward":
-            util.sprite.set_layer(layer+args.num)
+            util.sprite.set_layer(layer+util.int(args.num))
         else:
-            util.sprite.set_layer(layer-args.num)
+            util.sprite.set_layer(layer-util.int(args.num))
 
     def costumenumbername(self, args, util):
         sprite = util.sprite
@@ -149,7 +152,6 @@ class BlocksLooks:
             return sprite.current_costume.name
         
     def nextcostume(self, args, util):
-        print("next costume")
         util.request_redraw()
         sprite = util.sprite
 

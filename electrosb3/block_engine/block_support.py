@@ -18,7 +18,9 @@ keymap = {
     "g": pygame.K_g,
     "space": pygame.K_SPACE,
     "down arrow": pygame.K_DOWN,
-    "up arrow": pygame.K_UP
+    "up arrow": pygame.K_UP,
+    "left arrow": pygame.K_LEFT,
+    "right arrow": pygame.K_RIGHT
 }
 
 class API:
@@ -53,6 +55,25 @@ class API:
     def get_cursor(self): return Util.reverse_scratch_pos(pygame.Vector2(pygame.mouse.get_pos()))
     def get_mouse_down(self): return pygame.mouse.get_pressed()[0]
 
+    def stop_this_script(self):
+        block = None
+            
+        while True:
+            top_stack = self.script.peek_stack()
+
+            if (not top_stack): # No more top stack, kill the thread
+                self.script.kill()
+                return
+
+            block = self.script.get_block(top_stack.parent)
+
+            if block.get_opcode() == "procedures_call":
+                break
+
+            self.script.pop_stack()
+
+        self.script.update_from_stack()
+
     def get_mutations(self): return self.block.mutations
     def get_stage(self):
         for sprite_name in self.project.sprites:
@@ -60,8 +81,8 @@ class API:
             if sprite.is_stage:
                 return sprite
             
-    def float(self, num, cannot_nan=False): return Util.to_float(num, cannot_nan)
-    def int(self, num, cannot_nan=False): return Util.to_int(num, cannot_nan)
+    def float(self, num): return Util.to_float(num)
+    def int(self, num): return Util.to_int(num)
 
     def str(self, num):
         if type(num) == float:
@@ -76,7 +97,7 @@ class API:
         to_num1 = Util.to_float(num1)
         to_num2 = Util.to_float(num2)
 
-        if (to_num1 == "NAN") or (to_num2 == "NAN"):
+        if Util.can_nan(num1) or Util.can_nan(num2):
             # Handle string compare
 
             num1 = str(num1).lower()
@@ -96,7 +117,7 @@ class API:
     def is_touching(self, menu, sprite): 
         return Util.is_touching(menu.name, sprite)
 
-    def start_hats(self, hat, args = None): self.stepper.start_hats(hat, args)
+    def start_hats(self, hat, args = None): return self.stepper.start_hats(hat, args)
 
     def start_timer(self, duration):
         self.timer = time.time()
@@ -153,4 +174,5 @@ class API:
         self.stepper = self.script.stepper
 
     def do_yield(self): 
-        if (not self.script.warp): self.script.set_status(Enum.STATUS_YIELDED)
+        if (not self.script.warp): 
+            self.script.status = Enum.STATUS_YIELDED

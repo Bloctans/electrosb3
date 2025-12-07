@@ -65,7 +65,7 @@ class Block:
         self.id = None
 
         self.info = {
-            "restart_existing": False
+            "restart_existing": False,
         }
 
         self.scripts = []

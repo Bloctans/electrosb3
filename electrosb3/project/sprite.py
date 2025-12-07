@@ -27,6 +27,10 @@ class List:
 
         return self.can_get(index) and self.list[int(index)] or 0
     
+    def delete_item(self, index):
+        if self.can_get(index):
+            self.list.pop(index)
+
     def add(self, item):
         self.list.append(item)
 
@@ -43,7 +47,9 @@ class List:
         self.list = []
         
     def replace(self, index, item):
-        self.list[int(index)-1] = item
+        if (not self.can_get(index)): return
+        
+        self.list[int(index)] = item
 
 import uuid
 
@@ -163,7 +169,7 @@ class Sprite:
     def set_costume(self, costume): 
         to_num = Util.to_float(costume)
 
-        if not (to_num == "NAN"): 
+        if not Util.can_nan(costume): 
             costume = int(to_num)
             costume = round(costume)-1
             costume = self.costumes[costume % len(self.costumes)]

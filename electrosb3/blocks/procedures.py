@@ -29,13 +29,19 @@ class BlocksProcedures:
         info = util.get_script_info()
         info["procedure_args"] = {}
 
+        mutations = util.get_mutations()
+
+        if "log" in mutations.proc_code:
+            print("log: "+str(args.arg0))
+            return
+
         def find_block(hat):
             block = hat.run_block(util.script)
             
             mutations = util.get_mutations()
 
-            if "log" in mutations.proc_code:
-                print(args.__dict__)
+            if not (block.sprite == util.sprite):
+                return
 
             if block.mutations.proc_code == mutations.proc_code:
                 for input in args.__dict__:
@@ -46,7 +52,10 @@ class BlocksProcedures:
                         name: value
                     })
                 
-                util.script.branch_to(hat.id, False, mutations.warp)
+                #print("start custom")
+                #print(mutations.proc_code)
+                
+                util.script.branch_to(hat.id, False, True, mutations.warp)
 
         util.stepper.each_hat("procedures_definition", {}, find_block)
 

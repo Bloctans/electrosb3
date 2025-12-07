@@ -65,13 +65,17 @@ class BlocksControl:
         stop_option = args.get("stop_option").name
 
         if stop_option == "other scripts in sprite":
+            print("other scripts")
             def other_scripts(script):
                 if (script.sprite == util.sprite) and (not (script == util.script)): 
                     script.kill()
 
             util.stepper.each_script(other_scripts)
         elif stop_option == "this script":
-            util.script.kill()
+            print("this script")
+
+            util.stop_this_script()
+
         else:
             print("Invalid stop option: "+stop_option)
 

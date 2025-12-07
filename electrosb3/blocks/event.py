@@ -34,16 +34,39 @@ class BlocksEvent:
         }
 
     def broadcast(self,args,api: API):
-        #print("broadcasting")
-        #print(args.broadcast_input)
+        print("broadcasting")
+        print(args.broadcast_input)
         api.start_hats("event_whenbroadcastreceived", {
             "broadcast_option": args.broadcast_input
         })
 
     def broadcastandwait(self,args,api: API):
-        api.start_hats("event_whenbroadcastreceived", {
-            "broadcast_option": args.broadcast_input
-        })
+        info = api.info
+
+        if not ("recorded" in info.keys()):
+            api.info.update({"recorded": None})
+
+        if info["recorded"] == None:
+            print("broadcasting and wait")
+            print(args.broadcast_input)
+            print(api.sprite.name)
+            result = api.start_hats("event_whenbroadcastreceived", {
+                "broadcast_option": args.broadcast_input
+            })
+            info["recorded"] = result
+            api.do_yield()
+        else:
+            do_yield = False
+
+            for script in info["recorded"]:
+                if script.running:
+                    #print(script.sprite.name)
+                    do_yield = True
+
+            if do_yield:
+                api.do_yield()
+            else:
+                info["recorded"] = None
 
     # Rarely used
     def whenkeypressed(self, args, util):

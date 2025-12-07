@@ -1,11 +1,12 @@
 import electrosb3.block_engine.enum as Enum
 from electrosb3.block_engine.block import Block
 
-class StackEntry:
-    def __init__(self, block, is_loop, is_procedure, stack_parent):
+class StackFrame:
+    def __init__(self, block, is_loop, is_procedure, warp, stack_parent):
         self.parent = stack_parent
         self.block = block
         self.is_loop = is_loop
+        self.warp = warp
         self.is_procedure = is_procedure
 
 """
@@ -14,42 +15,55 @@ class StackEntry:
 """
 class Script:
     def __init__(self):
-        self.current_block = None
         self.start_block = None
         self.hat = None
+
         self.stepper = None
+        self.sprite = None
+
+        self.current_block = None
 
         self.stack = []
         self.data = {}
 
         self.warp = False
+        self.procedure = False
 
         self.dont_step = False
         self.running = True
 
-        self.status = Enum.STATUS_NONE # This concept is stolen from the VM.
-
-        self.sprite = None
-
-    def is_yielding(self): return (self.status == Enum.STATUS_YIELDED)
-    def set_status(self, status_type): 
-        self.status = status_type
+        self.status = Enum.STATUS_NONE # This concept is stolen from the VM
 
     #  This concept is once again... DRUMROLL.............. Stolen from the VM!!!!!!
-    def branch_to(self, block: str, loop: bool, procedure: bool = False): 
-        if (not block): return
+    def branch_to(self, block: str, loop: bool, procedure: bool = False, procedure_warp: bool = False): 
+        if (not block): 
+            print("Cant branch")
+            return
 
-        self.stack.append(StackEntry(block, loop, procedure, self.current_block))
+        #self.warp = procedure_warp
+
+        entry = StackFrame(block, loop, procedure, procedure_warp, self.current_block)
+
+        self.stack.append(entry)
+
         self.dont_step = True
         self.goto(block)
+
+    def peek_stack(self):
+        try:
+            return self.stack[-1]
+        except IndexError:
+            return None
+        
+    def pop_stack(self):
+        return self.stack.pop()
 
     def restart(self):
         self.goto(self.start_block)
         self.stack = []
-        #self.data = {}
         self.warp = False
         self.dont_step = False
-        self.set_status(Enum.STATUS_NONE)
+        self.status = Enum.STATUS_NONE
 
     def goto(self, block: str): 
         if type(block) == Block:
@@ -57,6 +71,7 @@ class Script:
         else:
             self.current_block = self.get_block(block)
 
+    # Get the next stack block if it exists
     def next_block(self):
         if self.current_block.next:
             self.goto(self.current_block.next)
@@ -64,16 +79,26 @@ class Script:
         else:
             return False
 
-    def run_block(self, block): 
-        return block.run_block(self)
-    
-    def get_block(self, id):
-        return self.stepper.get_block(id)
+    def run_block(self, block): return block.run_block(self)
+    def get_block(self, id): return self.stepper.get_block(id)
     
     def kill(self):
-        self.hat.scripts.remove(self)
+        #self.hat.scripts.remove(self)
         self.running = False
 
+    # Update the current block based off the top stack
+    def update_from_stack(self):
+        self.goto(self.peek_stack().parent)
+        self.step_to_next_block()
+
+    def next_stack_procedure(self):
+        while True:
+            next_procedure = self.peek_stack()
+
+            if next_procedure and next_procedure.is_procedure:
+                return next_procedure
+
+    # Step to the next block (in stack or not)
     def step_to_next_block(self):
         could_step = self.next_block()
 
@@ -81,18 +106,25 @@ class Script:
             #print("step")
             return # Nothing else needs to happen
         
-        if len(self.stack) == 0:  # Stack has no data, stop running thread.
+        if len(self.stack) == 0:  # Stack has no data, kill thread.
             #print("kill")
-            self.running = False
+            self.kill()
             return
         
         # We couldnt simply step to the next block, so go look at the stack now
         stack_last = self.stack.pop()
 
         # This will signify we are exiting a custom block
-        if stack_last.is_procedure:
-            #print("unwarp")
-            self.warp = False # Always kill warp mode
+        """if stack_last.is_procedure:
+            next_procedure = self.next_stack_procedure()
+
+            if next_procedure:
+                self.warp = next_procedure.warp
+            else:
+                print("unwarp")
+                # Procedure stack finally run dry
+                self.warp = False
+                self.procedure = False"""
 
         if stack_last.is_loop:
             #print("loop")
@@ -109,9 +141,10 @@ class Script:
     # TODO: we shouldnt need to return to break tbh
     def step_once(self):
         if self.status == Enum.STATUS_YIELDED: # Now that its yielded, step again.
-            self.set_status(Enum.STATUS_NONE)
+            self.status = Enum.STATUS_NONE
 
-        #print(self.current_block.opcode)
+        #if self.sprite.name == "Player":
+        #    print(self.current_block.opcode)
         #print(self.current_block.id)
         self.run_block(self.current_block)
 

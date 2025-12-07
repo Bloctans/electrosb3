@@ -113,7 +113,7 @@ class BlocksOperator:
         if len(string) <= letter:
             return ""
         else:
-            return string[letter]
+            return string[letter+1]
     
     def round(self, args, util):
         return round(args.num)
@@ -140,7 +140,7 @@ class BlocksOperator:
         return util.float(args.num1)-util.float(args.num2)
 
     def mathop(self, args, util): 
-        num = util.float(args.num, True)
+        num = util.float(args.num)
 
         if args.operator.name in self.needs_rad:
             num = math.radians(num)

@@ -80,13 +80,16 @@ class BlocksData:
         return list.clear()
 
     def deleteoflist(self, args, util):
-        print("delete id")
-        print(args.__dict__)
+        list = util.get_list(args.get("list"))
+
+        print(list.__dict__)
+
+        return list.delete_item(util.int(args.get("index"))-1)
 
     def itemoflist(self, args, util):
         list = util.get_list(args.get("list"))
 
-        return list.get_item(args.get("index"))
+        return list.get_item(util.int(args.get("index"))-1)
     
     def itemnumoflist(self, args, util):
         list = util.get_list(args.get("list"))
@@ -96,19 +99,17 @@ class BlocksData:
     def listcontainsitem(self, args, util):
         list = util.get_list(args.get("list"))
 
-        print("contains")
-
-        return list.contains(args.get("index"))
+        return list.contains(args.get("index")-1)
 
     def replaceitemoflist(self, args, util):
         list = util.get_list(args.get("list"))
 
-        return list.replace(args.get("index"), args.get("item"))
+        return list.replace(util.int(args.get("index"))-1, args.get("item"))
 
     def insertatlist(self, args, util):
         list = util.get_list(args.get("list"))
 
-        return list.insert_at(args.get("index"), args.get("item"))
+        return list.insert_at(util.int(args.get("index"))-1, args.get("item"))
 
     def addtolist(self, args, util):
         list = util.get_list(args.get("list"))

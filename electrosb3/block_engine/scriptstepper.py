@@ -45,34 +45,45 @@ class ScriptStepper:
 
             self.script_queue.append({self.uuid(): script})
 
+            return script
+
     def create_hat_scripts(self, hat, sprite):
         for clone in sprite.clones:
             self.create_script(hat, clone)
 
         self.create_script(hat, sprite)
 
-    # TODO: an each_hat in clone mode may help shorten this script
+    # TODO: shorten this god
     def start_hat(self, hat):
         sprite = hat.sprite.get_main_sprite()
+
+        recorded_scripts = []
+
+        def create_and_add(hat, sprite):
+            recorded_scripts.append(self.create_script(hat, sprite))
 
         if ("restart_existing" in hat.info.keys()):
             threads_exist = []
 
             def restart_threads(script): 
                 if script.hat == hat:
+                    recorded_scripts.append(script)
                     threads_exist.append(script.sprite.id)
                     script.restart()
 
             self.each_script(restart_threads)
 
             def create_if_none(thesprite):
-                if not (thesprite.id in threads_exist): self.create_script(hat, thesprite)
+                if not (thesprite.id in threads_exist): 
+                    create_and_add(hat, thesprite)
 
             create_if_none(sprite)
             for clone in sprite.clones: create_if_none(clone)
         else:
-            for clone in sprite.clones: self.create_script(hat, clone)
-            self.create_script(hat, sprite)
+            for clone in sprite.clones: create_and_add(hat, clone)
+            create_and_add(hat, sprite)
+
+        return recorded_scripts
 
     def each_script(self, callback):
         for script in self.scripts:
@@ -101,14 +112,22 @@ class ScriptStepper:
                     callback(hat)
 
     def start_hats(self, hat, args = {}):
-        self.each_hat(hat, args, lambda hat_block: self.start_hat(hat_block))
+        recorded_scripts = []
+
+        def start_hat(hat):
+            recorded = self.start_hat(hat)
+
+            for i in recorded:
+                recorded_scripts.append(i)
+
+        self.each_hat(hat, args, start_hat)
+
+        return recorded_scripts
 
     def step_hats(self):
         # Go through each hat and run their blocks, if it returns true start a new script
         for hat in self.hats:
             should_run = hat.run_block()
-
-            pass 
             """
                 This will not be done for now, as this is rarely used in the actual vm.
 
