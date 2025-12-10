@@ -113,7 +113,7 @@ class BlocksOperator:
         if len(string) <= letter:
             return ""
         else:
-            return string[letter+1]
+            return string[letter-1]
     
     def round(self, args, util):
         return round(args.num)

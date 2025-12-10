@@ -32,7 +32,6 @@ class ScriptStepper:
             return self.blocks[block]
 
     def create_script(self, hat, sprite):
-        #print("New script")
         if hat.next:
             script = Script()
             script.hat = hat

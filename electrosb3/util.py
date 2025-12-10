@@ -7,6 +7,12 @@ def to_scratch_pos(Vector2: Vector2):
 
     return (x,y)
 
+def index(list, index):
+    try:
+        return list[index]
+    except IndexError:
+        return None
+
 def reverse_scratch_pos(Vector2: Vector2):
     x = Vector2.x - 240
     y = (-Vector2.y) + 180
@@ -29,17 +35,6 @@ def is_numeric(num):
         return True
     except:
         return False
-
-# im lazy
-def can_nan(num):  
-    if num == "":
-        return False
-    elif type(num) == str and is_numeric(num):
-        return True      
-    elif type(num) == str or type(num) == int or type(num) == float:
-        return False
-    else:
-        return True
 
 def to_int(num):
     return int(to_float(num))

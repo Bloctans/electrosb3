@@ -26,9 +26,6 @@ class BlocksProcedures:
         return util.block
 
     def call(self, args, util):
-        info = util.get_script_info()
-        info["procedure_args"] = {}
-
         mutations = util.get_mutations()
 
         if "log" in mutations.proc_code:
@@ -44,18 +41,17 @@ class BlocksProcedures:
                 return
 
             if block.mutations.proc_code == mutations.proc_code:
+                stack = util.script.branch_to(hat.id, False, True, mutations.warp)
+
                 for input in args.__dict__:
                     value = args.__dict__[input]
                     name = block.mutations.args[input]["name"]
 
-                    info["procedure_args"].update({
+                    stack.params.update({
                         name: value
                     })
-                
-                #print("start custom")
-                #print(mutations.proc_code)
-                
-                util.script.branch_to(hat.id, False, True, mutations.warp)
+
+                #print(f"calling {mutations.proc_code} with {stack.params}")
 
         util.stepper.each_hat("procedures_definition", {}, find_block)
 
@@ -74,19 +70,22 @@ class BlocksArg:
 
     def reporter_string_number(self, args, util):
         value = args.value.name
-        info = util.get_script_info()
+        #print(value)
+        #print(util.get_debug_info())
+
+        params = util.get_params()
         
-        if value in info["procedure_args"].keys():
-            return info["procedure_args"][value]
+        if value in params.keys():
+            return params[value]
         else:
             return 0
         
     def reporter_boolean(self, args, util):
         value = args.value.name
-        info = util.get_script_info()
+        params = util.get_params()
         
-        if value in info["procedure_args"].keys():
-            return info["procedure_args"][value]
+        if value in params.keys():
+            return params[value]
         else:
             return False
 

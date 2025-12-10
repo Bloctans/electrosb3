@@ -4,7 +4,7 @@ from electrosb3.window import Window
 from electrosb3.project import Project
 from electrosb3.block_engine import Enum as ElectroEnum
 
-VERSION = "0.6"
+VERSION = "0.6.1"
 
 class Electro:
     def __init__(self):

@@ -16,11 +16,14 @@ class List:
         self.name = variable[0]
         self.list: list = variable[1]
 
+    def __str__(self):
+        return f"len {len(self.list)}, "+str(self.list)
+
     def get_length(self):
         return len(self.list)
     
     def can_get(self, index):
-        return self.get_length() > int(index)
+        return (self.get_length() > int(index)) and (index >= 0)
 
     def get_item(self, index):
         index = Util.to_int(index)
@@ -169,7 +172,7 @@ class Sprite:
     def set_costume(self, costume): 
         to_num = Util.to_float(costume)
 
-        if not Util.can_nan(costume): 
+        if Util.is_numeric(costume): 
             costume = int(to_num)
             costume = round(costume)-1
             costume = self.costumes[costume % len(self.costumes)]

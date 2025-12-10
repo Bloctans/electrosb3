@@ -119,8 +119,8 @@ class Block:
             return input[1]
         elif wrapper_type == 12: # Variable
             return self.api.get_variable(Field(wrapper_value, input[2])).value
-        else:
-            pass
+        elif wrapper_type == 13: # List
+            return self.api.get_list(Field(wrapper_value, input[2]))
 
     def parse_only_fields(self):
         args = {}

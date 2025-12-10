@@ -50,7 +50,21 @@ class API:
         else:
             return pygame.key.get_pressed()[keymap[key]]
         
+    def get_debug_info(self):
+        hat = self.script.hat
+
+        return f"""
+            Sprite Name: {self.sprite.name}
+            Block ID: {self.block.id}
+            Block Opcode: {self.block.get_opcode()}
+            Script Hat (ID): {hat.id}
+            Script Hat (Opcode): {hat.get_opcode()}   
+            Script Hat (Fields): {hat.args["fields"]}
+            Stack: {self.script.stack}
+        """
+        
     def get_script_info(self): return self.script.data
+    def get_params(self): return self.script.get_procedure_params() or {}
 
     def get_cursor(self): return Util.reverse_scratch_pos(pygame.Vector2(pygame.mouse.get_pos()))
     def get_mouse_down(self): return pygame.mouse.get_pressed()[0]
@@ -97,8 +111,9 @@ class API:
         to_num1 = Util.to_float(num1)
         to_num2 = Util.to_float(num2)
 
-        if Util.can_nan(num1) or Util.can_nan(num2):
+        if not (Util.is_numeric(num1) or Util.is_numeric(num2)):
             # Handle string compare
+            #print("string compare",to_num1,to_num2,Util.can_nan(num1),Util.can_nan(num2))
 
             num1 = str(num1).lower()
             num2 = str(num2).lower()
