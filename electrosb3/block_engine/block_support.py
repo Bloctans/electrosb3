@@ -180,6 +180,9 @@ class API:
     def request_redraw(self):
         if (not self.script.warp): self.stepper.request_redraw()
 
+    def get_main_sprite(self):
+        return self.sprite.get_main_sprite()
+
     def configure(self, script): 
         sprite = script.sprite
 

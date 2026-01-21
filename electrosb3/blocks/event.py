@@ -31,6 +31,10 @@ class BlocksEvent:
                 "type": BlockEngine.Enum.BLOCK_HAT,
                 "function": self.whenthisspriteclicked
             },
+            "whenbackdropswitchesto": {
+                "type": BlockEngine.Enum.BLOCK_STACK,
+                "function": self.whenbackdropswitchesto
+            },
         }
 
     def broadcast(self,args,api: API):
@@ -39,6 +43,9 @@ class BlocksEvent:
         api.start_hats("event_whenbroadcastreceived", {
             "broadcast_option": args.broadcast_input
         })
+
+    def whenbackdropswitchesto(self,args,api: API):
+        pass
 
     def broadcastandwait(self,args,api: API):
         info = api.info

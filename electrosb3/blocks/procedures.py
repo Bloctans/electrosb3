@@ -37,7 +37,7 @@ class BlocksProcedures:
             
             mutations = util.get_mutations()
 
-            if not (block.sprite == util.sprite):
+            if not (block.sprite == util.get_main_sprite()):
                 return
 
             if block.mutations.proc_code == mutations.proc_code:
