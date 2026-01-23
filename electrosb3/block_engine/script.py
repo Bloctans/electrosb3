@@ -33,7 +33,6 @@ class Script:
         self.warp = False
         self.procedure = False
 
-        self.dont_step = False
         self.running = True
 
         self.status = Enum.STATUS_NONE # This concept is stolen from the VM
@@ -41,7 +40,6 @@ class Script:
     #  This concept is once again... DRUMROLL.............. Stolen from the VM!!!!!!
     def branch_to(self, block: str, loop: bool, procedure: bool = False, procedure_warp: bool = False): 
         if (not block): 
-            print("Cant branch")
             return
          
         if (not self.warp):
@@ -50,17 +48,15 @@ class Script:
         entry = StackFrame(self.current_block, loop, procedure, procedure_warp)
 
         self.stack.append(entry)
-
-        self.dont_step = True # TODO: Could we just run step_once() instead of needing dont_step?
+        
         self.goto(block)
+        self.run_block(self.current_block) # Run the current block here otherwise the block will be skipped next tick
 
         return entry
 
     # Another concept from vm... man i feel so stupid sometimes...
     def get_procedure_params(self): 
         stack = self.next_stack_procedure()
-
-        #print(self.stack)
 
         if stack:
             return stack.params
@@ -75,7 +71,6 @@ class Script:
         self.goto(self.start_block)
         self.stack = []
         self.warp = False
-        self.dont_step = False
         self.status = Enum.STATUS_NONE
 
     def goto(self, block: str): 
@@ -102,18 +97,19 @@ class Script:
     # Update the current block based off the top stack
     def update_from_stack(self):
         self.goto(self.peek_stack().parent)
-        self.step_to_next_block()
+        self.pop_stack()
+        #self.step_to_next_block() # No clue why but this is broken
 
     def next_stack_procedure(self):
         temp_stack = self.copy_stack()
 
         while True:
-            if len(temp_stack) < 1:
+            if len(temp_stack) == 0:
                 return False
 
             next_procedure = temp_stack.pop()
 
-            if next_procedure and next_procedure.is_procedure:
+            if next_procedure.is_procedure:
                 return next_procedure
 
     # Step to the next block (in stack or not)
@@ -121,16 +117,14 @@ class Script:
         could_step = self.next_block()
 
         if could_step:
-            #print("step")
             return # Nothing else needs to happen
         
         if len(self.stack) == 0:  # Stack has no data, kill thread.
-            #print("kill")
             self.kill()
             return
-        
+
         # We couldnt simply step to the next block, so go look at the stack now
-        stack_last = self.stack.pop()
+        stack_last = self.pop_stack()
 
         # This will signify we are exiting a custom block
         if stack_last.is_procedure:
@@ -139,18 +133,15 @@ class Script:
             if next_procedure:
                 self.warp = next_procedure.warp
             else:
-                #print("unwarp")
                 # Procedure stack finally run dry
                 self.warp = False
                 self.procedure = False
 
         if stack_last.is_loop:
-            #print("loop")
             # If its a loop, we go back to whatever called it and rerun that block
             self.goto(stack_last.parent)
             return True # now break, as loops need to allow other threads to run.
         else:
-            #print("go to next")
             # If its not a loop, we go to whatever called it, then do step_to_next_block() recursively
             self.goto(stack_last.parent)
             return self.step_to_next_block()
@@ -163,18 +154,15 @@ class Script:
 
         self.run_block(self.current_block)
 
-        should_step = (self.status == Enum.STATUS_NONE) and (not self.dont_step)
         do_break = False
 
-        if should_step:
+        if self.status == Enum.STATUS_NONE:
             do_break = self.step_to_next_block()
         elif self.status == Enum.STATUS_YIELDED:
             do_break = True
-        else:
-            self.dont_step = False
 
-        #if (not self.warp):
-        return do_break
+        if (not self.warp):
+            return do_break
 
     def step(self):
         while True:

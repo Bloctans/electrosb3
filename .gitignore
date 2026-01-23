@@ -1,5 +1,5 @@
 # Our tests
-tests/*
+project_tests/*
 
 # Notes
 notes/*

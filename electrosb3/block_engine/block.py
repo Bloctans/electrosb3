@@ -22,8 +22,6 @@ class Args:
 class Mutation:
     def __init__(self, raw):
         def has(value): return value in raw.keys()
-
-        #print(raw)
         
         # im way too lazy
         if has("proccode"): self.proc_code = raw["proccode"]
@@ -40,7 +38,7 @@ class Mutation:
                     "name": names[index],
                     "default": defaults[index]
                 }})
-        if has("warp"): self.warp = raw["warp"]
+        if has("warp"): self.warp = raw["warp"]=="true" # Holy shit am i stupid
 
         # ?
         if has("hasnext"): self.has_next = raw["hasnext"]

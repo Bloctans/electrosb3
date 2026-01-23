@@ -20,7 +20,11 @@ keymap = {
     "down arrow": pygame.K_DOWN,
     "up arrow": pygame.K_UP,
     "left arrow": pygame.K_LEFT,
-    "right arrow": pygame.K_RIGHT
+    "right arrow": pygame.K_RIGHT,
+    "r": pygame.K_r,
+    "q": pygame.K_q,
+    "p": pygame.K_p,
+    "z": pygame.K_z
 }
 
 class API:
@@ -106,15 +110,23 @@ class API:
                 return str(num)
         else:
             return str(num)
+        
+    def is_white_space(self, value):
+        if type(value) == str: return len(value.strip()) == 0
+        else: return (value == None)
 
     def compare(self, num1, num2):
         to_num1 = Util.to_float(num1)
         to_num2 = Util.to_float(num2)
 
-        if not (Util.is_numeric(num1) or Util.is_numeric(num2)):
-            # Handle string compare
-            #print("string compare",to_num1,to_num2,Util.can_nan(num1),Util.can_nan(num2))
+        num1_str = not Util.is_numeric(num1) 
+        num2_str = not Util.is_numeric(num2)
 
+        if (to_num1 == 0) and self.is_white_space(num1): num1_str = True
+        if (to_num2 == 0) and self.is_white_space(num2): num2_str = True
+
+        if (num1_str or num2_str):
+            # Handle string compare
             num1 = str(num1).lower()
             num2 = str(num2).lower()
 

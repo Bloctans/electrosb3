@@ -56,6 +56,7 @@ class BlocksControl:
         util.script.branch_to(args.get("substack"), True)
 
     def repeat(self, args, util):
+        #print(args.get("times"))
         if util.loops <= util.int(args.get("times")):
             util.script.branch_to(args.get("substack"), True)
         else:
@@ -71,9 +72,7 @@ class BlocksControl:
 
             util.stepper.each_script(other_scripts)
         elif stop_option == "this script":
-
             util.stop_this_script()
-
         else:
             print("Invalid stop option: "+stop_option)
 

@@ -91,7 +91,7 @@ class BlocksSensing:
             var = util.variable_from_sprite(object, property)
 
             if var == None:
-                print(property)
+                print("Unknown Property", property)
             else:
                 return var
 

@@ -1,5 +1,4 @@
 from pygame import Vector2, mouse
-import math
 
 def to_scratch_pos(Vector2: Vector2):
     x = Vector2.x + 240
@@ -22,9 +21,7 @@ def reverse_scratch_pos(Vector2: Vector2):
 def to_float(num):  
     if num == "":
         return 0.0
-    elif type(num) == str and (not is_numeric(num)):
-        return 0.0       
-    elif type(num) == str or type(num) == int or type(num) == float:
+    elif is_numeric(num):
         return float(num)
     else:
         return 0.0

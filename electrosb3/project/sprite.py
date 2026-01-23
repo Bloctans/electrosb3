@@ -16,6 +16,9 @@ class List:
         self.name = variable[0]
         self.list: list = variable[1]
 
+    def copy(self):
+        return List([self.name, self.list])
+
     def __str__(self):
         return f"len {len(self.list)}, "+str(self.list)
 
@@ -85,6 +88,9 @@ class Sprite:
         self.visible = True
         self.layer_order = 0
 
+        self.drawable = None
+        self.drawable_rect = None
+
         self.t = 0
 
         self.name = "Placeholder"
@@ -133,6 +139,8 @@ class Sprite:
         clone.variables = self.copy_variables()
         clone.project = self.project
 
+        clone.request_redraw()
+
         parent.clones.append(clone)
         self.renderer.add(clone)
 
@@ -180,11 +188,24 @@ class Sprite:
         if type(costume) == str:
             costume = self.costume_from_name(costume)
 
-        self.current_costume = costume
+        if costume:
+            self.current_costume = costume
+            self.request_redraw()
 
-    def get_image(self):
+    def set_rotation(self, new_rotation):
+        self.rotation = new_rotation
+        self.request_redraw()
+
+    def set_position(self, new_position):
+        self.position = new_position
+        self.request_redraw()
+
+    def set_size(self, new_size):
+        self.size = new_size
+        self.request_redraw()
+
+    def request_redraw(self):
         image = self.current_costume.image
-
         center = self.get_pos()
 
         transformed_size = self.size/100
@@ -196,14 +217,19 @@ class Sprite:
 
         rotated_image = pygame.transform.scale_by(rotated_image, (transformed_size, transformed_size))
 
-        rotated_image.set_alpha(255-self.alpha)
+        if self.alpha > 10:
+            rotated_image.set_alpha(255-self.alpha)
 
         new_rect = rotated_image.get_rect(center = image.get_rect(topleft = (center[0], center[1])).center)
 
-        return rotated_image, new_rect
+        self.drawable = rotated_image
+        self.drawable_rect = new_rect
+
+    def get_image(self):
+        return self.drawable, self.drawable_rect
 
     def get_bounds(self):
-        _, rect = self.get_image()
+        rect = self.drawable_rect
 
         return {
             "x1": rect[0],
@@ -214,6 +240,7 @@ class Sprite:
 
     def setup(self):
         self.current_costume = self.costumes[0]
+        self.request_redraw()
 
     def update(self, screen):
         self.t += 1

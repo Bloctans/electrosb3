@@ -63,9 +63,6 @@ class Deserialize:
         for block_id in serialized_blocks:
             block_value = serialized_blocks[block_id]
 
-            #print(block_id)
-            #print(block_value)
-
             if type(block_value) == list:
                 stepper.add_block(block_id, block) # add and pray because im too lazy
                 continue
@@ -143,7 +140,7 @@ class Deserialize:
             sprite.costumes.append(self.deserialize_costume(costume,i))
             i += 1
 
-        sprite.setup() # Sorta temporary
+        sprite.setup()
 
         return sprite 
 

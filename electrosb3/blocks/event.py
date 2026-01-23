@@ -38,8 +38,6 @@ class BlocksEvent:
         }
 
     def broadcast(self,args,api: API):
-        #print("broadcasting")
-        #print(args.broadcast_input)
         api.start_hats("event_whenbroadcastreceived", {
             "broadcast_option": args.broadcast_input
         })
@@ -49,14 +47,12 @@ class BlocksEvent:
 
     def broadcastandwait(self,args,api: API):
         info = api.info
+        print("broadcast and wait")
 
         if not ("recorded" in info.keys()):
             api.info.update({"recorded": None})
 
         if info["recorded"] == None:
-            print("broadcasting and wait")
-            print(args.broadcast_input)
-            print(api.sprite.name)
             result = api.start_hats("event_whenbroadcastreceived", {
                 "broadcast_option": args.broadcast_input
             })

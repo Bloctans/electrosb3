@@ -70,8 +70,6 @@ class BlocksArg:
 
     def reporter_string_number(self, args, util):
         value = args.value.name
-        #print(value)
-        #print(util.get_debug_info())
 
         params = util.get_params()
         

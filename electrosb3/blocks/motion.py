@@ -79,7 +79,7 @@ class BlocksMotion:
     # TODO: Rewrite motion extension
 
     def _changeby(self,x,y,util): 
-        util.sprite.position += Vector2(float(x),float(y))
+        util.sprite.set_position(util.sprite.position + Vector2(float(x),float(y)))
         util.request_redraw()
 
     def pointtowards(self, args, util):
@@ -87,10 +87,10 @@ class BlocksMotion:
         pass
 
     def _setrotation(self, rotation, sprite): 
-        sprite.rotation = -rotation
+        sprite.set_rotation(-rotation)
         
     def _changerotation(self, rotation, sprite): 
-        sprite.rotation += rotation
+        sprite.set_rotation(sprite.rotation + rotation)
 
     def pointindirection(self, args, util): 
         self._setrotation(float(args.direction), util.sprite)
@@ -98,7 +98,8 @@ class BlocksMotion:
     def direction(self, args, util): return util.sprite.rotation
 
     def setrotationstyle(self, args, util):
-        print("Unimplemented: setrotationstyle")
+        pass
+        #print("Unimplemented: setrotationstyle")
 
     def changexby(self, args, util): 
         self._changeby(args.dx,0,util)
@@ -107,7 +108,7 @@ class BlocksMotion:
         sprite = util.get_sprite(args.to.name)
 
         util.request_redraw()
-        util.sprite.position = sprite.position
+        util.sprite.set_position(sprite.position)
 
     def sprite_menu(self, args, util): 
         return util.get_sprite(args.to.name)
@@ -117,15 +118,15 @@ class BlocksMotion:
 
     def gotoxy(self, args, util): 
         util.request_redraw()
-        util.sprite.position = Vector2(float(args.x), float(args.y))
+        util.sprite.set_position(Vector2(float(args.x), float(args.y)))
 
     def setx(self, args, util): 
         util.request_redraw()
-        util.sprite.position.x = float(args.x)
+        util.sprite.set_position(Vector2(float(args.x), util.sprite.position.y))
 
     def sety(self, args, util):
         util.request_redraw()
-        util.sprite.position.y = float(args.y)
+        util.sprite.set_position(Vector2(util.sprite.position.x, float(args.y)))
 
     def xposition(self, args, util): return util.sprite.position.x
     def yposition(self, args, util): return util.sprite.position.y

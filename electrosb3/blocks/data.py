@@ -82,8 +82,6 @@ class BlocksData:
     def deleteoflist(self, args, util):
         list = util.get_list(args.get("list"))
 
-        print(list.__dict__)
-
         return list.delete_item(util.int(args.get("index"))-1)
 
     def itemoflist(self, args, util):
@@ -123,7 +121,7 @@ class BlocksData:
 
     def changevariableby(self, args, util):
         variable = util.get_variable(args.get("variable"))
-        variable.value = util.float(variable.value) + float(args.get("value")) # Always assume this will be a float
+        variable.value = util.float(variable.value) + util.float(args.get("value")) # Always assume this will be a float
 
 
 BlockEngine.register_extension("data", BlocksData())

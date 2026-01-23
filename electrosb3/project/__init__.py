@@ -13,8 +13,11 @@ from electrosb3.renderer.draw import Drawer
 import electrosb3.blocks as Blocks # Imported here to initalize blocks
 
 class Project:
-    def __init__(self, file):
-        self.game_name = Path(file).stem
+    def __init__(self, file, name = "Unknown"):
+        if type(file) == str:
+            self.game_name = Path(file).stem
+        else:
+            self.game_name = name
 
         self.sprites: dict[Sprite] = {}
 
@@ -29,8 +32,8 @@ class Project:
         if event == Enum.MOUSE_DOWN:
             def sprite_clicked(hat, sprite):
                 if Util.is_touching("_mouse_", sprite):
-                    for variable in sprite.variables:
-                        print(sprite.variables[variable].__dict__)
+                    #for variable in sprite.variables:
+                    #    print(sprite.variables[variable].__dict__)
                         
                     self.script_stepper.create_script(hat, sprite)
 

@@ -104,14 +104,14 @@ class BlocksLooks:
 
     def changesizeby(self, args, util):
         util.request_redraw()
-        util.sprite.size += args.change
+        util.sprite.set_size(util.sprite.size + args.change)
 
     def cleargraphiceffects(self, args, util):
         pass
 
     def setsizeto(self, args, util):
         util.request_redraw()
-        util.sprite.size = args.size
+        util.sprite.set_size(args.size)
 
     def changeeffectby(self, args, util):
         util.request_redraw()

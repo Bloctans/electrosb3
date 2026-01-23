@@ -40,6 +40,7 @@ class BlocksSound:
             if sound.name == name: return sound
 
     def volume(self, args, util):
+        print(util.get_debug_info())
         print("unimplemented: volume")
         return 100
 
