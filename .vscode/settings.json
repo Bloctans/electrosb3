@@ -1,0 +1,13 @@
+{
+    "Lua.diagnostics.globals": [
+        "love",
+    ],
+    "Lua.diagnostics.disable": [
+        "deprecated",
+        "undefined-field"
+    ],
+    "Lua.workspace.library": [
+        "${3rd}/love2d/library",
+    ],
+    "Lua.completion.autoRequire": false
+}

@@ -11,6 +11,8 @@ extracted/*
 __pycache__
 */__pycache__
 
+src/CLibraries/*
+
 # Env stuff
 .env
 .envrc
