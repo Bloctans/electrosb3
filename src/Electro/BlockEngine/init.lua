@@ -15,7 +15,7 @@ function BlockEngine.Init()
     BlockEngine.Block = require("Electro.BlockEngine.Block")
 
     BlockEngine.Extensions = require("Electro.BlockEngine.Extensions")
-    BlockEngine.Extensions.Register("Control", "Event", "Sound", "Looks", "Operator")
+    BlockEngine.Extensions.Register("control", "event", "sound", "looks", "operator", "sensing", "data", "motion", "DebuggerExtensionTS", "procedures")
 
     BlockEngine.DefineShortcuts()
 end

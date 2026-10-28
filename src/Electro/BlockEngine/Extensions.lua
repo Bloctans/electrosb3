@@ -8,7 +8,7 @@ function Extension.Register(...)
     for _, Name in pairs(Extensions) do
         local Module = require("Electro.Blocks."..Name)
 
-        Extension.BlockSets[string.lower(Name)] = Module.Definitions
+        Extension.BlockSets[Name] = Module.Definitions
     end
 end
 
@@ -22,6 +22,27 @@ function Extension.GetDefinition(Opcode)
     assert(BlockDef, "Opcode "..Opcode.." doesnt exist!")
 
     return BlockDef
+end
+
+function Extension.KnownBlocks()
+    local Known = 0
+    local Implemented = 0
+
+    for _, Set in pairs(Extension.BlockSets) do
+        Known = Known + table.length(Set)
+
+        for _, Block in pairs(Set) do
+            if Block.Function then
+                Implemented = Implemented + 1
+            end
+        end
+    end
+
+    return {
+        Known = Known,
+        Implemented = Implemented,
+        Total = 123
+    }
 end
 
 return Extension

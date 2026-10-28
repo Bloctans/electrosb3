@@ -24,6 +24,10 @@ return function(Hat, Sprite)
         })
     end
 
+    function Script.Kill()
+        Script.State = Enum.STATUS_DONE
+    end
+
     function Script.PopStack()
         return table.remove(Stack)
     end
@@ -38,6 +42,17 @@ return function(Hat, Sprite)
         Script.Goto(BlockID)
     end
 
+    --[[
+        BlockID: the block id to go to
+        DontFlow: 
+            if true, the control flow flag will not be set
+
+            if we dont indicate control flow for a block, then branching (for eg. a c block)
+            will skip the first block in the new stack
+
+            however if we indiciate control flow during the routine that handles stepping to the next block, we risk
+            yielding and thus running the first block twice
+    ]]
     function Script.Goto(BlockID, DontFlow)
         CurrentBlock = Stepper.GetBlock(BlockID)
 
@@ -54,20 +69,20 @@ return function(Hat, Sprite)
             local LastStack = Script.PopStack()
 
             if (not LastStack) then -- No more stack, so we're done with this script
-                Script.State = Enum.STATUS_DONE
+                Script.Kill()
                 return true
             end
 
             if LastStack.IsLoop then -- Re-run previous
-                Script.Goto(LastStack.BlockID)
+                Script.Goto(LastStack.BlockID, true)
                 return true -- Unless we're in warp mode, yield 
             end
 
             -- Check if theres a block after the last one in the stack
-            local NextBlock = Script.GetNextBlock(LastStack.BlockID)
+            local NextBlock = Script.GetNextBlock(Stepper.GetBlock(LastStack.BlockID))
 
             if NextBlock then -- We found a new block, step to it
-                Script.Goto(NextBlock)
+                Script.Goto(NextBlock, true)
                 return
             end
 
@@ -118,9 +133,13 @@ return function(Hat, Sprite)
 
     -- Step block until yield or no longer running
     function Script.Step()
+        assert(Script.State ~= Enum.STATUS_DONE, "Stepped a killed script!") -- Fucked up shit happens if we dont have this hard check
+
         while true do
             local DidBreak = Script.StepBlock()
-            if DidBreak then return end
+
+            -- If we want to break then we retrun from this loop, ALSO hard-coded kill check that prevents this from stepping any further
+            if DidBreak or (Script.State == Enum.STATUS_DONE) then return end
         end
     end
 

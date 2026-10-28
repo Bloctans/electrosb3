@@ -1,8 +1,13 @@
 return function()
     local Sound = {
         Source = nil,
-        Name = nil
+        Name = nil,
+        PlayingYield = false -- Specific to playuntildone
     }
+
+    function Sound.GetPlaying()
+        return Sound.Source:isPlaying()
+    end
 
     function Sound.Play()
         assert(Sound.Source, "Attempted to play unloaded sound")

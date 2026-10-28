@@ -477,7 +477,7 @@ function InternalPrint(IsVerbose, External, Color, ...)
 	local StartCol = esc..Color.."m"
 	local EndCol = esc.."0m"
 
-	local FinalString = "["..os.clock()..(IsVerbose and " - VERBOSE] " or "] ")..Path..":"..(LineNumber)..":"
+	local FinalString = "["..love.timer.getTime()..(IsVerbose and " - VERBOSE] " or "] ")..Path..":"..(LineNumber)..":"
 	local EndString = ""
 
 	for _, v in pairs(FormattedPrintTable) do

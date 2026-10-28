@@ -37,15 +37,19 @@ function Deserializer.DeserializeTarget(TargetID, TargetJSON)
     Target.IsStage = TargetJSON.isStage
     Target.Name = TargetJSON.name
     Target.CurrentCostume = TargetJSON.currentCostume + 1
-    Target.Visible = TargetJSON.visible
+    Target.Visible = Target.IsStage and true or TargetJSON.visible
+    Target.Direction = TargetJSON.direction or 90
+    Target.Size = TargetJSON.size or 100
+    Target.ID = TargetID
 
     for ID, Costume in pairs(TargetJSON.costumes) do
         assert(Costume.md5ext, "Costume w/o md5ext not supported yet")
         
-        local Image = Resvg.CreateImage(Deserializer.Read(Costume.md5ext))
+        local Image, Size = Resvg.CreateImage(Deserializer.Read(Costume.md5ext))
 
         local TargetCostume = Electro.Project.Costume()
         TargetCostume.Image = Image
+        TargetCostume.Size = Size
         TargetCostume.RotationCenter = Vector2.new(Costume.rotationCenterX, Costume.rotationCenterY)
         TargetCostume.ID = ID
 
@@ -60,6 +64,12 @@ function Deserializer.DeserializeTarget(TargetID, TargetJSON)
         Target.Sounds[ID] = DeserializedSound
     end
 
+    Electro.Data.SetupData(TargetID)
+
+    for ID, Variable in pairs(TargetJSON.variables) do
+        Electro.Data.SetVariable(TargetID, ID, Variable[2])
+    end
+
     Deserializer.DeserializeBlocks(TargetJSON.blocks, Target)
 
     Electro.Project.Targets[TargetID] = Target
@@ -72,7 +82,7 @@ function Deserializer.Deserialize(MountNameIn)
     ProjectJSON = JSON.decode(ProjectJSON)
 
     for ID, Target in pairs(ProjectJSON.targets) do
-        Deserializer.DeserializeTarget(ID, Target)
+        Deserializer.DeserializeTarget(CreateUUID(), Target)
     end
 end
 

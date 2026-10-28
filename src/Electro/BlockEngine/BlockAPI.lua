@@ -3,6 +3,7 @@
 
 ---@class ElectroBlockAPI
 local Methods = {}
+local BlockEngine = Electro.BlockEngine
 
 function Methods:Configure(Script, Sprite, Block)
     self.Script = Script
@@ -14,12 +15,36 @@ function Methods:BranchTo(Block, IsLoop)
     self.Script.BranchToBlock(Block, IsLoop)
 end
 
+function Methods:StartHats(Opcode, Fields)
+    BlockEngine.Stepper.StartHats(Opcode, Fields)
+end
+
+function Methods:StartHat(Hat, Fields)
+    BlockEngine.Stepper.StartHat(Hat, Fields)
+end
+
+function Methods:EachHat(Opcode, Callback, ...)
+    BlockEngine.Stepper.EachHat(Opcode, Callback, ...)
+end
+
+function Methods:Boolean(Value) return Electro.Util.ToBoolean(Value) end
+function Methods:Float(Value) return tonumber(Value) or 0 end
+
+function Methods:SetVariable(ID, Value)
+    return Electro.Data.SetVariable(self.Sprite.ID, ID, Value)
+end
+
 function Methods:Yield()
     self.Script.SetYielded()
 end
 
+function Methods:GetVariable(ID)
+    return Electro.Data.GetVariable(self.Sprite.ID, ID)
+end
+
 function Methods:RequestRedraw()
-    Electro.BlockEngine.Stepper:RequestRedraw()
+    BlockEngine.Stepper:RequestRedraw()
+    self.Sprite:Redraw()
 end
 
 function Methods:Compare(A,B)
@@ -27,7 +52,7 @@ function Methods:Compare(A,B)
 end
 
 function Methods:StartTimer(Duration)
-    self.Timer = os.clock()
+    self.Timer = love.timer.getTime()
     self.TimerDuration = Duration
     self.TimerStarted = true
 end
@@ -37,7 +62,7 @@ function Methods:ResetLoops()
 end
 
 function Methods:TimerEnded()
-    local DidEnd = (os.clock() - self.Timer) > self.TimerDuration
+    local DidEnd = (love.timer.getTime() - self.Timer) > self.TimerDuration
 
     -- Auto-end timer
     if DidEnd and self.TimerStarted then
@@ -48,10 +73,10 @@ function Methods:TimerEnded()
 end
 
 return function()
-    return setmetatable({
+    return setmetatable({ -- TODO: in the case of clones, these may be utilized improperly during control flow swapping
         Timer = 0,
         Loops = 0,
-        TimerStarted = 0,
+        TimerStarted = false,
         TimerDuration = 0
     }, {
         __index = Methods

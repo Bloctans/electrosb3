@@ -3,6 +3,9 @@ local ffi = require("ffi")
 local libresvg = ffi.load(package.searchpath("libresvg", package.cpath))
 
 ffi.cdef[[
+    // Copyright 2021 the Resvg Authors
+    // SPDX-License-Identifier: Apache-2.0 OR MIT
+
     /**
     * @brief List of possible errors.
     */
@@ -520,7 +523,7 @@ function svg.CreateImage(FileData)
 
     libresvg.resvg_render(tree[0], libresvg.resvg_transform_identity(), size.width, size.height, DataPointer)
 
-    return love.graphics.newImage(Data)
+    return love.graphics.newImage(Data), Vector2.new(size.width, size.height)
 end
 
 return svg

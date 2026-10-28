@@ -4,7 +4,7 @@ function love.conf(t)
     t.console = true
 
     t.version = "12.0"
-    t.window.title = "ElectroSB3"
+    t.window.title = "ElectroSB3 Runner"
     t.window.resizable = true
     
     t.window.vsync = 0

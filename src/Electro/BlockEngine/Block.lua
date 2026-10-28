@@ -10,53 +10,71 @@ return function()
         API = Electro.BlockEngine.BlockAPI() ---@class ElectroBlockAPI
     }
 
+    function Block.ParseInput(Data, Script)
+        local Type = Data[1]
+        local Value = Data[2]
+
+        if type(Value) == "table" then
+            Data = Value
+
+            Type = Data[1]
+            Value = Data[2]
+        end
+
+        if Type <= 3 then -- Blocks/Substacks
+            local Block = Electro.BlockEngine.GetBlock(Value)
+
+            if Block and (Block.Definition.Type == Electro.Enum.BLOCK_INPUT) then -- Execute this block
+                local Return = Block.Execute(Script)
+
+                if not Block.Definition.ReturnOptional then
+                    assert(type(Return) ~= "nil", Block.Opcode.." returned nil")
+                end
+
+                return Return
+            else
+                return Value
+            end
+        elseif Type == 10 then -- String
+            return Value
+        elseif Type == 11 then -- Broadcast
+            return Value
+        elseif Type == 12 then -- Variable
+            return Block.API:GetVariable(Data[3])
+        elseif Type >= 4 and Type <= 9 then
+            return tonumber(Value)
+        else
+            error("Invalid Type "..Type.." ("..Value..")")
+        end
+    end
+
     -- This IS recursive but oh well
-    function Block.ParseInputs(Inputs, Script)
+    function Block.ParseInputs(Script)
         local ParsedInputs = {}
 
-        for Name, Data in pairs(Inputs) do
-            local Type = Data[1]
-            local Value = Data[2]
-
-            if type(Value) == "table" then
-                Type = Value[1]
-                Value = Value[2]
-            end
-
-            if Type <= 3 then -- Blocks/Substacks
-                local Block = Electro.BlockEngine.GetBlock(Value)
-
-                if Block.Definition.Type == Electro.Enum.BLOCK_INPUT then -- Execute this block
-                    local Return = Block.Execute(Script)
-                    assert(type(Return) ~= "nil", Block.Opcode.." returned nil")
-
-                    ParsedInputs[Name] = Return
-                else
-                    ParsedInputs[Name] = Value
-                end
-            elseif Type == 10 then -- String
-                ParsedInputs[Name] = Value
-            elseif Type == 11 then -- Broadcast (TODO)
-                ParsedInputs[Name] = nil
-            elseif Type >= 4 and Type <= 9 then
-                ParsedInputs[Name] = tonumber(Value)
-            else
-                error("Invalid Type "..Type.." ("..Value..")")
-            end
+        for Name, Data in pairs(Block.RawArgs.Inputs) do
+            ParsedInputs[Name] = Block.ParseInput(Data, Script)
         end
 
         return ParsedInputs
     end
 
-    function Block.ParseArgs(Args, Script)
-        local Inputs = Block.ParseInputs(Args.Inputs, Script)
+    function Block.ParseFields(Inputs)
+        local Inputs = Inputs or {}
 
-        for Name, Value in pairs(Args.Fields) do
+        for Name, Value in pairs(Block.RawArgs.Fields) do
             Inputs[Name] = {
                 Name = Value[1],
                 ID = Value[2]
             }
         end
+
+        return Inputs
+    end
+
+    function Block.ParseArgs(Script)
+        local Inputs = Block.ParseInputs(Script)
+        Block.ParseFields(Inputs)
 
         return Inputs
     end
@@ -72,9 +90,14 @@ return function()
         Block.API.Loops = Block.API.Loops + 1
 
         local Definition = Block.Definition
-        assert(Definition and Definition.Function, Block.Opcode.." has no function definition")
+        assert(Definition, Block.Opcode.." has no definition!")
         
-        local Args = Block.ParseArgs(Block.RawArgs, Script)
+        local Args = Block.ParseArgs(Script)
+
+        if (not Definition.Function) then
+            print(Block.Opcode.." has no function definition, skipping")
+            return
+        end
 
         return Definition.Function(Args, Block.API)
     end
