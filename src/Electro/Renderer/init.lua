@@ -21,13 +21,23 @@ function Renderer.DrawDebugRect(Target)
     love.graphics.rectangle("line", Rect.X1, Rect.Y1, Rect.X2 - Rect.X1, Rect.Y2 - Rect.Y1)
 end
 
+function Renderer.GetTopLayer()
+    return table.length(Renderer.RenderTargets)+1
+end
+
 function Renderer.Render(MouseRect)
     Electro.MouseRect = MouseRect
 
     love.graphics.setCanvas(Renderer.Canvas)
     love.graphics.clear(1,1,1)
 
-    for _, Target in pairs(Renderer.RenderTargets) do
+    table.sort(Renderer.RenderTargets, function(a, b)
+        return a.Layer < b.Layer
+    end)
+
+    for Layer, Target in pairs(Renderer.RenderTargets) do
+        Target.Layer = Layer
+
         if Target.Visible then
             local Costume = Target:GetCostume()
             local RotationCenter = Costume and Costume.RotationCenter or Vector2.zero
@@ -51,6 +61,7 @@ function Renderer.Render(MouseRect)
                 love.graphics.print("Cannot draw costume",0,0)
             else
                 love.graphics.draw(CurrentImage, 0,0)
+                love.graphics.print("Layer "..Target.Layer,0,0)
             end
 
             love.graphics.setShader()

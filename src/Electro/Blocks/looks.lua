@@ -31,10 +31,6 @@ function Looks.CostumeNumberName(Args, API)
     end
 end
 
-function Looks.Empty()
-   
-end
-
 function Looks.Show(_, API)
     API.Sprite.Visible = true
 end
@@ -53,6 +49,16 @@ end
 
 function Looks.NextCostume(_, API)
     API.Sprite:SetCostume(API.Sprite.CurrentCostume + 1)
+end
+
+function Looks.GotoFrontBack(Args, API)
+    local Mode = Args.FRONT_BACK.Name
+
+    if Mode == "back" then
+        API.Sprite.Layer = Electro.Project.GetStage().Layer+1
+    else
+        API.Sprite.Layer = Electro.Renderer.GetTopLayer()
+    end
 end
 
 Looks.Definitions = {
@@ -103,7 +109,8 @@ Looks.Definitions = {
         Function = Looks.Show
     },
     ["gotofrontback"] = {
-        Type = Enum.BLOCK_STACK
+        Type = Enum.BLOCK_STACK,
+        Function = Looks.GotoFrontBack
     }
 }
 

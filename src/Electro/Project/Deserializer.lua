@@ -41,6 +41,7 @@ function Deserializer.DeserializeTarget(TargetID, TargetJSON)
     Target.Direction = TargetJSON.direction or 90
     Target.Size = TargetJSON.size or 100
     Target.ID = TargetID
+    Target.Layer = TargetJSON.layerOrder or Electro.Renderer.GetTopLayer()
 
     for ID, Costume in pairs(TargetJSON.costumes) do
         assert(Costume.md5ext, "Costume w/o md5ext not supported yet")

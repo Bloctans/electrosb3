@@ -25,7 +25,7 @@ function Project.Load(ProjectPath)
 end
 
 function Project.GetStage()
-    return Project.StageID
+    return Project.Targets[Project.StageID]
 end
 
 return Project

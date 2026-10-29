@@ -20,6 +20,7 @@ function Control.Wait(Args, API)
     if not API.TimerStarted then
         API:StartTimer(Args.DURATION)
         API:Yield()
+        --API:RequestRedraw()
     elseif not API:TimerEnded() then
         API:Yield()
         API:RequestRedraw() -- For some reason this works???

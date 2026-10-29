@@ -5,6 +5,7 @@ BlockEngine.LastUpdate = 0
 function BlockEngine.DefineShortcuts()
     BlockEngine.StartHats = BlockEngine.Stepper.StartHats
     BlockEngine.GetBlock = BlockEngine.Stepper.GetBlock
+    BlockEngine.RequestRedraw = BlockEngine.Stepper.RequestRedraw
 end
 
 function BlockEngine.Init()

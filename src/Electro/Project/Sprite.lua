@@ -7,6 +7,7 @@ end
 
 function Methods:SetCostume(ID)
     self.CurrentCostume = Electro.Util.TableMod(ID, self.Costumes)
+    Electro.BlockEngine.RequestRedraw()
 end
 
 -- Can only delete as clone
@@ -40,6 +41,7 @@ function Methods:CreateClone()
     CloneSprite.Sounds = self.Sounds
     CloneSprite.Direction = self.Direction
     CloneSprite.Visible = self.Visible
+    CloneSprite.Layer = self.Layer-1
 
     -- Register to what is needed, starting of hats is handled in block
     table.insert(self.Clones, CloneSprite)
@@ -109,6 +111,7 @@ return function()
         Direction = 0,
         Visible = true,
         CurrentCostume = 0,
+        Layer = 0,
 
         -- Clones
         Clones = {},
