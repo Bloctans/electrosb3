@@ -22,10 +22,14 @@ end
 
 -- Create a new script object using a target sprite and hat
 function ScriptStepper.CreateScript(Hat, Sprite)
+    if (not Hat.Next) then -- skip empty hats
+        return
+    end
+
     local Script = BlockEngine.Script(Hat, Sprite)
     --print("Create new "..Hat.Opcode, Script.UUID)
 
-    ScriptStepper.Scripts[Script.UUID] = Script
+    table.insert(ScriptStepper.Scripts, Script)
 end
 
 function ScriptStepper.EachScript(Callback)
@@ -52,6 +56,10 @@ end
 ]]
 function ScriptStepper.StartHat(Hat)
     local BlockSprite = Hat.Sprite
+
+    for _, Clone in pairs(BlockSprite.Clones) do
+        ScriptStepper.CreateScript(Hat, Clone)
+    end
 
     ScriptStepper.CreateScript(Hat, Hat.Sprite)
 end
@@ -90,9 +98,8 @@ function ScriptStepper.Update(dt)
         end
 
         for _, Script in pairs(ToKill) do
-            -- TODO: More
-
-            ScriptStepper.Scripts[Script.UUID] = nil
+            local Index = table.find(ScriptStepper.Scripts, Script)
+            table.remove(ScriptStepper.Scripts, Index)
         end
     end
 

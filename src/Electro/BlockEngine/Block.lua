@@ -87,7 +87,6 @@ return function()
     ]]
     function Block.Execute(Script)
         Block.API:Configure(Script, Script.Sprite, Block)
-        Block.API.Loops = Block.API.Loops + 1
 
         local Definition = Block.Definition
         assert(Definition, Block.Opcode.." has no definition!")

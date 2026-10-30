@@ -25,6 +25,9 @@ Data.Definitions = {
     },
     ["hidevariable"] = {
         Type = Enum.BLOCK_STACK
+    },
+    ["deletealloflist"] = {
+        Type = Enum.BLOCK_STACK
     }
 }
 

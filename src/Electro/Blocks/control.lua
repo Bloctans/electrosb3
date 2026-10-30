@@ -3,10 +3,13 @@ local BlockEngine = Electro.BlockEngine
 local Control = {}
 
 function Control.Repeat(Args, API)
-    if API.Loops <= Args.TIMES then
+    local Info = API:GetScriptInfo()
+    Info.Loops = Info.Loops + 1
+
+    if Info.Loops <= Args.TIMES then
         API:BranchTo(Args.SUBSTACK, true)
     else
-        API:ResetLoops()
+        Info.Loops = 0
     end
 end
 

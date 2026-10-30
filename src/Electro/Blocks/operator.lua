@@ -21,6 +21,10 @@ function Operator.LessThan(Args, API)
     return API:Compare(Args.OPERAND1, Args.OPERAND2) < 0
 end
 
+function Operator.Join(Args, API)
+    print(Args) 
+end
+
 function Operator.Multiply(Args, API)
     return API:Float(Args.NUM1) * API:Float(Args.NUM2)
 end
@@ -91,6 +95,10 @@ Operator.Definitions = {
     ["add"] = {
         Type = Enum.BLOCK_INPUT,
         Function = Operator.Add
+    },
+    ["join"] = {
+        Type = Enum.BLOCK_INPUT,
+        Function = Operator.Join
     },
     ["not"] = {
         Type = Enum.BLOCK_INPUT,

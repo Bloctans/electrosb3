@@ -2,7 +2,7 @@ local Enum = Electro.Enum
 local Motion = {}
 
 function Motion.ChangeYBy(Args, API)
-    Motion._Change(API, Vector2.yAxis * Args.DY)
+    Motion._Change(API, Vector2.yAxis * API:Float(Args.DY))
 end
 
 function Motion.MoveSteps(Args, API)

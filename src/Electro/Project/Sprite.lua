@@ -25,6 +25,8 @@ function Methods:Delete()
                 Script.Kill()
             end
         end)
+    else
+        print("Attempted to delete parent")
     end
 end
 
@@ -41,7 +43,8 @@ function Methods:CreateClone()
     CloneSprite.Sounds = self.Sounds
     CloneSprite.Direction = self.Direction
     CloneSprite.Visible = self.Visible
-    CloneSprite.Layer = self.Layer-1
+
+    Electro.Renderer.MoveToLayer(CloneSprite, self.Layer)
 
     -- Register to what is needed, starting of hats is handled in block
     table.insert(self.Clones, CloneSprite)

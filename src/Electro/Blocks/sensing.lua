@@ -30,15 +30,24 @@ function Sensing.TouchingObjectMenu(Args, API)
 
     if Type.Name == "_mouse_" then
         return Electro.MouseRect
+    elseif Type.Name == "_edge_" then
+        return Electro.Util.Rect(Vector2.zero, Electro.CanvasSize, true)
+    else
+        return Electro.Project.SpriteFromName(Type.Name).Rect
     end
 end
 
 function Sensing.OfObjectMenu(Args, API)
-    
+    return Electro.Project.SpriteFromName(Args.OBJECT.Name)
 end
 
 function Sensing.Of(Args, API)
-    print(Args)
+    local Property = Args.PROPERTY.Name
+    local Object = Args.OBJECT
+
+    if Property == "x position" then
+        return Object.Position.X
+    end
 end
 
 -- TODO: Implement

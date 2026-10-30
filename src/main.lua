@@ -5,6 +5,7 @@ require("Electro")
 
 function love.load()
     local FileDialog = require("Packages.filedialog")
+    --local ProjectPath = "/home/bloctans/github/electrosb3/project_tests/Super Mario Bros. Scratched v0.8.sb3" --FileDialog.OpenFileDialog("Open Project")
     local ProjectPath = "/home/bloctans/github/electrosb3/project_tests/Advanced - Wave simulator - Edit.pmp" --FileDialog.OpenFileDialog("Open Project")
 
     if (not ProjectPath) then 

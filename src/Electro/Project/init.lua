@@ -22,6 +22,21 @@ function Project.Load(ProjectPath)
             Project.StageID = Target.ID
         end
     end
+
+    -- Sort and sync rendering layers
+    table.sort(Electro.Renderer.RenderTargets, function (a, b)
+        return a.Layer < b.Layer
+    end)
+
+    Electro.Renderer.SyncLayers()
+end
+
+function Project.SpriteFromName(Name)
+    for _, Target in pairs(Project.Targets) do
+        if Target.Name == Name then
+            return Target
+        end
+    end
 end
 
 function Project.GetStage()

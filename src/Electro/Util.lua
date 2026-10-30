@@ -23,16 +23,23 @@ function Util.ToBoolean(Value)
 end
 
 function Util.CheckAABB(Rect1, Rect2)
-    return (Rect1.X1 > Rect2.X1) and (Rect1.X2 < Rect2.X2)
+    local Result = (Rect1.X1 > Rect2.X1) and (Rect1.X2 < Rect2.X2)
         and (Rect1.Y1 > Rect2.Y1) and (Rect1.Y2 < Rect2.Y2)
+
+    if Rect1.Invert or Rect2.Invert then
+        return not Result
+    else
+        return Result
+    end
 end
 
-function Util.Rect(Position, Size)
+function Util.Rect(Position, Size, Opposing)
     return {
         X1 = Position.X,
         Y1 = Position.Y,
         X2 = Position.X + Size.X,
-        Y2 = Position.Y + Size.Y
+        Y2 = Position.Y + Size.Y,
+        Invert = Opposing
     }
 end
 

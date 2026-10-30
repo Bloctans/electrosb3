@@ -9,6 +9,10 @@ return function(Hat, Sprite)
     Script.Hat = Hat
     Script.StartBlock = Stepper.GetBlock(Hat.Next)
 
+    Script.Info = {
+        Loops = 0
+    }
+
     local DidControlFlow = false
     local CurrentBlock = Script.StartBlock
     local Stack = {}
@@ -55,6 +59,7 @@ return function(Hat, Sprite)
     ]]
     function Script.Goto(BlockID, DontFlow)
         CurrentBlock = Stepper.GetBlock(BlockID)
+        assert(CurrentBlock, "No current block")
 
         if DontFlow then return end -- There is the possibility we may use this function but NOT want to indicate control flow
         DidControlFlow = true -- Assuming we want, Indicate that we did control flow so that the stepper doesnt skip the new block

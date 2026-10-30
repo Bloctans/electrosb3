@@ -14,6 +14,16 @@ function Deserializer.DeserializeBlocks(Blocks, Sprite)
 
     for ID, Block in pairs(Blocks) do
         local DeserializedBlock = BlockEngine.Block()
+
+        if Block.mutation then
+            local Mutation = Block.mutation
+
+            DeserializedBlock.Mutation = {
+                Name = Mutation.proccode,
+                Warp = (Mutation.warp == "true") and true or false
+            }
+        end
+
         DeserializedBlock.ID = ID
         DeserializedBlock.Next = Block.next
         DeserializedBlock.Parent = Block.parent
@@ -51,6 +61,7 @@ function Deserializer.DeserializeTarget(TargetID, TargetJSON)
         local TargetCostume = Electro.Project.Costume()
         TargetCostume.Image = Image
         TargetCostume.Size = Size
+        TargetCostume.Name = Costume.name
         TargetCostume.RotationCenter = Vector2.new(Costume.rotationCenterX, Costume.rotationCenterY)
         TargetCostume.ID = ID
 

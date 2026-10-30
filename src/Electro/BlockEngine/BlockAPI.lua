@@ -38,6 +38,10 @@ function Methods:Yield()
     self.Script.SetYielded()
 end
 
+function Methods:GetMutation()
+    return self.Block.Mutation
+end
+
 function Methods:GetVariable(ID)
     return Electro.Data.GetVariable(self.Sprite.ID, ID)
 end
@@ -57,8 +61,8 @@ function Methods:StartTimer(Duration)
     self.TimerStarted = true
 end
 
-function Methods:ResetLoops()
-    self.Loops = 0
+function Methods:GetScriptInfo()
+    return self.Script.Info
 end
 
 function Methods:TimerEnded()
@@ -75,7 +79,6 @@ end
 return function()
     return setmetatable({ -- TODO: in the case of clones, these may be utilized improperly during control flow swapping
         Timer = 0,
-        Loops = 0,
         TimerStarted = false,
         TimerDuration = 0
     }, {

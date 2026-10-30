@@ -47,6 +47,10 @@ function Looks.SetEffectTo(Args, API)
     API.Sprite.Effects[Args.EFFECT.Name] = Args.VALUE
 end
 
+function Looks.ChangeEffectBy(Args, API)
+    API.Sprite.Effects[Args.EFFECT.Name] = API.Sprite.Effects[Args.EFFECT.Name] + Args.CHANGE
+end
+
 function Looks.NextCostume(_, API)
     API.Sprite:SetCostume(API.Sprite.CurrentCostume + 1)
 end
@@ -55,10 +59,17 @@ function Looks.GotoFrontBack(Args, API)
     local Mode = Args.FRONT_BACK.Name
 
     if Mode == "back" then
-        API.Sprite.Layer = Electro.Project.GetStage().Layer+1
+        Electro.Renderer.MoveToLayer(API.Sprite, Electro.Project.GetStage().Layer+1)
     else
-        API.Sprite.Layer = Electro.Renderer.GetTopLayer()
+        Electro.Renderer.MoveToLayer(API.Sprite, Electro.Renderer.GetTopLayer())
     end
+end
+
+function Looks.SwitchBackdropTo(Args, API)
+    print(Args)
+
+    local Stage = Electro.Project.GetStage()
+    Stage:SetCostume()
 end
 
 Looks.Definitions = {
@@ -79,7 +90,12 @@ Looks.Definitions = {
         Function = Looks.CostumeMenu
     },
     ["changeeffectby"] = {
-        Type = Enum.BLOCK_STACK
+        Type = Enum.BLOCK_STACK,
+        Function = Looks.ChangeEffectBy
+    },
+    ["switchbackdropto"] = {
+        Type = Enum.BLOCK_STACK,
+        Function = Looks.SwitchBackdropTo
     },
     ["seteffectto"] = {
         Type = Enum.BLOCK_STACK,

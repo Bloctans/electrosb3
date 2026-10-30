@@ -5,8 +5,22 @@ function procedures.Definition(Args, API)
     return Args.custom_block
 end
 
+function procedures.Prototype(Args, API)
+    return {
+        Name = API:GetMutation().Name
+    }
+end
+
 function procedures.Call(Args, API)
-    print(Args)
+    local Mutation = API:GetMutation()
+
+    API:EachHat("procedures_definition", function(Block)
+        local Prototype = Block.Execute(API.Script)
+
+        if Prototype.Name == Mutation.Name then
+            API:BranchTo(Block.ID, false)
+        end
+    end)
 end
 
 procedures.Definitions = {
@@ -15,7 +29,8 @@ procedures.Definitions = {
         Function = procedures.Definition
     },
     ["prototype"] = { -- Actual definition part we care about.
-        Type = Enum.BLOCK_INPUT
+        Type = Enum.BLOCK_INPUT,
+        Function = procedures.Prototype
     },
     ["call"] = {
         Type = Enum.BLOCK_STACK,
