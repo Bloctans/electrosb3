@@ -20,9 +20,9 @@ function procedures.Call(Args, API)
 
             local PrototypeArgs = Prototype.Arguments
 
-            local Stack = API:BranchTo(Block.ID, false)
+            local Stack = API:BranchTo(Block.ID, false, Mutation.Warp)
             Stack.IsProcedure = true
-
+            
             for Index, Value in pairs(Args) do
                 Stack.Params[PrototypeArgs[Index]] = Value
             end

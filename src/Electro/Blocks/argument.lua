@@ -9,7 +9,10 @@ function Argument.ReporterLiteral(Args, API)
 end
 
 function Argument.ReporterBoolean(Args, API)
-    print(Args)
+    local ProcedureStack = API:GetProcedureStack()
+    local Params = ProcedureStack and ProcedureStack.Params or {}
+
+    return API:Boolean(Params[Args.VALUE.Name] or false)
 end
 
 Argument.Definitions = {

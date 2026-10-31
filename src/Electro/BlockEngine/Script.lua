@@ -59,13 +59,19 @@ return function(Hat, Sprite)
         return table.remove(Stack)
     end
 
+    function Script.IsWarpMode()
+        local ProcStack = Script.FindProcedureStack()
+
+        return ProcStack and ProcStack.WarpMode or false
+    end
+
     function Script.SetYielded()
         Script.State = Enum.STATUS_YIELDED
     end
 
     -- Push our current block to the stack, then goto the new one
-    function Script.BranchToBlock(BlockID, IsLoop)
-        local Stack = Script.PushStack(IsLoop)
+    function Script.BranchToBlock(BlockID, IsLoop, Warp)
+        local Stack = Script.PushStack(IsLoop, Warp)
         Script.Goto(BlockID)
 
         return Stack
@@ -105,6 +111,11 @@ return function(Hat, Sprite)
 
             if LastStack.IsLoop then -- Re-run previous
                 Script.Goto(LastStack.BlockID, true)
+
+                if Script.IsWarpMode() then
+                    return
+                end
+
                 return true -- Unless we're in warp mode, yield 
             end
 
@@ -143,6 +154,11 @@ return function(Hat, Sprite)
         -- Re-wake yielded script
         if Script.State == Enum.STATUS_YIELDED then
             Script.State = Enum.STATUS_RUNNING
+
+            if Script.IsWarpMode() then
+                return
+            end
+
             return true -- Re-Run current block next tick
         end
 

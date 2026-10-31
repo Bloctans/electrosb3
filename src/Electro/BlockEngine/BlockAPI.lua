@@ -17,8 +17,8 @@ function Methods:Configure(Script, Sprite, Block)
     self.Block = Block
 end
 
-function Methods:BranchTo(Block, IsLoop)
-    return self.Script.BranchToBlock(Block, IsLoop)
+function Methods:BranchTo(Block, IsLoop, Warp)
+    return self.Script.BranchToBlock(Block, IsLoop, Warp)
 end
 
 function Methods:GetProcedureStack()
@@ -27,10 +27,6 @@ end
 
 function Methods:StartHats(Opcode, Fields)
     BlockEngine.Stepper.StartHats(Opcode, Fields)
-end
-
-function Methods:StartHat(Hat, Fields)
-    BlockEngine.Stepper.StartHat(Hat, Fields)
 end
 
 function Methods:EachHat(Opcode, Callback, ...)
