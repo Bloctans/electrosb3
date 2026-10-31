@@ -89,8 +89,9 @@ return function(Hat, Sprite)
             yielding and thus running the first block twice
     ]]
     function Script.Goto(BlockID, DontFlow)
+        if (not BlockID) then print("Attempted to step to non-existant blockid", BlockID) return end
+
         CurrentBlock = Stepper.GetBlock(BlockID)
-        assert(CurrentBlock, "No current block")
 
         if DontFlow then return end -- There is the possibility we may use this function but NOT want to indicate control flow
         DidControlFlow = true -- Assuming we want, Indicate that we did control flow so that the stepper doesnt skip the new block

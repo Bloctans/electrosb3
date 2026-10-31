@@ -25,8 +25,8 @@ function Renderer.DrawDebug(Target)
     love.graphics.rectangle("line", Rect.X1, Rect.Y1, Rect.X2 - Rect.X1, Rect.Y2 - Rect.Y1)
 
     love.graphics.pop()
-    love.graphics.print("Layer "..Target.Layer, 0,0)
-    love.graphics.print("CostumeID "..Target.CurrentCostume, 0,20)
+    --love.graphics.print("Layer "..Target.Layer, 0,0)
+    --love.graphics.print("CostumeID "..Target.CurrentCostume, 0,20)
 end
 
 function Renderer.DebugLayer()
@@ -115,7 +115,7 @@ function Renderer.Render()
                 love.graphics.draw(CurrentImage, 0,0)
             end
 
-            --Renderer.DrawDebug(Target)
+            Renderer.DrawDebug(Target)
 
             love.graphics.setShader()
             love.graphics.pop()

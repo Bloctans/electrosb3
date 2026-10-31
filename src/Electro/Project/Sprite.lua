@@ -61,6 +61,16 @@ function Methods:GetRootSprite()
     return self.Parent or self
 end
 
+function Methods:GetCloneRects()
+    local Rects = {self.Rect}
+
+    for _, Clone in pairs(self.Clones) do
+        table.insert(Rects, Clone.Rect)
+    end
+
+    return Rects
+end
+
 function Methods:CostumeIDFromName(Name)
     for ID, Costume in pairs(self.Costumes) do
         if Costume.Name == Name then
@@ -76,8 +86,10 @@ function Methods:Redraw()
     local Costume = self:GetCostume()
     
     if Costume then
-        Dimension = Costume.Size * (self.Size/100)
-        Pivot = Costume.RotationCenter
+        local Size = Costume.Size * Costume.Scale
+
+        Dimension = Size * (self.Size/100)
+        Pivot = Dimension/2
     end
 
     self.Rect = Electro.Util.Rect(Electro.Util.FromScratch(self.Position) - Pivot, Dimension)

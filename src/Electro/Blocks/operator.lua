@@ -5,7 +5,9 @@ local MathOps = {
     floor = math.floor,
     sin = math.sin,
     cos = math.cos,
-    ceiling = math.ceil
+    ceiling = math.ceil,
+    abs = math.abs,
+    sqrt = math.sqrt
 }
 
 local Trig = {sin = true, cos = true, tan = true} -- These require degrees to radians
@@ -23,7 +25,7 @@ function Operator.LessThan(Args, API)
 end
 
 function Operator.Join(Args, API)
-    return Args.STRING1..Args.STRING2
+    return API:String(Args.STRING1)..API:String(Args.STRING2)
 end
 
 function Operator.LetterOf(Args, API)

@@ -9,6 +9,7 @@ Sensing.KeyLookup = {
     b = "b",
     z = "z",
     n = "n",
+    x = "x",
     space = "space",
     enter = "return",
     any = "any",
@@ -27,14 +28,14 @@ function Sensing.KeyPressed(Args, _)
         return Sensing.AnyKey
     end
 
-    return love.keyboard.isDown(Args.KEY_OPTION)
+    local Lookup = Sensing.KeyLookup[Args.KEY_OPTION]
+    assert(Lookup, Args.KEY_OPTION.." not in lookup")
+
+    return love.keyboard.isDown(Lookup)
 end
 
 function Sensing.KeyOptions(Args, _)
-    local Lookup = Sensing.KeyLookup[Args.KEY_OPTION.Name]
-    assert(Lookup, "No key "..Args.KEY_OPTION.Name)
-
-    return Lookup
+    return Args.KEY_OPTION.Name
 end
 
 function Sensing.Timer(_, _)
@@ -53,11 +54,11 @@ function Sensing.TouchingObjectMenu(Args, API)
     local Type = Args.TOUCHINGOBJECTMENU
 
     if Type.Name == "_mouse_" then
-        return Electro.MouseRect
+        return {Electro.MouseRect}
     elseif Type.Name == "_edge_" then
-        return Electro.Util.Rect(Vector2.zero, Electro.CanvasSize)
+        return {Electro.Util.Rect(Vector2.zero, Electro.CanvasSize)}
     else
-        return Electro.Project.SpriteFromName(Type.Name).Rect
+        return Electro.Project.SpriteFromName(Type.Name):GetCloneRects()
     end
 end
 
@@ -71,26 +72,39 @@ function Sensing.Of(Args, API)
 
     if Property == "x position" then
         return Object.Position.X
+    elseif Property == "y position" then
+        return Object.Position.Y
+    elseif Property == "direction" then
+        return Object.Direction
+    else
+        error("Invalid property "..Property)
     end
 end
 
 -- TODO: Implement
 function Sensing.TouchingObject(Args, API)
     local SpriteRect = API.Sprite.Rect
+    local Rects = Args.TOUCHINGOBJECTMENU
 
-    return Electro.Util.CheckAABB(Args.TOUCHINGOBJECTMENU, SpriteRect)
+    local Touching = false
+
+    for _, Rect in pairs(Rects) do
+        if Electro.Util.CheckAABB(SpriteRect, Rect) then
+            Touching = true
+        end
+    end
+
+    return Touching
 end
 
 function Sensing.DistanceTo(Args, API)
-    print(Args)
+    local SubjectSprite = Electro.Project.SpriteFromName(Args.DISTANCETOMENU)
+
+    return (API.Sprite.Position - SubjectSprite.Position):Magnitude()
 end
 
 function Sensing.DistanceToMenu(Args, API)
-    print(Args)
-end
-
-function Sensing.LetterOf(Args, API)
-    print(Args)
+    return Args.DISTANCETOMENU.Name
 end
 
 function Sensing.MouseX()
@@ -149,10 +163,6 @@ Sensing.Definitions = {
     ["distancetomenu"] = {
         Type = Enum.BLOCK_INPUT,
         Function = Sensing.DistanceToMenu
-    },
-    ["letter_of"] = {
-        Type = Enum.BLOCK_INPUT,
-        Function = Sensing.LetterOf
     },
     ["mousex"] = {
         Type = Enum.BLOCK_INPUT,

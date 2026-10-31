@@ -34,7 +34,7 @@ return function()
                 return Return
             else
                 return Value
-            end
+            end    
         elseif Type == 10 then -- String
             return Value
         elseif Type == 11 then -- Broadcast
@@ -98,7 +98,15 @@ return function()
             return
         end
 
-        return Definition.Function(Args, Block.API)
+        
+        local Success, Result = pcall(Definition.Function, Args, Block.API)
+
+        if not Success then
+            print(Result)
+            error(Block.Opcode.." failed to run, error message logged.\n\nit's reccommended to check for a tail call optimization error if its related to a mismatched type")
+        end
+        
+        return Result
     end
 
     return Block

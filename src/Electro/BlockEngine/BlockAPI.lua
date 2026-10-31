@@ -38,7 +38,13 @@ function Methods:EachScript(Callback)
 end
 
 function Methods:Boolean(Value) return Electro.Util.ToBoolean(Value) end
-function Methods:Float(Value) return tonumber(Value) or 0 end
+function Methods:Float(Value) 
+    if type(Value) == "boolean" then
+        return Value and 1 or 0
+    else
+        return tonumber(Value) or 0
+    end
+end
 function Methods:String(Value) return tostring(Value) end
 
 function Methods:SetVariable(ID, Value)

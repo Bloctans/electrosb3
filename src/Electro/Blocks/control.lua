@@ -3,10 +3,12 @@ local BlockEngine = Electro.BlockEngine
 local Control = {}
 
 function Control.Repeat(Args, API)
+    local Times = math.round(API:Float(Args.TIMES))
+    
     local Info = API:GetScriptInfo()
     Info.Loops = Info.Loops + 1
 
-    if Info.Loops <= API:Float(Args.TIMES) then
+    if Info.Loops <= Times then
         API:BranchTo(Args.SUBSTACK, true)
     else
         Info.Loops = 0
@@ -75,7 +77,7 @@ function Control.CreateCloneMenu(Args, API)
     if CloneOption == "_myself_" then
         return API.Sprite
     else
-        error("Invalid option "..CloneOption)
+        return Electro.Project.SpriteFromName(CloneOption)
     end
 end
 

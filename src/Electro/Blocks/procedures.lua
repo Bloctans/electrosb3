@@ -16,7 +16,7 @@ function procedures.Call(Args, API)
         local Prototype = Block.Execute(API.Script)
 
         if (Prototype.Name == Mutation.Name) and (Block.Sprite == API.Sprite:GetRootSprite()) then
-            print("Found proc for "..Mutation.Name)
+            --print("Found proc for "..Mutation.Name)
 
             local PrototypeArgs = Prototype.Arguments
 

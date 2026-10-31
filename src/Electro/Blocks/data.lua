@@ -17,7 +17,7 @@ function Data.DeleteAllOfList(Args, API)
 end
 
 function Data.ItemOfList(Args, API)
-    return API:GetList(Args.LIST.ID)[API:Float(Args.INDEX)]
+    return API:GetList(Args.LIST.ID)[API:Float(Args.INDEX)] or ""
 end
 
 function Data.AddToList(Args, API)
@@ -68,7 +68,7 @@ Data.Definitions = {
         Function = Data.ItemOfList
     },
     ["addtolist"] = {
-        Type = Enum.BLOCK_INPUT,
+        Type = Enum.BLOCK_STACK,
         Function = Data.AddToList
     },
     ["lengthoflist"] = {
