@@ -7,14 +7,19 @@ ScriptStepper.RedrawRequested = false
 
 ScriptStepper.Scripts = {}
 ScriptStepper.HatLookup = {} -- lookup of running scripts to current hats
-
 ScriptStepper.Blocks = {}
+ScriptStepper.BlocksByTarget = {}
 
 function ScriptStepper.RequestRedraw()
     ScriptStepper.RedrawRequested = true
 end
 
-function ScriptStepper.AddBlock(ID, Block)
+function ScriptStepper.AddBlock(ID, Block, TargetID)
+    if (not ScriptStepper.BlocksByTarget[TargetID]) then
+        ScriptStepper.BlocksByTarget[TargetID] = {}
+    end
+
+    ScriptStepper.BlocksByTarget[TargetID][ID] = Block
     ScriptStepper.Blocks[ID] = Block
 end
 
@@ -47,10 +52,16 @@ function ScriptStepper.EachScript(Callback)
 end
 
 function ScriptStepper.EachHat(Opcode, Callback, ...)
-    for _, Block in pairs(ScriptStepper.Blocks) do
-        if Block.Opcode == Opcode then
-            Callback(Block, ...)
-        end
+    --[[
+        This is an insanely dumb implementation detail you need to follow that otherwise breaks projects
+        if you need to know why, https://github.com/scratchfoundation/scratch-vm/blob/developer/src/engine/runtime.js#L1962
+    ]]
+    for i = #ScriptStepper.BlocksByTarget, 1, -1 do
+        for _, Block in pairs(ScriptStepper.BlocksByTarget[i]) do
+            if Block.Opcode == Opcode then
+                Callback(Block, ...)
+            end
+        end 
     end
 end
 

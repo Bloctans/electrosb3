@@ -10,7 +10,7 @@ Electro = {
     VERSION = "0.1",
     Rate = 1/30,
     StartTime = 0,
-    CanvasSize = Vector2.new(480, 360),
+    CanvasSize = Vector2.new(512,448)--480, 360),
 }
 
 function Electro.PrintSplash()

@@ -19,6 +19,9 @@ Event.Definitions = {
         Type = Enum.BLOCK_HAT,
         RestartScripts = true,
     },
+    ["whenkeypressed"] = {
+        Type = Enum.BLOCK_HAT,
+    },
     ["whengreaterthan"] = { -- This is stupid, KNOWN, not implemented..
         Type = Enum.BLOCK_HAT
     },

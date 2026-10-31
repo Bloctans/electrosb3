@@ -16,6 +16,8 @@ end
 function Control.RepeatUntil(Args, API)
     if not Args.CONDITION then
         API:BranchTo(Args.SUBSTACK, true)
+    else
+        print("stop repeat")
     end
 end
 
@@ -86,6 +88,12 @@ function Control.Stop(Args, API)
 
     if Option == "this script" then
         API.Script.StopThisScript()
+    elseif Option == "other scripts in sprite" then
+        --[[API:EachScript(function(Script)
+            if (Script.Sprite == API.Sprite) and (API.Script ~= Script) then
+                Script.Kill()
+            end
+        end)]]
     end
 end
 

@@ -16,6 +16,7 @@ return function()
 
     function Sound.Play()
         assert(Sound.Source, "Attempted to play unloaded sound")
+        Sound.Source:stop()
         Sound.Source:play()
     end
 

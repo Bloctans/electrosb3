@@ -7,11 +7,15 @@ Sensing.KeyLookup = {
     s = "s",
     d = "d",
     b = "b",
+    z = "z",
+    n = "n",
     space = "space",
     enter = "return",
     any = "any",
     ["down arrow"] = "down",
     ["up arrow"] = "up",
+    ["right arrow"] = "right",
+    ["left arrow"] = "left",
 }
 
 Sensing.AnyKey = false
@@ -165,6 +169,12 @@ Sensing.Definitions = {
     ["loudness"] = {
         Type = Enum.BLOCK_INPUT,
         Function = Sensing.Loudness
+    },
+    ["askandwait"] = {
+        Type = Enum.BLOCK_STACK
+    },
+    ["answer"] = {
+        Type = Enum.BLOCK_INPUT
     }
 }
 

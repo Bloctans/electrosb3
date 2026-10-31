@@ -17,7 +17,7 @@ function Data.DeleteAllOfList(Args, API)
 end
 
 function Data.ItemOfList(Args, API)
-    return API:GetList(Args.LIST.ID)[Args.INDEX]
+    return API:GetList(Args.LIST.ID)[API:Float(Args.INDEX)]
 end
 
 function Data.AddToList(Args, API)
@@ -75,18 +75,18 @@ Data.Definitions = {
         Type = Enum.BLOCK_INPUT,
         Function = Data.LengthOfList
     },
-    --[[["itemnumoflist"] = {
+    ["itemnumoflist"] = {
         Type = Enum.BLOCK_INPUT,
         Function = Data.ItemNumberOfList
-    },]]
+    },
     ["replaceitemoflist"] = {
         Type = Enum.BLOCK_STACK,
         Function = Data.ReplaceItemOfList
     },
-    --[[["deleteoflist"] = {
+    ["deleteoflist"] = {
         Type = Enum.BLOCK_INPUT,
         Function = Data.DeleteOfList
-    },]]
+    },
 }
 
 return Data

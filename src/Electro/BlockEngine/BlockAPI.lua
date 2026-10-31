@@ -37,8 +37,13 @@ function Methods:EachHat(Opcode, Callback, ...)
     BlockEngine.Stepper.EachHat(Opcode, Callback, ...)
 end
 
+function Methods:EachScript(Callback)
+    BlockEngine.Stepper.EachScript(Callback)
+end
+
 function Methods:Boolean(Value) return Electro.Util.ToBoolean(Value) end
 function Methods:Float(Value) return tonumber(Value) or 0 end
+function Methods:String(Value) return tostring(Value) end
 
 function Methods:SetVariable(ID, Value)
     return Electro.Data.SetVariable(self.Sprite.ID, ID, Value)

@@ -1,11 +1,12 @@
 local Util = {}
+local Offset = Electro.CanvasSize/2
 
 function Util.FromScratch(Position)
-    return Vector2.new(Position.X + 240, -Position.Y + 180)
+    return Vector2.new(Position.X + Offset.X, -Position.Y + Offset.Y)
 end
 
 function Util.ToScratch(Position)
-    return Vector2.new(Position.X - 240, -Position.Y + 180)
+    return Vector2.new(Position.X - Offset.X, -Position.Y + Offset.Y)
 end
 
 function Util.TableMod(Value, Table)
@@ -52,8 +53,8 @@ function Util.Compare(A,B)
     local NB = tonumber(B)
     
     if not (NA and NB) then
-        local SA = tostring(A)
-        local SB = tostring(B)
+        local SA = string.lower(tostring(A))
+        local SB = string.lower(tostring(B))
 
         if SA < SB then
             return -1

@@ -71,11 +71,15 @@ end
 
 function Looks.SwitchBackdropTo(Args, API)
     local Stage = Electro.Project.GetStage()
-    Stage:SetCostume(Args.BACKDROP)
+
+    local CostumeID = Stage:CostumeIDFromName(Args.BACKDROP)
+    if not CostumeID then CostumeID = API:Float(Args.BACKDROP) end
+
+    Stage:SetCostume(CostumeID)
 end
 
 function Looks.Backdrops(Args, API)
-    return Electro.Project.GetStage():CostumeIDFromName(Args.BACKDROP.Name)
+    return Args.BACKDROP.Name
 end
 
 function Looks.GoLayer(Args, API)

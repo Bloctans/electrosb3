@@ -98,7 +98,7 @@ function Renderer.Render()
 
             love.graphics.push("all")
             love.graphics.translate(Position.X, Position.Y)
-            love.graphics.scale(Target.Size/100)
+            love.graphics.scale(Target.Size/100 * Costume.Scale)
             love.graphics.rotate(math.rad(Target.Direction - 90))
             love.graphics.translate(-RotationCenter.X, -RotationCenter.Y)
 

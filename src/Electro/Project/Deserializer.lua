@@ -8,7 +8,7 @@ function Deserializer.Read(Path)
     return Data
 end
 
-function Deserializer.DeserializeBlocks(Blocks, Sprite)
+function Deserializer.DeserializeBlocks(Blocks, Sprite, TargetIndex)
     local BlockEngine = Electro.BlockEngine
     local Stepper = BlockEngine.Stepper
 
@@ -48,14 +48,14 @@ function Deserializer.DeserializeBlocks(Blocks, Sprite)
                 Fields = Block.fields
             }
 
-            Stepper.AddBlock(ID, DeserializedBlock)
+            Stepper.AddBlock(ID, DeserializedBlock, TargetIndex)
         else
             print("Got orphaned block, skipping")
         end
     end
 end
 
-function Deserializer.DeserializeTarget(TargetID, TargetJSON)
+function Deserializer.DeserializeTarget(TargetID, TargetJSON, Index)
     local Target = Electro.Project.Sprite()
 
     Target.Position = Vector2.new(TargetJSON.x or 0, TargetJSON.y or 0)
@@ -90,6 +90,7 @@ function Deserializer.DeserializeTarget(TargetID, TargetJSON)
         TargetCostume.Image = Image
         TargetCostume.Size = Size
         TargetCostume.Name = Costume.name
+        TargetCostume.Scale = 1/(Costume.bitmapResolution or 1)
         TargetCostume.RotationCenter = Vector2.new(Costume.rotationCenterX, Costume.rotationCenterY)
         TargetCostume.ID = ID
 
@@ -132,7 +133,7 @@ function Deserializer.DeserializeTarget(TargetID, TargetJSON)
         end
     end
 
-    Deserializer.DeserializeBlocks(TargetJSON.blocks, Target)
+    Deserializer.DeserializeBlocks(TargetJSON.blocks, Target, Index)
 
     Electro.Project.Targets[TargetID] = Target
 end
@@ -146,7 +147,7 @@ function Deserializer.Deserialize(MountNameIn)
     ProjectJSON = JSON.decode(ProjectJSON)
 
     for ID, Target in pairs(ProjectJSON.targets) do
-        Deserializer.DeserializeTarget(CreateUUID(), Target)
+        Deserializer.DeserializeTarget(CreateUUID(), Target, ID)
     end
 
     DeserializeBench.End()

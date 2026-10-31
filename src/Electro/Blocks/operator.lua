@@ -4,7 +4,8 @@ local Operator = {}
 local MathOps = {
     floor = math.floor,
     sin = math.sin,
-    cos = math.cos
+    cos = math.cos,
+    ceiling = math.ceil
 }
 
 local Trig = {sin = true, cos = true, tan = true} -- These require degrees to radians
@@ -26,11 +27,13 @@ function Operator.Join(Args, API)
 end
 
 function Operator.LetterOf(Args, API)
-    print(Args) 
+    local Letter = API:Float(Args.LETTER)
+
+    return string.sub(API:String(Args.STRING), Letter, Letter)
 end
 
 function Operator.Length(Args, API)
-    print(Args)
+    return #API:String(Args.STRING)
 end
 
 function Operator.Round(Args, API)
