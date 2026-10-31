@@ -6,6 +6,8 @@ local Enum, BlockEngine = Electro.Enum, Electro.BlockEngine
 ScriptStepper.RedrawRequested = false
 
 ScriptStepper.Scripts = {}
+ScriptStepper.HatLookup = {} -- lookup of running scripts to current hats
+
 ScriptStepper.Blocks = {}
 
 function ScriptStepper.RequestRedraw()
@@ -30,6 +32,12 @@ function ScriptStepper.CreateScript(Hat, Sprite)
     --print("Create new "..Hat.Opcode, Script.UUID)
 
     table.insert(ScriptStepper.Scripts, Script)
+
+    if (not ScriptStepper.HatLookup[Hat.ID]) then
+        ScriptStepper.HatLookup[Hat.ID] = {}
+    end
+
+    table.insert(ScriptStepper.HatLookup[Hat.ID], Script)
 end
 
 function ScriptStepper.EachScript(Callback)
@@ -56,6 +64,13 @@ end
 ]]
 function ScriptStepper.StartHat(Hat)
     local BlockSprite = Hat.Sprite
+    local Definition = Hat.Definition
+
+    if Definition.RestartScripts and ScriptStepper.HatLookup[Hat.ID] then
+        for _, Script in pairs(ScriptStepper.HatLookup[Hat.ID]) do
+            Script.Kill()
+        end
+    end
 
     for _, Clone in pairs(BlockSprite.Clones) do
         ScriptStepper.CreateScript(Hat, Clone)
@@ -101,6 +116,12 @@ function ScriptStepper.Update(dt)
 
         for _, Script in pairs(ToKill) do
             local Index = table.find(ScriptStepper.Scripts, Script)
+            local LookupEntry = ScriptStepper.HatLookup[Script.Hat.ID]
+
+            local HatIndex = table.find(LookupEntry, Script)
+            assert(HatIndex, "?????")
+
+            table.remove(LookupEntry, HatIndex)
             table.remove(ScriptStepper.Scripts, Index)
         end
     end
