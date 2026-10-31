@@ -67,8 +67,6 @@ function Methods:CostumeIDFromName(Name)
             return ID
         end
     end
-
-    return 1
 end
 
 function Methods:Redraw()

@@ -4,6 +4,10 @@ function Util.FromScratch(Position)
     return Vector2.new(Position.X + 240, -Position.Y + 180)
 end
 
+function Util.ToScratch(Position)
+    return Vector2.new(Position.X - 240, -Position.Y + 180)
+end
+
 function Util.TableMod(Value, Table)
     return ((Value-1) % table.length(Table)) + 1
 end

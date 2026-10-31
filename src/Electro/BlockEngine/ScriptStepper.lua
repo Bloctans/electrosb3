@@ -85,6 +85,8 @@ end
 function ScriptStepper.Update(dt)
     local Start = love.timer.getTime()
 
+    Electro.Profiler.Start("Step Scripts")
+
     while (not ScriptStepper.RedrawRequested) and ((love.timer.getTime() - Start) < (Electro.Rate * 0.75)) do
         local ToKill = {}
 
@@ -102,6 +104,8 @@ function ScriptStepper.Update(dt)
             table.remove(ScriptStepper.Scripts, Index)
         end
     end
+
+    Electro.Profiler.End()
 
     ScriptStepper.RedrawRequested = false
 end

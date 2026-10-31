@@ -1,30 +1,34 @@
 local Data = {}
-local Variable = {}
+local DataEntries = {}, {}
 
 -- Setup stage data container
 function Data.SetupData(SpriteID)
-    Variable[SpriteID] = {}
-    return Variable[SpriteID]
+    DataEntries[SpriteID] = {
+        Variable = {},
+        List = {}
+    }
+
+    return DataEntries[SpriteID]
 end
 
-function Data.GetVariables(SpriteID)
-    return Variable[SpriteID], Variable[Electro.Project.StageID]
+function Data.GetData(SpriteID, Type)
+    return DataEntries[SpriteID][Type], DataEntries[Electro.Project.StageID][Type]
 end
 
 function Data.Clear(SpriteID)
-    Variable[SpriteID] = nil
+    DataEntries[SpriteID] = nil
 end
 
 function Data.Clone(SubjectID, TargetID)
-    local TargetVariables = Data.SetupData(TargetID)
+    local TargetEntry = Data.SetupData(TargetID)
+    local SubjectEntry = table.deepcopy(DataEntries[SubjectID])
 
-    for ID, Value in pairs(Variable[SubjectID]) do
-        TargetVariables[ID] = Value
-    end
+    TargetEntry.Variable = SubjectEntry.Variable
+    TargetEntry.List = SubjectEntry.List
 end
 
 function Data.GetVariable(SpriteID, ID)
-    local Variables, StageVariables = Data.GetVariables(SpriteID)
+    local Variables, StageVariables = Data.GetData(SpriteID, "Variable")
 
     if StageVariables[ID] then
         return StageVariables[ID]
@@ -36,12 +40,24 @@ function Data.GetVariable(SpriteID, ID)
 end
 
 function Data.SetVariable(SpriteID, ID, Value)
-    local Variables, StageVariables = Data.GetVariables(SpriteID)
+    local Variables, StageVariables = Data.GetData(SpriteID, "Variable")
 
     if StageVariables and StageVariables[ID] then
         StageVariables[ID] = Value
     else
         Variables[ID] = Value
+    end
+end
+
+function Data.GetList(SpriteID, ID)
+    local List, StageList = Data.GetData(SpriteID, "List")
+
+    if StageList[ID] then
+        return StageList[ID]
+    else
+        if (not List[ID]) then List[ID] = {} end -- If it doesnt exist, create it
+
+        return List[ID]
     end
 end
 

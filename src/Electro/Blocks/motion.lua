@@ -44,6 +44,10 @@ function Motion.YPosition(_, API)
     return API.Sprite.Position.Y
 end
 
+function Motion.Direction(_, API)
+    return API.Sprite.Direction
+end
+
 function Motion._SetDirection(API, Direction)
     API.Sprite.Direction = Direction
     API:RequestRedraw()
@@ -91,6 +95,10 @@ Motion.Definitions = {
         Type = Enum.BLOCK_INPUT,
         Function = Motion.YPosition
     },
+    ["direction"] = {
+        Type = Enum.BLOCK_INPUT,
+        Function = Motion.Direction
+    },
     ["movesteps"] = {
         Type = Enum.BLOCK_STACK,
         Function = Motion.MoveSteps
@@ -98,6 +106,9 @@ Motion.Definitions = {
     ["pointindirection"] = {
         Type = Enum.BLOCK_STACK,
         Function = Motion.SetDirection
+    },
+    ["setrotationstyle"] = {
+        Type = Enum.BLOCK_STACK
     }
 }
 

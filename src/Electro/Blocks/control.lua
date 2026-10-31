@@ -6,7 +6,7 @@ function Control.Repeat(Args, API)
     local Info = API:GetScriptInfo()
     Info.Loops = Info.Loops + 1
 
-    if Info.Loops <= Args.TIMES then
+    if Info.Loops <= API:Float(Args.TIMES) then
         API:BranchTo(Args.SUBSTACK, true)
     else
         Info.Loops = 0
@@ -81,6 +81,14 @@ function Control.DeleteClone(Args, API)
     API.Sprite:Delete()
 end
 
+function Control.Stop(Args, API)
+    local Option = Args.STOP_OPTION.Name
+
+    if Option == "this script" then
+        API.Script.StopThisScript()
+    end
+end
+
 Control.Definitions = {
     ["repeat"] = {
         Type = Enum.BLOCK_STACK,
@@ -112,6 +120,7 @@ Control.Definitions = {
     },
     ["stop"] = {
         Type = Enum.BLOCK_STACK,
+        Function = Control.Stop
     },
     ["delete_this_clone"] = {
         Type = Enum.BLOCK_STACK,

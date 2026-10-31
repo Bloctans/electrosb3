@@ -6,19 +6,39 @@ Sensing.KeyLookup = {
     a = "a",
     s = "s",
     d = "d",
-    space = "space"
+    b = "b",
+    space = "space",
+    enter = "return",
+    any = "any",
+    ["down arrow"] = "down",
+    ["up arrow"] = "up",
 }
 
+Sensing.AnyKey = false
+
+local Mouse = Vector2.zero
+
 function Sensing.KeyPressed(Args, _)
+    if Args.KEY_OPTION == "any" then
+        return Sensing.AnyKey
+    end
+
     return love.keyboard.isDown(Args.KEY_OPTION)
 end
 
 function Sensing.KeyOptions(Args, _)
-    return Sensing.KeyLookup[Args.KEY_OPTION.Name]
+    local Lookup = Sensing.KeyLookup[Args.KEY_OPTION.Name]
+    assert(Lookup, "No key "..Args.KEY_OPTION.Name)
+
+    return Lookup
 end
 
 function Sensing.Timer(_, _)
     return love.timer.getTime() - Electro.StartTime
+end
+
+function Sensing.ResetTimer(_, _)
+    Electro.StartTime = love.timer.getTime()
 end
 
 function Sensing.MouseDown(_, _)
@@ -31,7 +51,7 @@ function Sensing.TouchingObjectMenu(Args, API)
     if Type.Name == "_mouse_" then
         return Electro.MouseRect
     elseif Type.Name == "_edge_" then
-        return Electro.Util.Rect(Vector2.zero, Electro.CanvasSize, true)
+        return Electro.Util.Rect(Vector2.zero, Electro.CanvasSize)
     else
         return Electro.Project.SpriteFromName(Type.Name).Rect
     end
@@ -55,6 +75,34 @@ function Sensing.TouchingObject(Args, API)
     local SpriteRect = API.Sprite.Rect
 
     return Electro.Util.CheckAABB(Args.TOUCHINGOBJECTMENU, SpriteRect)
+end
+
+function Sensing.DistanceTo(Args, API)
+    print(Args)
+end
+
+function Sensing.DistanceToMenu(Args, API)
+    print(Args)
+end
+
+function Sensing.LetterOf(Args, API)
+    print(Args)
+end
+
+function Sensing.MouseX()
+    return Mouse.X
+end
+
+function Sensing.MouseY()
+    return Mouse.Y
+end
+
+function Sensing.Loudness()
+    return 0
+end
+
+function Sensing.OnUpdate()
+    Mouse = Electro.Util.ToScratch(Vector2.new(Electro.MouseRect.X1, Electro.MouseRect.Y1))
 end
 
 Sensing.Definitions = {
@@ -90,6 +138,38 @@ Sensing.Definitions = {
         Type = Enum.BLOCK_INPUT,
         Function = Sensing.OfObjectMenu
     },
+    ["distanceto"] = {
+        Type = Enum.BLOCK_INPUT,
+        Function = Sensing.DistanceTo
+    },
+    ["distancetomenu"] = {
+        Type = Enum.BLOCK_INPUT,
+        Function = Sensing.DistanceToMenu
+    },
+    ["letter_of"] = {
+        Type = Enum.BLOCK_INPUT,
+        Function = Sensing.LetterOf
+    },
+    ["mousex"] = {
+        Type = Enum.BLOCK_INPUT,
+        Function = Sensing.MouseX
+    },
+    ["mousey"] = {
+        Type = Enum.BLOCK_INPUT,
+        Function = Sensing.MouseY
+    },
+    ["resettimer"] = {
+        Type = Enum.BLOCK_STACK,
+        Function = Sensing.ResetTimer
+    },
+    ["loudness"] = {
+        Type = Enum.BLOCK_INPUT,
+        Function = Sensing.Loudness
+    }
+}
+
+Sensing.Events = {
+    Update = Sensing.OnUpdate
 }
 
 return Sensing

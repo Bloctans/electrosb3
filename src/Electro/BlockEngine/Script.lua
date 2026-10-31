@@ -9,9 +9,7 @@ return function(Hat, Sprite)
     Script.Hat = Hat
     Script.StartBlock = Stepper.GetBlock(Hat.Next)
 
-    Script.Info = {
-        Loops = 0
-    }
+    Script.Info = {}
 
     local DidControlFlow = false
     local CurrentBlock = Script.StartBlock
@@ -21,11 +19,36 @@ return function(Hat, Sprite)
     Script.UUID = CreateUUID()
 
     -- Push the current state to the stack
-    function Script.PushStack(IsLoop)
-        table.insert(Stack, {
+    function Script.PushStack(Loop, Warp)
+        local StackFrame = {
             BlockID = CurrentBlock.ID,
-            IsLoop = IsLoop
-        })
+            IsLoop = Loop,
+            WarpMode = Warp,
+            Params = {},
+            IsProcedure = false
+        }
+
+        table.insert(Stack, StackFrame)
+        return StackFrame
+    end
+
+    -- Find latest hot procedure stacks in your area why am i like this
+    function Script.FindProcedureStack()
+        for i = #Stack, 1, -1 do
+            local Frame = Stack[i]
+
+            if Frame.IsProcedure then return Frame end
+        end
+    end
+
+    function Script.StopThisScript()
+        while true do
+            local LastStack = Script.PopStack() -- TODO: Custom block support
+
+            if (not LastStack) then
+                return
+            end
+        end
     end
 
     function Script.Kill()
@@ -42,8 +65,10 @@ return function(Hat, Sprite)
 
     -- Push our current block to the stack, then goto the new one
     function Script.BranchToBlock(BlockID, IsLoop)
-        Script.PushStack(IsLoop)
+        local Stack = Script.PushStack(IsLoop)
         Script.Goto(BlockID)
+
+        return Stack
     end
 
     --[[

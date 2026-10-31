@@ -6,6 +6,7 @@ function BlockEngine.DefineShortcuts()
     BlockEngine.StartHats = BlockEngine.Stepper.StartHats
     BlockEngine.GetBlock = BlockEngine.Stepper.GetBlock
     BlockEngine.RequestRedraw = BlockEngine.Stepper.RequestRedraw
+    BlockEngine.SetExtensionVariable = BlockEngine.Extensions.SetVariable
 end
 
 function BlockEngine.Init()
@@ -16,7 +17,7 @@ function BlockEngine.Init()
     BlockEngine.Block = require("Electro.BlockEngine.Block")
 
     BlockEngine.Extensions = require("Electro.BlockEngine.Extensions")
-    BlockEngine.Extensions.Register("control", "event", "sound", "looks", "operator", "sensing", "data", "motion", "DebuggerExtensionTS", "procedures")
+    BlockEngine.Extensions.Register("control", "event", "sound", "looks", "operator", "sensing", "data", "motion", "DebuggerExtensionTS", "procedures", "argument", "pen")
 
     BlockEngine.DefineShortcuts()
 end
@@ -28,6 +29,8 @@ function BlockEngine.Update()
         BlockEngine.LastUpdate = love.timer.getTime()
         BlockEngine.Stepper.Update()
     end
+
+    BlockEngine.Extensions.CallEvents("Update")
 end
 
 return BlockEngine

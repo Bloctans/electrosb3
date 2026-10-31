@@ -1,6 +1,8 @@
 local Enum = Electro.Enum
 local Sounds = {}
 
+Sounds.Playing = {}
+
 function Sounds.Play(Args, API)
     local Sound = Args.SOUND_MENU
 
@@ -22,9 +24,18 @@ function Sounds.PlayUntilDone(Args, API)
         Sound.PlayingYield = true
         Sound.Play()
 
+        Sounds.Playing[Sound.ID] = Sound
+
         API:Yield()
     else
+        Sounds.Playing[Sound.ID] = nil
         Sound.PlayingYield = false
+    end
+end
+
+function Sounds.StopAllSounds()
+    for _, Sound in pairs(Sounds.Playing) do
+        Sound:Stop()
     end
 end
 
@@ -44,6 +55,13 @@ Sounds.Definitions = {
     },
     ["setvolumeto"] = {
         Type = Enum.BLOCK_STACK
+    },
+    ["cleareffects"] = {
+        Type = Enum.BLOCK_STACK
+    },
+    ["stopallsounds"] = {
+        Type = Enum.BLOCK_STACK,
+        Function = Sounds.StopAllSounds
     }
 }
 

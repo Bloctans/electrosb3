@@ -6,13 +6,23 @@ local Methods = {}
 local BlockEngine = Electro.BlockEngine
 
 function Methods:Configure(Script, Sprite, Block)
+    if (not Script.Info[Block.ID]) then
+        Script.Info[Block.ID] = {
+            Loops = 0
+        }
+    end
+
     self.Script = Script
     self.Sprite = Sprite
     self.Block = Block
 end
 
 function Methods:BranchTo(Block, IsLoop)
-    self.Script.BranchToBlock(Block, IsLoop)
+    return self.Script.BranchToBlock(Block, IsLoop)
+end
+
+function Methods:GetProcedureStack()
+    return self.Script.FindProcedureStack()
 end
 
 function Methods:StartHats(Opcode, Fields)
@@ -32,6 +42,10 @@ function Methods:Float(Value) return tonumber(Value) or 0 end
 
 function Methods:SetVariable(ID, Value)
     return Electro.Data.SetVariable(self.Sprite.ID, ID, Value)
+end
+
+function Methods:GetList(ID)
+    return Electro.Data.GetList(self.Sprite.ID, ID)
 end
 
 function Methods:Yield()
@@ -62,7 +76,7 @@ function Methods:StartTimer(Duration)
 end
 
 function Methods:GetScriptInfo()
-    return self.Script.Info
+    return self.Script.Info[self.Block.ID]
 end
 
 function Methods:TimerEnded()

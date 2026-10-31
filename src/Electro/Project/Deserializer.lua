@@ -13,30 +13,45 @@ function Deserializer.DeserializeBlocks(Blocks, Sprite)
     local Stepper = BlockEngine.Stepper
 
     for ID, Block in pairs(Blocks) do
-        local DeserializedBlock = BlockEngine.Block()
+        if Block.opcode then
+            local DeserializedBlock = BlockEngine.Block()
 
-        if Block.mutation then
-            local Mutation = Block.mutation
+            if Block.mutation then
+                local Mutation = Block.mutation
+                local Arguments = {}
 
-            DeserializedBlock.Mutation = {
-                Name = Mutation.proccode,
-                Warp = (Mutation.warp == "true") and true or false
+                if Mutation.argumentids and Mutation.argumentnames then -- what the actual fuck why do i need to parse twice scratch\
+                    local ArgumentIds = JSON.parse_array(Mutation.argumentids,1)
+                    local ArgumentNames = JSON.parse_array(Mutation.argumentnames,1)
+
+                    for i, ArgumentId in pairs(ArgumentIds) do
+                        Arguments[ArgumentId] = ArgumentNames[i]
+                    end
+                end
+
+                DeserializedBlock.Mutation = {
+                    Name = Mutation.proccode,
+                    Warp = (Mutation.warp == "true") and true or false,
+                    Arguments = Arguments
+                }
+            end
+
+            DeserializedBlock.ID = ID
+            DeserializedBlock.Next = Block.next
+            DeserializedBlock.Parent = Block.parent
+            DeserializedBlock.Opcode = Block.opcode
+            DeserializedBlock.Sprite = Sprite
+            DeserializedBlock.Definition = BlockEngine.Extensions.GetDefinition(Block.opcode)
+
+            DeserializedBlock.RawArgs = {
+                Inputs = Block.inputs,
+                Fields = Block.fields
             }
+
+            Stepper.AddBlock(ID, DeserializedBlock)
+        else
+            print("Got orphaned block, skipping")
         end
-
-        DeserializedBlock.ID = ID
-        DeserializedBlock.Next = Block.next
-        DeserializedBlock.Parent = Block.parent
-        DeserializedBlock.Opcode = Block.opcode
-        DeserializedBlock.Sprite = Sprite
-        DeserializedBlock.Definition = BlockEngine.Extensions.GetDefinition(Block.opcode)
-
-        DeserializedBlock.RawArgs = {
-            Inputs = Block.inputs,
-            Fields = Block.fields
-        }
-
-        Stepper.AddBlock(ID, DeserializedBlock)
     end
 end
 
@@ -53,10 +68,23 @@ function Deserializer.DeserializeTarget(TargetID, TargetJSON)
     Target.ID = TargetID
     Target.Layer = TargetJSON.layerOrder or Electro.Renderer.GetTopLayer()
 
+    if Target.IsStage then
+        Electro.Project.StageID = Target.ID
+    end
+
     for ID, Costume in pairs(TargetJSON.costumes) do
         assert(Costume.md5ext, "Costume w/o md5ext not supported yet")
+
+        local Image, Size
         
-        local Image, Size = Resvg.CreateImage(Deserializer.Read(Costume.md5ext))
+        if Costume.dataFormat == "svg" then
+            Image, Size = Resvg.CreateImage(Deserializer.Read(Costume.md5ext))
+        else
+            local Data = love.filesystem.newFileData(Deserializer.Read(Costume.md5ext), Costume.md5ext)
+
+            Image = love.graphics.newImage(Data)
+            Size = Vector2.new(Image:getWidth(), Image:getHeight())
+        end
 
         local TargetCostume = Electro.Project.Costume()
         TargetCostume.Image = Image
@@ -69,9 +97,23 @@ function Deserializer.DeserializeTarget(TargetID, TargetJSON)
     end
 
     for ID, Sound in pairs(TargetJSON.sounds) do
+        local Sucess, Message = pcall(function()
+            return love.audio.newSource(MountName..Sound.md5ext, "static")
+        end)
+        
+        local Source
+
+        if Sucess then
+            Source = Message
+        else
+            print("Failed to load WAV")
+            Source = love.audio.newSource("Electro/Project/error.wav", "static")
+        end
+
         local DeserializedSound = Electro.Project.Sound()
-        DeserializedSound.Source = love.audio.newSource(MountName..Sound.md5ext, "static")
+        DeserializedSound.Source = Source
         DeserializedSound.Name = Sound.name
+        DeserializedSound.ID = CreateUUID()
 
         Target.Sounds[ID] = DeserializedSound
     end
@@ -82,12 +124,22 @@ function Deserializer.DeserializeTarget(TargetID, TargetJSON)
         Electro.Data.SetVariable(TargetID, ID, Variable[2])
     end
 
+    for ID, SerializedList in pairs(TargetJSON.lists) do
+        local List = Electro.Data.GetList(Target.ID,ID)
+
+        for i,v in pairs(SerializedList[2]) do
+            List[i] = v
+        end
+    end
+
     Deserializer.DeserializeBlocks(TargetJSON.blocks, Target)
 
     Electro.Project.Targets[TargetID] = Target
 end
 
 function Deserializer.Deserialize(MountNameIn)
+    local DeserializeBench = Electro.Profiler.Benchmark("Deserialize Project")
+
     MountName = MountNameIn.."/"
 
     local ProjectJSON = Deserializer.Read("project.json")
@@ -96,6 +148,8 @@ function Deserializer.Deserialize(MountNameIn)
     for ID, Target in pairs(ProjectJSON.targets) do
         Deserializer.DeserializeTarget(CreateUUID(), Target)
     end
+
+    DeserializeBench.End()
 end
 
 return Deserializer

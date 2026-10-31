@@ -277,7 +277,7 @@ local function parse_literal(str, i)
 end
 
 
-local function parse_array(str, i)
+function json.parse_array(str, i)
   local res = {}
   local n = 1
   i = i + 1
@@ -357,7 +357,7 @@ local char_func_map = {
   [ "t" ] = parse_literal,
   [ "f" ] = parse_literal,
   [ "n" ] = parse_literal,
-  [ "[" ] = parse_array,
+  [ "[" ] = json.parse_array,
   [ "{" ] = parse_object,
 }
 

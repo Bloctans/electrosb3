@@ -6,6 +6,7 @@ local SpriteShader = love.graphics.newShader("Electro/Renderer/EffectShader.glsl
 
 function Renderer.Init()
     Renderer.Canvas = love.graphics.newCanvas(Electro.CanvasSize.X, Electro.CanvasSize.Y)
+    Renderer.PenCanvas = love.graphics.newCanvas(Electro.CanvasSize.X, Electro.CanvasSize.Y)
 end
 
 function Renderer.AddTarget(Target)
@@ -44,20 +45,23 @@ function Renderer.MoveToLayer(Target, Layer)
     local TargetIndex = table.find(Renderer.RenderTargets, Target)
     table.remove(Renderer.RenderTargets, TargetIndex)
 
-    local TargetsClone = table.clone(Renderer.RenderTargets)
     local Length = #Renderer.RenderTargets
- 
-    --Renderer.DebugLayer()
+    local NewTargets = {}
+
+    for i = 1,Layer-1 do
+        table.insert(NewTargets, Renderer.RenderTargets[i])
+    end
+
+    table.insert(NewTargets, Target)
 
     -- Shift all after the layer to target up
     for i = Layer, Length do
-        Renderer.RenderTargets[i+1] = TargetsClone[i]
+        table.insert(NewTargets, Renderer.RenderTargets[i])
     end
 
-    --Renderer.DebugLayer()
+    Renderer.RenderTargets = NewTargets
 
     -- Add back to targets
-    Renderer.RenderTargets[Layer] = Target
     Renderer.SyncLayers()
 end
 
@@ -71,13 +75,20 @@ function Renderer.GetTopLayer()
     return table.length(Renderer.RenderTargets)+1
 end
 
-function Renderer.Render(MouseRect)
-    Electro.MouseRect = MouseRect
+function Renderer.Render()
+    Electro.Profiler.Start("Electro - Render")
 
+    love.graphics.push("all")
     love.graphics.setCanvas(Renderer.Canvas)
     love.graphics.clear(1,1,1)
 
     for Layer, Target in pairs(Renderer.RenderTargets) do
+        Electro.Profiler.Start("Render Target")
+
+        if Layer == 2 then -- Draw pen layer before layer 2
+            love.graphics.draw(Renderer.PenCanvas)
+        end
+
         if Target.Visible then
             local Costume = Target:GetCostume()
             local RotationCenter = Costume and Costume.RotationCenter or Vector2.zero
@@ -109,9 +120,13 @@ function Renderer.Render(MouseRect)
             love.graphics.setShader()
             love.graphics.pop()
         end
+
+        Electro.Profiler.End()
     end
 
-    love.graphics.setCanvas()
+    love.graphics.pop()
+    Electro.Profiler.End()
+    
     return Renderer.Canvas
 end
 

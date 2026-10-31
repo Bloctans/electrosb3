@@ -2,11 +2,13 @@ local Enum = Electro.Enum
 local Looks = {}
 
 function Looks.CostumeMenu(Args, API)
-    return API.Sprite:CostumeIDFromName(Args.COSTUME.Name)
+    return Args.COSTUME.Name
 end
 
 function Looks.SwitchCostumeTo(Args, API)
-    local CostumeID = Args.COSTUME
+    local CostumeID = API.Sprite:CostumeIDFromName(Args.COSTUME)
+    if not CostumeID then CostumeID = API:Float(Args.COSTUME) end
+
     API.Sprite:SetCostume(CostumeID)
 end
 
@@ -28,6 +30,8 @@ function Looks.CostumeNumberName(Args, API)
     
     if Mode == "number" then
         return API.Sprite.CurrentCostume
+    else
+        return API.Sprite:GetCostume().Name
     end
 end
 
@@ -66,10 +70,33 @@ function Looks.GotoFrontBack(Args, API)
 end
 
 function Looks.SwitchBackdropTo(Args, API)
-    print(Args)
-
     local Stage = Electro.Project.GetStage()
-    Stage:SetCostume()
+    Stage:SetCostume(Args.BACKDROP)
+end
+
+function Looks.Backdrops(Args, API)
+    return Electro.Project.GetStage():CostumeIDFromName(Args.BACKDROP.Name)
+end
+
+function Looks.GoLayer(Args, API)
+    local Mode = Args.FORWARD_BACKWARD.Name
+
+    if Mode == "backward" then
+        Electro.Renderer.MoveToLayer(API.Sprite, API.Sprite.Layer-Args.NUM)
+    else
+        Electro.Renderer.MoveToLayer(API.Sprite, API.Sprite.Layer+Args.NUM)
+    end
+end
+
+function Looks.ClearEffects(Args, API)
+    local Effects = API.Sprite.Effects
+
+    Effects.GHOST = 0
+    Effects.BRIGHTNESS = 0
+end
+
+function Looks.Say(Args, API)
+    print(Args)
 end
 
 Looks.Definitions = {
@@ -106,7 +133,8 @@ Looks.Definitions = {
         Function = Looks.Hide
     },
     ["cleargraphiceffects"] = {
-        Type = Enum.BLOCK_STACK
+        Type = Enum.BLOCK_STACK,
+        Function = Looks.ClearEffects
     },
     ["setsizeto"] = {
         Type = Enum.BLOCK_STACK,
@@ -127,6 +155,18 @@ Looks.Definitions = {
     ["gotofrontback"] = {
         Type = Enum.BLOCK_STACK,
         Function = Looks.GotoFrontBack
+    },
+    ["backdrops"] = {
+        Type = Enum.BLOCK_INPUT,
+        Function = Looks.Backdrops
+    },
+    ["say"] = {
+        Type = Enum.BLOCK_STACK,
+        Function = Looks.Say
+    },
+    ["goforwardbackwardlayers"] = {
+        Type = Enum.BLOCK_STACK,
+        Function = Looks.GoLayer
     }
 }
 

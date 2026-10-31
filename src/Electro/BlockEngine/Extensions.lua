@@ -2,6 +2,16 @@
 local Extension = {}
 Extension.BlockSets = {}
 
+Extension.Events = {
+    Update = {}
+}
+
+function Extension.CallEvents(Name)
+    for _, Function in pairs(Extension.Events[Name]) do
+        Function()
+    end
+end
+
 function Extension.Register(...)
     local Extensions = {...}
 
@@ -9,6 +19,12 @@ function Extension.Register(...)
         local Module = require("Electro.Blocks."..Name)
 
         Extension.BlockSets[Name] = Module.Definitions
+
+        if Module.Events then
+            for Event, Function in pairs(Module.Events) do
+                table.insert(Extension.Events[Event], Function)
+            end
+        end
     end
 end
 
@@ -22,6 +38,11 @@ function Extension.GetDefinition(Opcode)
     assert(BlockDef, "Opcode "..Opcode.." doesnt exist!")
 
     return BlockDef
+end
+
+-- dumbass way to do this? idk
+function Extension.SetVariable(Set, Key, Value)
+    require("Electro.Blocks."..Set)[Key] = Value
 end
 
 function Extension.KnownBlocks()
@@ -41,7 +62,7 @@ function Extension.KnownBlocks()
     return {
         Known = Known,
         Implemented = Implemented,
-        Total = 123
+        Total = 126
     }
 end
 

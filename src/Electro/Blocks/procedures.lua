@@ -6,9 +6,7 @@ function procedures.Definition(Args, API)
 end
 
 function procedures.Prototype(Args, API)
-    return {
-        Name = API:GetMutation().Name
-    }
+    return API:GetMutation()
 end
 
 function procedures.Call(Args, API)
@@ -17,8 +15,17 @@ function procedures.Call(Args, API)
     API:EachHat("procedures_definition", function(Block)
         local Prototype = Block.Execute(API.Script)
 
-        if Prototype.Name == Mutation.Name then
-            API:BranchTo(Block.ID, false)
+        if (Prototype.Name == Mutation.Name) and (Block.Sprite == API.Sprite:GetRootSprite()) then
+            print("Found proc for "..Mutation.Name)
+
+            local PrototypeArgs = Prototype.Arguments
+
+            local Stack = API:BranchTo(Block.ID, false)
+            Stack.IsProcedure = true
+
+            for Index, Value in pairs(Args) do
+                Stack.Params[PrototypeArgs[Index]] = Value
+            end
         end
     end)
 end

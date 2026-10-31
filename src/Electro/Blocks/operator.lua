@@ -22,7 +22,19 @@ function Operator.LessThan(Args, API)
 end
 
 function Operator.Join(Args, API)
+    return Args.STRING1..Args.STRING2
+end
+
+function Operator.LetterOf(Args, API)
     print(Args) 
+end
+
+function Operator.Length(Args, API)
+    print(Args)
+end
+
+function Operator.Round(Args, API)
+    print(Args)
 end
 
 function Operator.Multiply(Args, API)
@@ -131,6 +143,18 @@ Operator.Definitions = {
     ["random"] = {
         Type = Enum.BLOCK_INPUT,
         Function = Operator.Random
+    },
+    ["letter_of"] = {
+        Type = Enum.BLOCK_INPUT,
+        Function = Operator.LetterOf
+    },
+    ["length"] = {
+        Type = Enum.BLOCK_INPUT,
+        Function = Operator.Length
+    },
+    ["round"] = {
+        Type = Enum.BLOCK_INPUT,
+        Function = Operator.Round
     }
 }
 

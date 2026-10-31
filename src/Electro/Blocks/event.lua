@@ -16,9 +16,13 @@ Event.Definitions = {
         Function = Event.Broadcast
     },
     ["whenbroadcastreceived"] = {
-        Type = Enum.BLOCK_HAT
+        Type = Enum.BLOCK_HAT,
+        RestartScripts = true,
     },
     ["whengreaterthan"] = { -- This is stupid, KNOWN, not implemented..
+        Type = Enum.BLOCK_HAT
+    },
+    ["whenthisspriteclicked"] = { -- This is stupid, KNOWN, not implemented..
         Type = Enum.BLOCK_HAT
     }
 }

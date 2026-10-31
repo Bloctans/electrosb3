@@ -2,6 +2,9 @@
 Resvg = require("Packages.svg")
 JSON = require("Packages.json")
 Vector2 = require("Packages.Vector2")
+Delton = require("Packages.delton")
+
+require("table.clear")
 
 Electro = {
     VERSION = "0.1",
@@ -24,6 +27,7 @@ end
 
 function Electro.Init()
     Electro.Util = require("Electro.Util")
+    Electro.Profiler = require("Electro.Profiler")
     Electro.Enum = require("Electro.Enum")
 
     Electro.MouseRect = Electro.Util.Rect(Vector2.zero, Vector2.zero)
@@ -35,14 +39,24 @@ function Electro.Init()
 
     Electro.Render = Electro.Renderer.Render
 
+    Electro.Profiler.Init()
     Electro.Renderer.Init()
     Electro.BlockEngine.Init()
 
     Electro.PrintSplash()
 end
 
-function Electro.Update(Delta)
+function Electro.Update(_, Config)
+    Electro.Profiler.Start("Electro - Update")
+
+    Electro.MouseRect = Config.MouseRect or Electro.Util.Rect(Vector2.zero, Vector2.zero)
+
+    Electro.BlockEngine.SetExtensionVariable("sensing", "AnyKey", Config.AnyPressed)
+
     Electro.BlockEngine.Update()
+
+    Electro.Profiler.End()
+    Electro.Profiler.Render()
 end
 
 return Electro
