@@ -12,9 +12,9 @@ Electro = {
     StartTime = 0,
     Flags = {
         LogDefinitionWarnings = false,
-        EnableDebugger = true,
+        EnableDebugger = false,
         DebugRenderer = false,
-        LogBranchWarnings = false
+        LogBranchWarnings = true
     },
     CanvasSize = Vector2.new(480, 360),
 }

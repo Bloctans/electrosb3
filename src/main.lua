@@ -10,8 +10,9 @@ function love.load()
     local FileDialog = require("Packages.filedialog")
     --local ProjectPath = "/home/bloctans/github/electrosb3/project_tests/Super Mario Bros. Scratched.pmp" --FileDialog.OpenFileDialog("Open Project")\
     --local ProjectPath = "/home/bloctans/github/electrosb3/project_tests/Advanced - Scratch the show.pmp"
-    local ProjectPath = "/home/bloctans/github/electrosb3/project_tests/Advanced - POWERTILED.pmp"
+    --local ProjectPath = "/home/bloctans/github/electrosb3/project_tests/Advanced - POWERTILED.pmp"
     --local ProjectPath = "/home/bloctans/github/electrosb3/project_tests/Advanced - Wave simulator - Edit.pmp" --FileDialog.OpenFileDialog("Open Project")
+    local ProjectPath 
 
     if (not ProjectPath) then 
         print("No project passed, qutting...")

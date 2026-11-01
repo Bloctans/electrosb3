@@ -43,7 +43,9 @@ function Data.ReplaceItemOfList(Args, API)
 end
 
 function Data.DeleteOfList(Args, API)
-    print(Args)
+    local List = API:GetList(Args.LIST.ID)
+
+    table.remove(List, Args.INDEX)
 end
 
 function Data.InsertAtList(Args, API)

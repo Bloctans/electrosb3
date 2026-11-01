@@ -107,7 +107,8 @@ function Deserializer.DeserializeTarget(TargetID, TargetJSON, Index)
         if Success then
             Source = Message
         else
-            print("Failed to load sound "..Sound.name)
+            print("Failed to load sound "..Sound.name.." at path "..MountName..Sound.md5ext)
+
             Source = love.audio.newSource("Electro/Project/error.wav", "static")
         end
 

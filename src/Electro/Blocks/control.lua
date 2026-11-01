@@ -18,16 +18,12 @@ end
 function Control.While(Args, API)
     if Args.CONDITION then
         API:BranchTo(Args.SUBSTACK, true)
-    else
-        print("stop repeat")
     end
 end
 
 function Control.RepeatUntil(Args, API)
     if not Args.CONDITION then
         API:BranchTo(Args.SUBSTACK, true)
-    else
-        print("stop repeat")
     end
 end
 
