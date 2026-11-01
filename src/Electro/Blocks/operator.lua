@@ -29,9 +29,9 @@ function Operator.Join(Args, API)
 end
 
 function Operator.LetterOf(Args, API)
-    local Letter = API:Float(Args.LETTER)
+    local Letter = API:Float(Args.LETTER, true)
 
-    return string.sub(API:String(Args.STRING), Letter, Letter)
+    return Letter and string.sub(API:String(Args.STRING), Letter, Letter) or ""
 end
 
 function Operator.Length(Args, API)
@@ -39,7 +39,7 @@ function Operator.Length(Args, API)
 end
 
 function Operator.Round(Args, API)
-    print(Args)
+    return math.round(API:Float(Args.NUM))
 end
 
 function Operator.Multiply(Args, API)
@@ -90,6 +90,12 @@ end
 
 function Operator.Random(Args, API)
     return math.random(API:Float(Args.FROM), API:Float(Args.TO))
+end
+
+function Operator.Contains(Args, API)
+    local Start = string.find(API:String(Args.STRING1), API:String(Args.STRING2))
+
+    return Start and true or false
 end
 
 Operator.Definitions = {
@@ -160,6 +166,10 @@ Operator.Definitions = {
     ["round"] = {
         Type = Enum.BLOCK_INPUT,
         Function = Operator.Round
+    },
+    ["contains"] = {
+        Type = Enum.BLOCK_INPUT,
+        Function = Operator.Contains
     }
 }
 

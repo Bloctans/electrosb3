@@ -7,7 +7,9 @@ end
 
 function Methods:SetCostume(ID)
     self.CurrentCostume = Electro.Util.TableMod(ID, self.Costumes)
+    
     Electro.BlockEngine.RequestRedraw()
+    self:Redraw()
 end
 
 -- Can only delete as clone
@@ -86,10 +88,10 @@ function Methods:Redraw()
     local Costume = self:GetCostume()
     
     if Costume then
-        local Size = Costume.Size * Costume.Scale
+        local Scale = (self.Size/100) * Costume.Scale
 
-        Dimension = Size * (self.Size/100)
-        Pivot = Dimension/2
+        Dimension = Costume.Size * Scale
+        Pivot = Costume.RotationCenter * Scale
     end
 
     self.Rect = Electro.Util.Rect(Electro.Util.FromScratch(self.Position) - Pivot, Dimension)
@@ -110,6 +112,8 @@ return function()
         ID = nil,
         Costumes = {},
         Sounds = {},
+
+        Info = {},
 
         Effects = {
             BRIGHTNESS = 0,

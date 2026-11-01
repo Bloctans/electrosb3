@@ -15,6 +15,14 @@ function Control.Repeat(Args, API)
     end
 end
 
+function Control.While(Args, API)
+    if Args.CONDITION then
+        API:BranchTo(Args.SUBSTACK, true)
+    else
+        print("stop repeat")
+    end
+end
+
 function Control.RepeatUntil(Args, API)
     if not Args.CONDITION then
         API:BranchTo(Args.SUBSTACK, true)
@@ -48,6 +56,20 @@ end
 function Control.If(Args, API)
     if Args.CONDITION then
         API:BranchTo(Args.SUBSTACK, false)
+    end
+end
+
+function Control.ForEach(Args, API)
+    local Value = API:Float(Args.VALUE)
+
+    local Info = API:GetScriptInfo()
+    Info.Loops = Info.Loops + 1
+
+    if Info.Loops <= Value then
+        API:SetVariable(Args.VARIABLE.ID, Info.Loops)
+        API:BranchTo(Args.SUBSTACK, true)
+    else
+        Info.Loops = 0
     end
 end
 
@@ -146,6 +168,14 @@ Control.Definitions = {
     },
     ["start_as_clone"] = {
         Type = Enum.BLOCK_HAT
+    },
+    ["while"] = {
+        Type = Enum.BLOCK_C,
+        Function = Control.While
+    },
+    ["for_each"] = {
+        Type = Enum.BLOCK_C,
+        Function = Control.ForEach
     }
 }
 

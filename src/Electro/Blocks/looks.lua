@@ -7,7 +7,8 @@ end
 
 function Looks.SwitchCostumeTo(Args, API)
     local CostumeID = API.Sprite:CostumeIDFromName(Args.COSTUME)
-    if not CostumeID then CostumeID = API:Float(Args.COSTUME) end
+    if not CostumeID then CostumeID = API:Float(Args.COSTUME, true) end
+    if not CostumeID then CostumeID = 1 end -- if we STILL dont have an id, use 1
 
     API.Sprite:SetCostume(CostumeID)
 end
@@ -32,6 +33,17 @@ function Looks.CostumeNumberName(Args, API)
         return API.Sprite.CurrentCostume
     else
         return API.Sprite:GetCostume().Name
+    end
+end
+
+function Looks.BackdropNumberName(Args, API)
+    local Stage = Electro.Project.GetStage()
+    local Mode = Args.NUMBER_NAME.Name
+    
+    if Mode == "number" then
+        return Stage.CurrentCostume
+    else
+        return Stage:GetCostume().Name
     end
 end
 
@@ -115,6 +127,10 @@ Looks.Definitions = {
     ["costumenumbername"] = {
         Type = Enum.BLOCK_INPUT,
         Function = Looks.CostumeNumberName
+    },
+    ["backdropnumbername"] = {
+        Type = Enum.BLOCK_INPUT,
+        Function = Looks.BackdropNumberName
     },
     ["costume"] = {
         Type = Enum.BLOCK_INPUT,

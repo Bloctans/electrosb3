@@ -31,16 +31,22 @@ function Data.LengthOfList(Args, API)
 end
 
 function Data.ItemNumberOfList(Args, API)
-    print(Args)
+    local List = API:GetList(Args.LIST.ID)
+
+    return table.find(List, Args.ITEM) or 0
 end
 
 function Data.ReplaceItemOfList(Args, API)
     local List = API:GetList(Args.LIST.ID)
 
-    List[Args.INDEX] = Args.ITEM
+    List[API:Float(Args.INDEX)] = Args.ITEM
 end
 
 function Data.DeleteOfList(Args, API)
+    print(Args)
+end
+
+function Data.InsertAtList(Args, API)
     print(Args)
 end
 
@@ -57,6 +63,12 @@ Data.Definitions = {
         Type = Enum.BLOCK_STACK
     },
     ["hidevariable"] = {
+        Type = Enum.BLOCK_STACK
+    },
+    ["showlist"] = {
+        Type = Enum.BLOCK_STACK
+    },
+    ["hidelist"] = {
         Type = Enum.BLOCK_STACK
     },
     ["deletealloflist"] = {
@@ -84,8 +96,12 @@ Data.Definitions = {
         Function = Data.ReplaceItemOfList
     },
     ["deleteoflist"] = {
-        Type = Enum.BLOCK_INPUT,
+        Type = Enum.BLOCK_STACK,
         Function = Data.DeleteOfList
+    },
+    ["insertatlist"] = {
+        Type = Enum.BLOCK_STACK,
+        Function = Data.InsertAtList
     },
 }
 

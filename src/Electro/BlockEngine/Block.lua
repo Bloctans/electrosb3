@@ -41,6 +41,8 @@ return function()
             return Value
         elseif Type == 12 then -- Variable
             return Block.API:GetVariable(Data[3])
+        elseif Type == 13 then
+            return Block.API:GetList(Data[3])
         elseif Type >= 4 and Type <= 9 then
             return tonumber(Value)
         else
@@ -94,12 +96,13 @@ return function()
         local Args = Block.ParseArgs(Script)
 
         if (not Definition.Function) then
-            print(Block.Opcode.." has no function definition, skipping")
+            if Electro.Flags.LogDefinitionWarnings then print(Block.Opcode.." has no function definition, skipping") end
             return
         end
 
-        
+        Electro.Profiler.Start("Execute "..Block.Opcode)
         local Success, Result = pcall(Definition.Function, Args, Block.API)
+        Electro.Profiler.End()
 
         if not Success then
             print(Result)

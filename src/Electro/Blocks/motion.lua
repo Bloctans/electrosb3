@@ -54,6 +54,10 @@ function Motion._SetDirection(API, Direction)
 end
 
 function Motion._Change(API, Pos)
+    if Pos.X ~= Pos.X or Pos.Y ~= Pos.Y then
+        return
+    end
+
     Motion._Set(API, API.Sprite.Position + Pos)
 end
 

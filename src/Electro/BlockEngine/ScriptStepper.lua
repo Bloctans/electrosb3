@@ -56,12 +56,17 @@ function ScriptStepper.EachHat(Opcode, Callback, ...)
         This is an insanely dumb implementation detail you need to follow that otherwise breaks projects
         if you need to know why, https://github.com/scratchfoundation/scratch-vm/blob/developer/src/engine/runtime.js#L1962
     ]]
-    for i = #ScriptStepper.BlocksByTarget, 1, -1 do
-        for _, Block in pairs(ScriptStepper.BlocksByTarget[i]) do
-            if Block.Opcode == Opcode then
-                Callback(Block, ...)
+
+    for i = #Electro.Renderer.RenderTargets, 1, -1 do
+        local Target = Electro.Renderer.RenderTargets[i]
+
+        if not Target.Parent and ScriptStepper.BlocksByTarget[Target.ID] then
+            for _, Block in pairs(ScriptStepper.BlocksByTarget[Target.ID]) do
+                if Block.Opcode == Opcode then
+                    Callback(Block, ...)
+                end
             end
-        end 
+        end
     end
 end
 

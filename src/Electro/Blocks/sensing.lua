@@ -10,6 +10,20 @@ Sensing.KeyLookup = {
     z = "z",
     n = "n",
     x = "x",
+    v = "v",
+    q = "q",
+    e = "e",
+    r = "r",
+    ["0"] = "0",
+    ["1"] = "1",
+    ["2"] = "2",
+    ["3"] = "3",
+    ["4"] = "4",
+    ["5"] = "5",
+    ["6"] = "6",
+    ["7"] = "7",
+    ["8"] = "8",
+    ["9"] = "9",
     space = "space",
     enter = "return",
     any = "any",
@@ -56,7 +70,7 @@ function Sensing.TouchingObjectMenu(Args, API)
     if Type.Name == "_mouse_" then
         return {Electro.MouseRect}
     elseif Type.Name == "_edge_" then
-        return {Electro.Util.Rect(Vector2.zero, Electro.CanvasSize)}
+        return {Electro.Util.Rect(Vector2.zero, Electro.CanvasSize, true)}
     else
         return Electro.Project.SpriteFromName(Type.Name):GetCloneRects()
     end
@@ -83,6 +97,8 @@ end
 
 -- TODO: Implement
 function Sensing.TouchingObject(Args, API)
+    API.Sprite:Redraw()
+
     local SpriteRect = API.Sprite.Rect
     local Rects = Args.TOUCHINGOBJECTMENU
 

@@ -38,9 +38,11 @@ function Methods:EachScript(Callback)
 end
 
 function Methods:Boolean(Value) return Electro.Util.ToBoolean(Value) end
-function Methods:Float(Value) 
+function Methods:Float(Value, CanNil) 
     if type(Value) == "boolean" then
         return Value and 1 or 0
+    elseif CanNil then
+        return tonumber(Value)
     else
         return tonumber(Value) or 0
     end
@@ -57,6 +59,10 @@ end
 
 function Methods:Yield()
     self.Script.SetYielded()
+end
+
+function Methods:YieldTick()
+    self.Script.SetYieldTick()
 end
 
 function Methods:GetMutation()
@@ -84,6 +90,11 @@ end
 
 function Methods:GetScriptInfo()
     return self.Script.Info[self.Block.ID]
+end
+
+-- SPRITE INFO IS NOT PER-BLOCK (it is per-sprite)!!! use script info for that!!!
+function Methods:GetSpriteInfo()
+    return self.Sprite:GetRootSprite().Info
 end
 
 function Methods:TimerEnded()

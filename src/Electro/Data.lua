@@ -1,5 +1,5 @@
 local Data = {}
-local DataEntries = {}, {}
+local DataEntries = {}
 
 -- Setup stage data container
 function Data.SetupData(SpriteID)
@@ -9,6 +9,10 @@ function Data.SetupData(SpriteID)
     }
 
     return DataEntries[SpriteID]
+end
+
+function Data.GetAll()
+    return DataEntries
 end
 
 function Data.GetData(SpriteID, Type)

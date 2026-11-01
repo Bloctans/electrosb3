@@ -4,7 +4,8 @@ local Sounds = {}
 Sounds.Playing = {}
 
 function Sounds.Play(Args, API)
-    local Sound = Args.SOUND_MENU
+    local Sound = API.Sprite:SoundFromName(Args.SOUND_MENU)
+    if (not Sound) then return end
 
     if Sound then
         Sound.Play()
@@ -12,11 +13,12 @@ function Sounds.Play(Args, API)
 end
 
 function Sounds.SoundMenu(Args, API)
-    return API.Sprite:SoundFromName(Args.SOUND_MENU.Name)
+    return Args.SOUND_MENU.Name
 end
 
 function Sounds.PlayUntilDone(Args, API)
-    local Sound = Args.SOUND_MENU
+    local Sound = API.Sprite:SoundFromName(Args.SOUND_MENU)
+    if (not Sound) then return end
 
     if Sound.GetPlaying() then
         API:Yield()
@@ -54,6 +56,9 @@ Sounds.Definitions = {
         Function = Sounds.Play
     },
     ["setvolumeto"] = {
+        Type = Enum.BLOCK_STACK
+    },
+    ["seteffectto"] = {
         Type = Enum.BLOCK_STACK
     },
     ["cleareffects"] = {

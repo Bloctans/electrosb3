@@ -12,6 +12,8 @@ Project.StageID = nil
 local MountName = "ElectroProject"
 
 function Project.Load(ProjectPath)
+    print("LOAD PROJECT \n")
+
     local DidMount = love.filesystem.mountFullPath(ProjectPath, MountName)
     if (not DidMount) then error("Could not mount project at path: "..ProjectPath) end
 

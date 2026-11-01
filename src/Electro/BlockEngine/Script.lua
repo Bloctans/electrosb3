@@ -9,6 +9,8 @@ return function(Hat, Sprite)
     Script.Hat = Hat
     Script.StartBlock = Stepper.GetBlock(Hat.Next)
 
+    Script.CreationTraceback = debug.traceback()
+
     Script.Info = {}
 
     local DidControlFlow = false
@@ -69,6 +71,10 @@ return function(Hat, Sprite)
         Script.State = Enum.STATUS_YIELDED
     end
 
+    function Script.SetYieldTick()
+        Script.State = Enum.STATUS_YIELDTICK
+    end
+
     -- Push our current block to the stack, then goto the new one
     function Script.BranchToBlock(BlockID, IsLoop, Warp)
         local Stack = Script.PushStack(IsLoop, Warp)
@@ -89,7 +95,10 @@ return function(Hat, Sprite)
             yielding and thus running the first block twice
     ]]
     function Script.Goto(BlockID, DontFlow)
-        if (not BlockID) then print("Attempted to step to non-existant blockid", BlockID) return end
+        if (not BlockID) then
+            if Electro.Flags.LogBranchWarnings then print("Attempted to step to non-existant blockid", BlockID) end
+            return 
+        end
 
         CurrentBlock = Stepper.GetBlock(BlockID)
 
@@ -184,6 +193,11 @@ return function(Hat, Sprite)
 
         while true do
             local DidBreak = Script.StepBlock()
+
+            if Script.State == Enum.STATUS_YIELDTICK then
+                Script.State = Enum.STATUS_RUNNING
+                return
+            end
 
             -- If we want to break then we retrun from this loop, ALSO hard-coded kill check that prevents this from stepping any further
             if DidBreak or (Script.State == Enum.STATUS_DONE) then return end

@@ -4,7 +4,9 @@ local Enum = Electro.Enum
 local Debugger = {}
 
 function Debugger.Log(Args, API)
-    print(Args.TEXT)
+    if Electro.Flags.EnableDebugger then
+        print(Args.TEXT)
+    end
 end
 
 Debugger.Definitions = {

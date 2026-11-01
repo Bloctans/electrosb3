@@ -7,9 +7,15 @@ Delton = require("Packages.delton")
 require("table.clear")
 
 Electro = {
-    VERSION = "0.1",
+    VERSION = "0.3",
     Rate = 1/30,
     StartTime = 0,
+    Flags = {
+        LogDefinitionWarnings = false,
+        EnableDebugger = true,
+        DebugRenderer = false,
+        LogBranchWarnings = false
+    },
     CanvasSize = Vector2.new(480, 360),
 }
 
@@ -23,6 +29,8 @@ end
 function Electro.StartProject()
     Electro.BlockEngine.StartHats("event_whenflagclicked")
     Electro.StartTime = love.timer.getTime()
+
+    print("START PROJECT \n")
 end
 
 function Electro.Init()

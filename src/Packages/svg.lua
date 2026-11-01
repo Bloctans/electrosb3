@@ -513,7 +513,7 @@ function svg.CreateImage(FileData)
     if error > 0 then
         print("Failed to load svg with error "..error..", assuming broken svg, discarding...")
 
-        return love.graphics.newImage(love.image.newImageData(1,1, "rgba8"))
+        return love.graphics.newImage(love.image.newImageData(1,1, "rgba8")), Vector2.one
     end
 
     local size = libresvg.resvg_get_image_size(tree[0])

@@ -9,5 +9,6 @@ return {
 
     STATUS_RUNNING = 1,
     STATUS_YIELDED = 2,
-    STATUS_DONE = 4,
+    STATUS_YIELDTICK = 4,
+    STATUS_DONE = 8,
 }

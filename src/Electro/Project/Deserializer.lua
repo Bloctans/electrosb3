@@ -8,7 +8,7 @@ function Deserializer.Read(Path)
     return Data
 end
 
-function Deserializer.DeserializeBlocks(Blocks, Sprite, TargetIndex)
+function Deserializer.DeserializeBlocks(Blocks, Sprite)
     local BlockEngine = Electro.BlockEngine
     local Stepper = BlockEngine.Stepper
 
@@ -48,7 +48,7 @@ function Deserializer.DeserializeBlocks(Blocks, Sprite, TargetIndex)
                 Fields = Block.fields
             }
 
-            Stepper.AddBlock(ID, DeserializedBlock, TargetIndex)
+            Stepper.AddBlock(ID, DeserializedBlock, Sprite.ID)
         else
             print("Got orphaned block, skipping")
         end
@@ -75,7 +75,7 @@ function Deserializer.DeserializeTarget(TargetID, TargetJSON, Index)
     for ID, Costume in pairs(TargetJSON.costumes) do
         assert(Costume.md5ext, "Costume w/o md5ext not supported yet")
 
-        local Image, Size
+        local Image, Size = nil, Vector2.zero
         
         if Costume.dataFormat == "svg" then
             Image, Size = Resvg.CreateImage(Deserializer.Read(Costume.md5ext))
@@ -98,16 +98,16 @@ function Deserializer.DeserializeTarget(TargetID, TargetJSON, Index)
     end
 
     for ID, Sound in pairs(TargetJSON.sounds) do
-        local Sucess, Message = pcall(function()
+        local Success, Message = pcall(function()
             return love.audio.newSource(MountName..Sound.md5ext, "static")
         end)
         
         local Source
 
-        if Sucess then
+        if Success then
             Source = Message
         else
-            print("Failed to load WAV")
+            print("Failed to load sound "..Sound.name)
             Source = love.audio.newSource("Electro/Project/error.wav", "static")
         end
 
@@ -133,7 +133,7 @@ function Deserializer.DeserializeTarget(TargetID, TargetJSON, Index)
         end
     end
 
-    Deserializer.DeserializeBlocks(TargetJSON.blocks, Target, Index)
+    Deserializer.DeserializeBlocks(TargetJSON.blocks, Target)
 
     Electro.Project.Targets[TargetID] = Target
 end
