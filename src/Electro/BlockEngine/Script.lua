@@ -5,9 +5,15 @@ return function(Hat, Sprite)
     ---@class ElectroScript
     local Script = {}
 
+    function Script.GetBlock(BlockID)
+        local Root = Script.Sprite:GetRootSprite()
+
+        return Stepper.GetBlock(Root.ID, BlockID)
+    end
+
     Script.Sprite = Sprite
     Script.Hat = Hat
-    Script.StartBlock = Stepper.GetBlock(Hat.Next)
+    Script.StartBlock = Script.GetBlock(Hat.Next)
 
     Script.CreationTraceback = debug.traceback()
 
@@ -99,10 +105,12 @@ return function(Hat, Sprite)
             yielding and thus running the first block twice
     ]]
     function Script.Goto(BlockID, DontFlow)
-        CurrentBlock = Stepper.GetBlock(BlockID)
+        CurrentBlock = Script.GetBlock(BlockID)
 
-        if DontFlow then return end -- There is the possibility we may use this function but NOT want to indicate control flow
-        DidControlFlow = true -- Assuming we want, Indicate that we did control flow so that the stepper doesnt skip the new block
+        if CurrentBlock then
+            if DontFlow then return end -- There is the possibility we may use this function but NOT want to indicate control flow
+            DidControlFlow = true -- Assuming we want, Indicate that we did control flow so that the stepper doesnt skip the new block
+        end
     end
 
     function Script.GetNextBlock(Block) return (Block or CurrentBlock).Next end
@@ -129,7 +137,7 @@ return function(Hat, Sprite)
             end
 
             -- Check if theres a block after the last one in the stack
-            local NextBlock = Script.GetNextBlock(Stepper.GetBlock(LastStack.BlockID))
+            local NextBlock = Script.GetNextBlock(Script.GetBlock(LastStack.BlockID))
 
             if NextBlock then -- We found a new block, step to it
                 Script.Goto(NextBlock, true)

@@ -8,23 +8,21 @@ ScriptStepper.RedrawRequested = false
 ScriptStepper.Scripts = {}
 ScriptStepper.HatLookup = {} -- lookup of running scripts to current hats
 ScriptStepper.Blocks = {}
-ScriptStepper.BlocksByTarget = {}
 
 function ScriptStepper.RequestRedraw()
     ScriptStepper.RedrawRequested = true
 end
 
 function ScriptStepper.AddBlock(ID, Block, TargetID)
-    if (not ScriptStepper.BlocksByTarget[TargetID]) then
-        ScriptStepper.BlocksByTarget[TargetID] = {}
+    if (not ScriptStepper.Blocks[TargetID]) then
+        ScriptStepper.Blocks[TargetID] = {}
     end
 
-    ScriptStepper.BlocksByTarget[TargetID][ID] = Block
-    ScriptStepper.Blocks[ID] = Block
+    ScriptStepper.Blocks[TargetID][ID] = Block
 end
 
-function ScriptStepper.GetBlock(ID)
-    return ScriptStepper.Blocks[ID]
+function ScriptStepper.GetBlock(TargetID, ID)
+    return ScriptStepper.Blocks[TargetID][ID]
 end
 
 -- Create a new script object using a target sprite and hat
@@ -62,8 +60,8 @@ function ScriptStepper.EachHat(Opcode, Callback, ...)
     for i = #Electro.Renderer.RenderTargets, 1, -1 do
         local Target = Electro.Renderer.RenderTargets[i]
 
-        if not Target.Parent and ScriptStepper.BlocksByTarget[Target.ID] then
-            for ID, Block in pairs(ScriptStepper.BlocksByTarget[Target.ID]) do
+        if not Target.Parent and ScriptStepper.Blocks[Target.ID] then
+            for ID, Block in pairs(ScriptStepper.Blocks[Target.ID]) do
                 if Block.Opcode == Opcode then
                     Callback(Block, ...)
                 end

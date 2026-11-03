@@ -3,6 +3,8 @@ local Sounds = {}
 
 Sounds.Playing = {}
 
+local Volume = 100
+
 function Sounds.Play(Args, API)
     local Sound = API.Sprite:SoundFromName(Args.SOUND_MENU)
     if (not Sound) then return end
@@ -41,8 +43,12 @@ function Sounds.StopAllSounds()
     end
 end
 
+function Sounds.ChangeVolumeBy(Args, API)
+    print(Args)
+end
+
 function Sounds.Volume()
-    return 100
+    return Volume
 end
 
 Sounds.Definitions = {
@@ -63,10 +69,12 @@ Sounds.Definitions = {
         Type = Enum.BLOCK_STACK
     },
     ["changevolumeby"] = {
-        Type = Enum.BLOCK_STACK
+        Type = Enum.BLOCK_STACK,
+        Function = Sounds.ChangeVolumeBy
     },
     ["volume"] = {
-        Type = Enum.BLOCK_INPUT
+        Type = Enum.BLOCK_INPUT,
+        Function = Sounds.Volume
     },
     ["seteffectto"] = {
         Type = Enum.BLOCK_STACK

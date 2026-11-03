@@ -21,15 +21,36 @@ function Event.BroadcastAndWait(Args, API)
     local ShouldYield = false
 
     for _, v in pairs(Info.Scripts) do
-        if v.Status ~= Enum.STATUS_DONE then
+        if v.State ~= Enum.STATUS_DONE then
             ShouldYield = true
         end
     end
 
     if ShouldYield then
-        API:YieldTick()
+        API:Yield()
+    else
+        Info.StartBroadcast = false
+        Info.Scripts = {}
     end
 end
+
+function Event.OnMouseClick()
+    local Stepper = Electro.BlockEngine.Stepper
+
+    for _, Sprite in pairs(Electro.Renderer.RenderTargets) do
+        if Electro.Util.CheckAABB(Sprite.Rect, Electro.MouseRect) then
+            Stepper.EachHat("event_whenthisspriteclicked", function(Hat)
+                if Hat.Sprite == Sprite:GetRootSprite() then
+                    Stepper.CreateScript(Hat, Sprite)
+                end
+            end)
+        end
+    end
+end
+
+Event.Events = {
+    MouseClick = Event.OnMouseClick
+}
 
 Event.Definitions = {
     ["whenflagclicked"] = {
@@ -53,8 +74,8 @@ Event.Definitions = {
     ["whengreaterthan"] = { -- This is stupid, KNOWN, not implemented..
         Type = Enum.BLOCK_HAT
     },
-    ["whenthisspriteclicked"] = { -- This is stupid, KNOWN, not implemented..
-        Type = Enum.BLOCK_HAT
+    ["whenthisspriteclicked"] = {
+        Type = Enum.BLOCK_HAT,
     }
 }
 

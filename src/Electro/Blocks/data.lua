@@ -45,13 +45,13 @@ end
 function Data.DeleteOfList(Args, API)
     local List = API:GetList(Args.LIST.ID)
 
-    table.remove(List, Args.INDEX)
+    table.remove(List, API:Float(Args.INDEX))
 end
 
 function Data.InsertAtList(Args, API)
     local List = API:GetList(Args.LIST.ID)
 
-    table.insert(List, Args.INDEX, Args.ITEM)
+    table.insert(List, API:Float(Args.INDEX), Args.ITEM)
 end
 
 function Data.ListContainsItem(Args, API)

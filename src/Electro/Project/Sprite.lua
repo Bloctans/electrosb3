@@ -40,11 +40,13 @@ function Methods:CreateClone()
     CloneSprite.Parent = self:GetRootSprite()
     CloneSprite.Position = self.Position:Copy()
     CloneSprite.Size = self.Size
+    CloneSprite.Name = self.Name
     CloneSprite.CurrentCostume = self.CurrentCostume
     CloneSprite.Costumes = self.Costumes
     CloneSprite.Sounds = self.Sounds
     CloneSprite.Direction = self.Direction
     CloneSprite.Visible = self.Visible
+    CloneSprite.IsClone = true
 
     Electro.Renderer.MoveToLayer(CloneSprite, self.Layer)
 
@@ -112,6 +114,7 @@ return function()
         ID = nil,
         Costumes = {},
         Sounds = {},
+        Name = "Sprite",
 
         Info = {},
 
@@ -129,6 +132,7 @@ return function()
         Visible = true,
         CurrentCostume = 0,
         Layer = 0,
+        IsClone = false,
 
         -- Clones
         Clones = {},

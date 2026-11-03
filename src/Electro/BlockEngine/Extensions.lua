@@ -3,7 +3,8 @@ local Extension = {}
 Extension.BlockSets = {}
 
 Extension.Events = {
-    Update = {}
+    Update = {},
+    MouseClick = {}
 }
 
 function Extension.CallEvents(Name)

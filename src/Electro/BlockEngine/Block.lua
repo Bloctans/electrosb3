@@ -22,7 +22,7 @@ return function()
         end
 
         if Type <= 3 then -- Blocks/Substacks
-            local Block = Electro.BlockEngine.GetBlock(Value)
+            local Block = Script.GetBlock(Value)
 
             if Block and (Block.Definition.Type == Electro.Enum.BLOCK_INPUT) then -- Execute this block
                 local Return = Block.Execute(Script)

@@ -108,6 +108,12 @@ function Control.Stop(Args, API)
 
     if Option == "this script" then
         API.Script.StopThisScript()
+    elseif Option == "other scripts in sprite" then
+        API:EachScript(function(Script)
+            if (Script.Sprite == API.Sprite) and (Script ~= API.Script) then
+                Script.Kill()
+            end
+        end)
     else
         error(Option.." doesnt exist")
     end

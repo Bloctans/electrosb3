@@ -73,7 +73,7 @@ end
 function Motion.Goto(Args, API)
     local Sprite = Electro.Project.SpriteFromName(Args.TO)
 
-    Sprite.Position = API.Sprite.Position:Copy()
+    API.Sprite.Position = Sprite.Position:Copy()
     API:RequestRedraw()
 end
 

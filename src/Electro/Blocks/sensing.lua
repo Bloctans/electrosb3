@@ -145,6 +145,10 @@ function Sensing.Username()
     return "ElectroUser"
 end
 
+function Sensing.Answer()
+    return ""
+end
+
 function Sensing.OnUpdate()
     Mouse = Electro.Util.ToScratch(Vector2.new(Electro.MouseRect.X1, Electro.MouseRect.Y1))
 end
@@ -210,7 +214,8 @@ Sensing.Definitions = {
         Type = Enum.BLOCK_STACK
     },
     ["answer"] = {
-        Type = Enum.BLOCK_INPUT
+        Type = Enum.BLOCK_INPUT,
+        Function = Sensing.Answer
     },
     ["username"] = {
         Type = Enum.BLOCK_INPUT,

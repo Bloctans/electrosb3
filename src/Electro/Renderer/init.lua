@@ -27,7 +27,8 @@ function Renderer.DrawDebug(Target)
 
     love.graphics.pop()
     --love.graphics.print("Layer "..Target.Layer, 0,0)
-    --love.graphics.print("CostumeID "..Target.CurrentCostume, 0,20)
+    --love.graphics.print("Name "..Target.Name, 0,20)
+    love.graphics.print("Clone "..tostring(Target.IsClone), 0,0)
 end
 
 function Renderer.DebugLayer()

@@ -60,11 +60,15 @@ function Looks.Size(_, API)
 end
 
 function Looks.SetEffectTo(Args, API)
-    API.Sprite.Effects[Args.EFFECT.Name] = Args.VALUE
+    local Effect = string.upper(Args.EFFECT.Name)
+
+    API.Sprite.Effects[Effect] = API:Float(Args.VALUE)
 end
 
 function Looks.ChangeEffectBy(Args, API)
-    API.Sprite.Effects[Args.EFFECT.Name] = API.Sprite.Effects[Args.EFFECT.Name] + Args.CHANGE
+    local Effect = string.upper(Args.EFFECT.Name)
+
+    API.Sprite.Effects[Effect] = API.Sprite.Effects[Effect] + API:Float(Args.CHANGE)
 end
 
 function Looks.NextCostume(_, API)
@@ -112,7 +116,7 @@ function Looks.ClearEffects(Args, API)
 end
 
 function Looks.Say(Args, API)
-    print(Args)
+    print(Args.MESSAGE)
 end
 
 Looks.Definitions = {

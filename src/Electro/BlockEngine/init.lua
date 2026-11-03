@@ -7,6 +7,7 @@ function BlockEngine.DefineShortcuts()
     BlockEngine.GetBlock = BlockEngine.Stepper.GetBlock
     BlockEngine.RequestRedraw = BlockEngine.Stepper.RequestRedraw
     BlockEngine.SetExtensionVariable = BlockEngine.Extensions.SetVariable
+    BlockEngine.CallEvents = BlockEngine.Extensions.CallEvents
 end
 
 function BlockEngine.Init()
@@ -30,7 +31,7 @@ function BlockEngine.Update()
         BlockEngine.Stepper.Update()
     end
 
-    BlockEngine.Extensions.CallEvents("Update")
+    BlockEngine.CallEvents("Update")
 end
 
 return BlockEngine
