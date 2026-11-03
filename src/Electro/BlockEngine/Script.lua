@@ -45,10 +45,14 @@ return function(Hat, Sprite)
 
     function Script.StopThisScript()
         while true do
-            local LastStack = Script.PopStack() -- TODO: Custom block support
+            local LastStack = Script.PeekStack() -- TODO: Custom block support
 
-            if (not LastStack) then
-                return
+            if not LastStack then break end
+
+            if not LastStack.IsProcedure then
+                Script.PopStack()
+            else
+                break
             end
         end
     end
@@ -95,11 +99,6 @@ return function(Hat, Sprite)
             yielding and thus running the first block twice
     ]]
     function Script.Goto(BlockID, DontFlow)
-        if (not BlockID) then
-            if Electro.Flags.LogBranchWarnings then print("Attempted to step to non-existant blockid", BlockID) end
-            return 
-        end
-
         CurrentBlock = Stepper.GetBlock(BlockID)
 
         if DontFlow then return end -- There is the possibility we may use this function but NOT want to indicate control flow
@@ -159,7 +158,9 @@ return function(Hat, Sprite)
             otherwise, we jump to the stackframe and find the next block in its stack
     ]]
     function Script.StepBlock()
-        CurrentBlock.Execute(Script)
+        if CurrentBlock then -- Simulate vm behavior by treating a null block as a block that isnt ran.
+            CurrentBlock.Execute(Script)
+        end
 
         -- Re-wake yielded script
         if Script.State == Enum.STATUS_YIELDED then
@@ -178,7 +179,7 @@ return function(Hat, Sprite)
             return
         end
 
-        local NextBlock = Script.GetNextBlock()
+        local NextBlock = CurrentBlock and Script.GetNextBlock()
 
         if NextBlock then
             Script.Goto(NextBlock, true)

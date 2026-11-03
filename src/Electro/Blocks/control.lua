@@ -31,7 +31,7 @@ function Control.Wait(Args, API)
     if not API.TimerStarted then
         API:StartTimer(Args.DURATION)
         API:Yield()
-        --API:RequestRedraw()
+        API:RequestRedraw()
     elseif not API:TimerEnded() then
         API:Yield()
         API:RequestRedraw() -- For some reason this works???
@@ -108,12 +108,8 @@ function Control.Stop(Args, API)
 
     if Option == "this script" then
         API.Script.StopThisScript()
-    elseif Option == "other scripts in sprite" then
-        --[[API:EachScript(function(Script)
-            if (Script.Sprite == API.Sprite) and (API.Script ~= Script) then
-                Script.Kill()
-            end
-        end)]]
+    else
+        error(Option.." doesnt exist")
     end
 end
 

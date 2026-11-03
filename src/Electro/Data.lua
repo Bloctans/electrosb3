@@ -1,5 +1,6 @@
 local Data = {}
 local DataEntries = {}
+local VariableLookup = {}
 
 -- Setup stage data container
 function Data.SetupData(SpriteID)
@@ -29,6 +30,18 @@ function Data.Clone(SubjectID, TargetID)
 
     TargetEntry.Variable = SubjectEntry.Variable
     TargetEntry.List = SubjectEntry.List
+end
+
+function Data.GetLookup(SpriteID, Name)
+    return VariableLookup[SpriteID][Name]
+end
+
+function Data.SetLookup(SpriteID, ID, Name)
+    if (not VariableLookup[SpriteID]) then
+        VariableLookup[SpriteID] = {} 
+    end
+
+    VariableLookup[SpriteID][Name] = ID
 end
 
 function Data.GetVariable(SpriteID, ID)

@@ -8,7 +8,7 @@ end
 function Data.ChangeVariableBy(Args, API)
     local Value = API:GetVariable(Args.VARIABLE.ID)
 
-    API:SetVariable(Args.VARIABLE.ID, Value + Args.VALUE)
+    API:SetVariable(Args.VARIABLE.ID, API:Float(Value) + API:Float(Args.VALUE))
 end
 
 function Data.DeleteAllOfList(Args, API)
@@ -49,6 +49,12 @@ function Data.DeleteOfList(Args, API)
 end
 
 function Data.InsertAtList(Args, API)
+    local List = API:GetList(Args.LIST.ID)
+
+    table.insert(List, Args.INDEX, Args.ITEM)
+end
+
+function Data.ListContainsItem(Args, API)
     print(Args)
 end
 
@@ -105,6 +111,10 @@ Data.Definitions = {
         Type = Enum.BLOCK_STACK,
         Function = Data.InsertAtList
     },
+    ["listcontainsitem"] = {
+        Type = Enum.BLOCK_INPUT,
+        Function = Data.ListContainsItem
+    }
 }
 
 return Data

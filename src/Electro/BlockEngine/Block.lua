@@ -42,7 +42,16 @@ return function()
         elseif Type == 12 then -- Variable
             return Block.API:GetVariable(Data[3])
         elseif Type == 13 then
-            return Block.API:GetList(Data[3])
+            local List = Block.API:GetList(Data[3])
+            local Seperator = ""
+
+            for _, v in pairs(List) do
+                if tostring(v):len() > 1 then
+                    Seperator = " "
+                end
+            end
+
+            return table.concat(List, Seperator)
         elseif Type >= 4 and Type <= 9 then
             return tonumber(Value)
         else

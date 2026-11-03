@@ -26,7 +26,7 @@ function Methods:GetProcedureStack()
 end
 
 function Methods:StartHats(Opcode, Fields)
-    BlockEngine.Stepper.StartHats(Opcode, Fields)
+    return BlockEngine.Stepper.StartHats(Opcode, Fields)
 end
 
 function Methods:EachHat(Opcode, Callback, ...)

@@ -28,7 +28,7 @@ function ScriptStepper.GetBlock(ID)
 end
 
 -- Create a new script object using a target sprite and hat
-function ScriptStepper.CreateScript(Hat, Sprite)
+function ScriptStepper.CreateScript(Hat, Sprite, ScriptsTable)
     if (not Hat.Next) then -- skip empty hats
         return
     end
@@ -43,6 +43,8 @@ function ScriptStepper.CreateScript(Hat, Sprite)
     end
 
     table.insert(ScriptStepper.HatLookup[Hat.ID], Script)
+
+    if ScriptsTable then table.insert(ScriptsTable, Script) end
 end
 
 function ScriptStepper.EachScript(Callback)
@@ -61,7 +63,7 @@ function ScriptStepper.EachHat(Opcode, Callback, ...)
         local Target = Electro.Renderer.RenderTargets[i]
 
         if not Target.Parent and ScriptStepper.BlocksByTarget[Target.ID] then
-            for _, Block in pairs(ScriptStepper.BlocksByTarget[Target.ID]) do
+            for ID, Block in pairs(ScriptStepper.BlocksByTarget[Target.ID]) do
                 if Block.Opcode == Opcode then
                     Callback(Block, ...)
                 end
@@ -78,7 +80,8 @@ end
     for restarting threads:
         although this is probably a really bad idea, 
 ]]
-function ScriptStepper.StartHat(Hat)
+function ScriptStepper.StartHat(Hat, Scripts)
+    local Scripts = Scripts or {}
     local BlockSprite = Hat.Sprite
     local Definition = Hat.Definition
 
@@ -89,13 +92,17 @@ function ScriptStepper.StartHat(Hat)
     end
 
     for _, Clone in pairs(BlockSprite.Clones) do
-        ScriptStepper.CreateScript(Hat, Clone)
+        ScriptStepper.CreateScript(Hat, Clone, Scripts)
     end
 
-    ScriptStepper.CreateScript(Hat, Hat.Sprite)
+    ScriptStepper.CreateScript(Hat, Hat.Sprite, Scripts)
+
+    return Scripts
 end
 
 function ScriptStepper.StartHats(Opcode, Fields)
+    local Scripts = {}
+
     ScriptStepper.EachHat(Opcode, function(Block, Fields)
         local PassFields = true
 
@@ -108,9 +115,11 @@ function ScriptStepper.StartHats(Opcode, Fields)
         end
 
         if PassFields then
-            ScriptStepper.StartHat(Block)
+            ScriptStepper.StartHat(Block, Scripts)
         end
     end, Fields)
+
+    return Scripts
 end
 
 function ScriptStepper.Update(dt)
@@ -118,7 +127,7 @@ function ScriptStepper.Update(dt)
 
     Electro.Profiler.Start("Step Scripts")
 
-    while (not ScriptStepper.RedrawRequested) and ((love.timer.getTime() - Start) < (Electro.Rate * 0.75)) do
+    while (not ScriptStepper.RedrawRequested) and ((love.timer.getTime() - Start) < (Electro.Rate * 0.75))  do
         local ToKill = {}
 
         ---@param Script ElectroScript

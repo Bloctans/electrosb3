@@ -45,25 +45,4 @@ function Extension.SetVariable(Set, Key, Value)
     require("Electro.Blocks."..Set)[Key] = Value
 end
 
-function Extension.KnownBlocks()
-    local Known = 0
-    local Implemented = 0
-
-    for _, Set in pairs(Extension.BlockSets) do
-        Known = Known + table.length(Set)
-
-        for _, Block in pairs(Set) do
-            if Block.Function then
-                Implemented = Implemented + 1
-            end
-        end
-    end
-
-    return {
-        Known = Known,
-        Implemented = Implemented,
-        Total = 126
-    }
-end
-
 return Extension

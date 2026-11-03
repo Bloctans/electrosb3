@@ -8,11 +8,12 @@ local Anypressed = false
 
 function love.load()
     local FileDialog = require("Packages.filedialog")
-    --local ProjectPath = "/home/bloctans/github/electrosb3/project_tests/Super Mario Bros. Scratched.pmp" --FileDialog.OpenFileDialog("Open Project")\
-    --local ProjectPath = "/home/bloctans/github/electrosb3/project_tests/Advanced - Scratch the show.pmp"
+    --local ProjectPath = FileDialog.OpenFileDialog("Open Project")
     --local ProjectPath = "/home/bloctans/github/electrosb3/project_tests/Advanced - POWERTILED.pmp"
-    --local ProjectPath = "/home/bloctans/github/electrosb3/project_tests/Advanced - Wave simulator - Edit.pmp" --FileDialog.OpenFileDialog("Open Project")
-    local ProjectPath 
+    --local ProjectPath = "/home/bloctans/github/electrosb3/project_tests/Test - Accuracy Test.sb3"
+    --local ProjectPath = "/home/bloctans/github/electrosb3/project_tests/events-broadcast-and-wait-yields-a-tick.sb3"
+    --local ProjectPath = "/home/bloctans/github/electrosb3/project_tests/event-broadcast-and-wait-can-continue-same-tick.sb3"
+    local ProjectPath = "/home/bloctans/github/electrosb3/project_tests/Extremely Advanced - Appel v1.4.sb3"
 
     if (not ProjectPath) then 
         print("No project passed, qutting...")

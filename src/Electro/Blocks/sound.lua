@@ -41,6 +41,10 @@ function Sounds.StopAllSounds()
     end
 end
 
+function Sounds.Volume()
+    return 100
+end
+
 Sounds.Definitions = {
     ["sounds_menu"] = {
         Type = Enum.BLOCK_INPUT,
@@ -57,6 +61,12 @@ Sounds.Definitions = {
     },
     ["setvolumeto"] = {
         Type = Enum.BLOCK_STACK
+    },
+    ["changevolumeby"] = {
+        Type = Enum.BLOCK_STACK
+    },
+    ["volume"] = {
+        Type = Enum.BLOCK_INPUT
     },
     ["seteffectto"] = {
         Type = Enum.BLOCK_STACK

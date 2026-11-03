@@ -123,6 +123,7 @@ function Deserializer.DeserializeTarget(TargetID, TargetJSON, Index)
     Electro.Data.SetupData(TargetID)
 
     for ID, Variable in pairs(TargetJSON.variables) do
+        Electro.Data.SetLookup(TargetID, ID, Variable[1])
         Electro.Data.SetVariable(TargetID, ID, Variable[2])
     end
 

@@ -84,12 +84,18 @@ function Sensing.Of(Args, API)
     local Property = Args.PROPERTY.Name
     local Object = Args.OBJECT
 
+    local AsVariable = Electro.Data.GetLookup(Object.ID, Property)
+
     if Property == "x position" then
         return Object.Position.X
     elseif Property == "y position" then
         return Object.Position.Y
     elseif Property == "direction" then
         return Object.Direction
+    elseif Property == "costume name" then
+        return Object:GetCostume().Name
+    elseif AsVariable then
+        return Electro.Data.GetVariable(Object.ID, AsVariable)
     else
         error("Invalid property "..Property)
     end
@@ -133,6 +139,10 @@ end
 
 function Sensing.Loudness()
     return 0
+end
+
+function Sensing.Username()
+    return "ElectroUser"
 end
 
 function Sensing.OnUpdate()
@@ -201,6 +211,10 @@ Sensing.Definitions = {
     },
     ["answer"] = {
         Type = Enum.BLOCK_INPUT
+    },
+    ["username"] = {
+        Type = Enum.BLOCK_INPUT,
+        Function = Sensing.Username
     }
 }
 

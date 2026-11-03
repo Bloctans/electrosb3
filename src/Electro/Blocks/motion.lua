@@ -24,6 +24,10 @@ function Motion.TurnRight(Args, API)
     Motion._SetDirection(API, API.Sprite.Direction + API:Float(Args.DEGREES))
 end
 
+function Motion.TurnLeft(Args, API)
+    Motion._SetDirection(API, API.Sprite.Direction - API:Float(Args.DEGREES))
+end
+
 function Motion.ChangeXBy(Args, API)
     Motion._Change(API, Vector2.xAxis * API:Float(Args.DX))
 end
@@ -64,6 +68,26 @@ end
 function Motion._Set(API, Pos)
     API.Sprite.Position = Pos
     API:RequestRedraw()
+end
+
+function Motion.Goto(Args, API)
+    local Sprite = Electro.Project.SpriteFromName(Args.TO)
+
+    Sprite.Position = API.Sprite.Position:Copy()
+    API:RequestRedraw()
+end
+
+function Motion.GotoMenu(Args, API)
+    return Args.TO.Name
+end
+
+function Motion.PointTowards(Args, API)
+    
+end
+
+
+function Motion.PointTowardsMenu(Args, API)
+    
 end
 
 Motion.Definitions = {
@@ -113,6 +137,26 @@ Motion.Definitions = {
     },
     ["setrotationstyle"] = {
         Type = Enum.BLOCK_STACK
+    },
+    ["turnleft"] = {
+        Type = Enum.BLOCK_STACK,
+        Function = Motion.TurnLeft
+    },
+    ["goto"] = {
+        Type = Enum.BLOCK_STACK,
+        Function = Motion.Goto
+    },
+    ["goto_menu"] = {
+        Type = Enum.BLOCK_INPUT,
+        Function = Motion.GotoMenu
+    },
+    ["pointtowards"] = {
+        Type = Enum.BLOCK_STACK,
+        Function = Motion.PointTowards
+    },
+    ["pointtowards_menu"] = {
+        Type = Enum.BLOCK_STACK,
+        Function = Motion.PointTowardsMenu
     }
 }
 

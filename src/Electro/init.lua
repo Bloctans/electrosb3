@@ -7,12 +7,12 @@ Delton = require("Packages.delton")
 require("table.clear")
 
 Electro = {
-    VERSION = "0.3",
+    VERSION = "0.4",
     Rate = 1/30,
     StartTime = 0,
     Flags = {
         LogDefinitionWarnings = false,
-        EnableDebugger = false,
+        EnableDebugger = true,
         DebugRenderer = false,
         LogBranchWarnings = true
     },
@@ -21,9 +21,6 @@ Electro = {
 
 function Electro.PrintSplash()
     print("\n\nElectroSB3 "..Electro.VERSION.."\nA LOVE reimplementation of the Scratch VM, Read the README for more info.\nOriginally Created by Touchcreator, Taken over by Bloctans.\n")
-
-    local Known = Electro.BlockEngine.Extensions.KnownBlocks()
-    print(Known.Implemented.." blocks implemented and "..Known.Known.." blocks known out of "..Known.Total.." total blocks")
 end
 
 function Electro.StartProject()
