@@ -14,7 +14,6 @@ function love.load()
     --local ProjectPath = "/home/bloctans/github/electrosb3/project_tests/events-broadcast-and-wait-yields-a-tick.sb3"
     --local ProjectPath = "/home/bloctans/github/electrosb3/project_tests/event-broadcast-and-wait-can-continue-same-tick.sb3"
     local ProjectPath = "/home/bloctans/github/electrosb3/project_tests/Extremely Advanced - Appel v1.4.sb3"
-    --local ProjectPath = "/home/bloctans/github/electrosb3/project_tests/Weird thing.sb3"
 
     if (not ProjectPath) then 
         print("No project passed, qutting...")

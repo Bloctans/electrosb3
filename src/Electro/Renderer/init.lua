@@ -31,26 +31,28 @@ function Renderer.DrawDebug(Target)
     love.graphics.print("Clone "..tostring(Target.IsClone), 0,0)
 end
 
-function Renderer.DebugLayer()
+function Renderer.DebugLayer(Targets)
     local a = {}
-    for i, _ in pairs(Renderer.RenderTargets) do table.insert(a,i) end
+    for i, v in pairs(Targets) do table.insert(a,v.Name) end
 
     print(a)
 end
 
-function Renderer.MoveToLayer(Target, Layer)
+function Renderer.MoveToLayer(Target, Layer, NewLayer)
     assert(Target, "no target")
 
-    Layer = math.max(Layer, 1)
+    Layer = math.max(Layer, 2)
 
     -- Remove the target from the renderer
     local TargetIndex = table.find(Renderer.RenderTargets, Target)
     table.remove(Renderer.RenderTargets, TargetIndex)
 
     local Length = #Renderer.RenderTargets
-    local NewTargets = {}
+    local NewTargets = {
+        Renderer.RenderTargets[1]
+    }
 
-    for i = 1,Layer-1 do
+    for i = 2,Layer-1 do
         table.insert(NewTargets, Renderer.RenderTargets[i])
     end
 
@@ -121,7 +123,8 @@ function Renderer.Render()
     for Layer, Target in pairs(Renderer.RenderTargets) do
         Electro.Profiler.Start("Render Target")
 
-        if Layer == 2 then -- Draw pen layer before layer 2
+        -- check to forcefully always draw our canvases on rendering layer 2 (stage shouldnt be a hard-coded barrier but if it works it works)
+        if Layer == 2 then
             love.graphics.draw(Renderer.PenCanvas)
         end
 

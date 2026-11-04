@@ -33,7 +33,7 @@ function Data.Clone(SubjectID, TargetID)
 end
 
 function Data.GetLookup(SpriteID, Name)
-    return VariableLookup[SpriteID][Name]
+    return VariableLookup[SpriteID] and VariableLookup[SpriteID][Name]
 end
 
 function Data.SetLookup(SpriteID, ID, Name)

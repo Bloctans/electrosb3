@@ -55,7 +55,9 @@ function Data.InsertAtList(Args, API)
 end
 
 function Data.ListContainsItem(Args, API)
-    print(Args)
+    local List = API:GetList(Args.LIST.ID)
+
+    return table.findLite(List, Args.ITEM) and true or false
 end
 
 Data.Definitions = {

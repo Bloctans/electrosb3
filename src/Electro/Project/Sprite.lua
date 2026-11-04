@@ -48,7 +48,7 @@ function Methods:CreateClone()
     CloneSprite.Visible = self.Visible
     CloneSprite.IsClone = true
 
-    Electro.Renderer.MoveToLayer(CloneSprite, self.Layer)
+    Electro.Renderer.MoveToLayer(CloneSprite, self:GetRootSprite().Layer-1)
 
     -- Register to what is needed, starting of hats is handled in block
     table.insert(self.Clones, CloneSprite)

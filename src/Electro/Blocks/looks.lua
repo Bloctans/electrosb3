@@ -79,7 +79,7 @@ function Looks.GotoFrontBack(Args, API)
     local Mode = Args.FRONT_BACK.Name
 
     if Mode == "back" then
-        Electro.Renderer.MoveToLayer(API.Sprite, Electro.Project.GetStage().Layer+1)
+        Electro.Renderer.MoveToLayer(API.Sprite, 2)
     else
         Electro.Renderer.MoveToLayer(API.Sprite, Electro.Renderer.GetTopLayer())
     end
