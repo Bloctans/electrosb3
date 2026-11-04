@@ -2,15 +2,23 @@
 
 An In-Progress Scratch VM.
 Originally by Touchcreator, Now maintained by Bloctans.
+Originally done in python, now rewritten in love2d and better than ever
 
 Contributions are welcome
 
 ## Accuracy
 
-Currently the accuracy of the engine does depend on the project, there are alot of issues with more complex projects such as 
-ones by griffpatch, however projects with a low-medium amount of complexity should run fine with little inaccuracies (outside of svg rendering)
+I would consider most projects to run pretty well, i havent tested everything however
+
+UNSUPPORTED:
+    - Pen blocks (Excluding stamp and clear all)
+    - Misc blocks that usually go unused in most projects (such as days since 2000)
+
+## Setup
+
+This requires a built version of [tinyfiledialogs](https://sourceforge.net/projects/tinyfiledialogs/) and [resvg](https://github.com/linebender/resvg)
+Said built libraries should be placed in the src/CLibraries folder
+
 
 ## Credits:
-[https://github.com/BirdLogics/sb3topy](BirdLogics/sb3topy) - Used as reference for block parsing (Also, I'd consider this different from this project, as ElectroSB3 is a **VM**, and not a **Converter**.)
-
 Scratch Foundation (Previously LLK) - Scratch, Certain concepts (VM code was referenced ALOT to try and get timings right, along with hats and such)
