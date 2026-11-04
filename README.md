@@ -11,8 +11,8 @@ Contributions are welcome
 I would consider most projects to run pretty well, i havent tested everything however
 
 UNSUPPORTED:
-    - Pen blocks (Excluding stamp and clear all)
-    - Misc blocks that usually go unused in most projects (such as days since 2000)
+- Pen blocks (Excluding stamp and clear all)    
+- Misc blocks that usually go unused in most projects (such as days since 2000)
 
 ## Setup
 
